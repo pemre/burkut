@@ -25,10 +25,13 @@ export default function Sidebar({
     onSelectGroup(groupId);
   };
 
-  // index'ten gruba göre item'ları filtrele (background ve _index hariç)
+  // index'ten gruba göre item'ları filtrele (background ve header hariç)
   const itemsInGroup = (groupId) =>
     Object.values(index).filter(
-      (item) => item.group === groupId && !item.id?.startsWith("bg_")
+      (item) =>
+        item.group === groupId &&
+        !item.id?.startsWith("bg_") &&
+        !item._isHeader
     );
 
   return (

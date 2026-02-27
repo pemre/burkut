@@ -10,6 +10,7 @@ import ContentPanel from "./ContentPanel";
  * 3. Markdown içerik render edilir
  * 4. Meta bilgileri (title, tags) gösterilir
  * 5. getContent null dönerse fallback mesajı gösterilir
+ * 6. selectedId null iken activeGroup header içeriği gösterilir
  */
 
 const mockIndex = {
@@ -19,6 +20,13 @@ const mockIndex = {
     title: "Xia Hanedanı",
     subtitle: "MÖ 2070–1600",
     tags: ["efsanevi", "tunç-çağı-öncesi"],
+    _isHeader: false,
+  },
+  "Dynasties and States": {
+    id: "Dynasties and States",
+    group: "Dynasties and States",
+    title: "Hanedanlar ve Devletler",
+    _isHeader: true,
   },
 };
 
@@ -67,6 +75,22 @@ describe("ContentPanel", () => {
     );
     await waitFor(() => {
       expect(screen.getByText(/content\.notFound/)).toBeInTheDocument();
+    });
+  });
+
+  it("selectedId null iken activeGroup header içeriği yüklenir", async () => {
+    const getContent = vi.fn().mockResolvedValue("# Hanedanlar ve Devletler\n\nGrup açıklaması.");
+    render(
+      <ContentPanel
+        selectedId={null}
+        activeGroup="Dynasties and States"
+        index={mockIndex}
+        getContent={getContent}
+      />
+    );
+    expect(getContent).toHaveBeenCalledWith("Dynasties and States");
+    await waitFor(() => {
+      expect(screen.getByText("Grup açıklaması.")).toBeInTheDocument();
     });
   });
 });

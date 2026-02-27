@@ -15,14 +15,15 @@ the appropriate folder.
 ### Data Layer
 - Each content item is a separate Markdown file in the `src/content/{group}/{id}.md` format.
 - Every file has a **YAML Front Matter** header from which timeline metadata is read.
-- Main menu body pages live in `src/content/_index/{group}.md`.
-- The `useMdLoader` hook lazily indexes all files via `import.meta.glob`.
+- **Group header pages** live as `src/content/{Group}.md` — a `.md` file at the content root that shares its name with the subfolder. When a sidebar group is clicked (and no specific item is selected), the header file's content is displayed in ContentPanel.
+- Sub-content items live in `src/content/{Group}/{id}.md` subfolders.
+- The `useMdLoader` hook lazily indexes all files via `import.meta.glob` and detects header files by path depth (direct children of `content/` = headers).
 
 ### Front Matter Schema
 ```yaml
 ---
-id: string              # must match the vis.js item id
-group: string           # e.g. Dynasties and States | Literature | Cinema | _index
+id: string              # must match the vis.js item id (header files: must match config group id exactly)
+group: string           # e.g. Dynasties and States | Literature | Cinema
 title: string           # title shown in Sidebar and ContentPanel
 subtitle: string        # date range, etc.
 start: string           # vis.js ISO format: "-002070-01-01"

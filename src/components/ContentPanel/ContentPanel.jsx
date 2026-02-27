@@ -13,7 +13,7 @@ export default function ContentPanel({ selectedId, activeGroup, index, getConten
     let cancelled = false;
     setLoading(true);
 
-    const targetId = selectedId || activeGroup?.toLowerCase();
+    const targetId = selectedId || activeGroup;
 
     getContent(targetId)
       .then((content) => {

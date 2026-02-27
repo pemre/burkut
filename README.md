@@ -39,7 +39,28 @@ npm run coverage    # coverage report
 
 ## Adding Content
 
-Create a `src/content/{group}/{id}.md` file, write the front matter — the app updates automatically.
+### Adding an item
+Create a `src/content/{Group}/{id}.md` file with YAML front matter — the app updates automatically.
+
+### Adding a new group
+1. Add a `{ id, translationKey }` entry to `groups` in `src/config.js`.
+2. Add translations in `src/i18n/locales/*.json`.
+3. Create a **group header file** at `src/content/{Group}.md` — its filename must match the group `id` exactly (case-sensitive). This markdown is displayed when the group header is clicked in the sidebar.
+4. Create a subfolder `src/content/{Group}/` for individual items.
+
+### Content structure
+```
+src/content/
+  Cinema.md                ← group header (shown when "Cinema" is clicked)
+  Cinema/                  ← sub-content items
+    Hero (2002).md
+    ...
+  Dynasties and States.md  ← group header
+  Dynasties and States/    ← sub-content items
+    xia.md
+    ...
+  Literature.md            ← group header (no subfolder yet)
+```
 
 See `SPEC.md` for the full content schema and architecture details.
 

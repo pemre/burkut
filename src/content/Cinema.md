@@ -1,6 +1,6 @@
 ---
-id: Cinema
-group: _index
+id: "Cinema"
+group: Cinema
 title: "Çin Sineması"
 ---
 
@@ -116,3 +116,4 @@ Bu üç film 6. Kuşak'ın sinemasını örnekler: Büyük anlatılar yerine sı
 > **Pekin Operası** (京剧, Jīngjù), yalnızca bir müzik türü değil; akrobasi, makyaj kodu, kostüm ve sahne hareketlerinden oluşan bütünleşik bir sahne sanatıdır. Kültür Devrimi döneminde (1966–76) bu gelenek sistematik olarak yok edilmeye çalışıldı — sanatçılar zulme uğradı, eserler yasaklandı. Farewell My Concubine bu yıkımı hem belgesel hem de şiirsel bir dille aktarır.
 
 > **Kuşak sistemi**, Çin resmi sinema tarihinin yönetmenleri politik dönemlere göre sınıflandırdığı bir çerçevedir. Bu sınıflandırmanın kendisi de bir politik jest: Devletin sinemayı nasıl dönemselleştirdiğini ve sahiplendiğini gösterir.
+

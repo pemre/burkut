@@ -16,9 +16,21 @@ import Sidebar from "./Sidebar";
  */
 
 const mockIndex = {
-  xia: { id: "xia", group: "Dynasties and States", title: "Xia Hanedanı" },
-  shang: { id: "shang", group: "Dynasties and States", title: "Shang Hanedanı" },
-  ed_1: { id: "ed_1", group: "Literature", title: "Yazının Doğuşu" },
+  xia: { id: "xia", group: "Dynasties and States", title: "Xia Hanedanı", _isHeader: false },
+  shang: { id: "shang", group: "Dynasties and States", title: "Shang Hanedanı", _isHeader: false },
+  ed_1: { id: "ed_1", group: "Literature", title: "Yazının Doğuşu", _isHeader: false },
+  "Dynasties and States": {
+    id: "Dynasties and States",
+    group: "Dynasties and States",
+    title: "Hanedanlar ve Devletler",
+    _isHeader: true,
+  },
+  Cinema: {
+    id: "Cinema",
+    group: "Cinema",
+    title: "Çin Sineması",
+    _isHeader: true,
+  },
 };
 
 const defaultProps = {
@@ -62,5 +74,15 @@ describe("Sidebar", () => {
     render(<Sidebar {...defaultProps} selectedId="xia" />);
     const btn = screen.getByText("Xia Hanedanı").closest("button");
     expect(btn).toHaveClass("selected");
+  });
+
+  it("header item'ları sidebar listesinde gösterilmez", () => {
+    render(<Sidebar {...defaultProps} activeGroup="Dynasties and States" />);
+    // Header item should NOT appear as a sidebar list item
+    const items = screen.getAllByRole("list")[0].querySelectorAll(".sidebar-item-btn");
+    const texts = Array.from(items).map((el) => el.textContent);
+    expect(texts).not.toContain("Hanedanlar ve Devletler");
+    expect(texts).toContain("Xia Hanedanı");
+    expect(texts).toContain("Shang Hanedanı");
   });
 });

@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect } from "vitest";
 import matter from "gray-matter";
 
 /**
@@ -53,10 +53,35 @@ location:
 });
 
 describe("pathToId util", () => {
-  it("dosya yolundan id çıkarır", () => {
-    const pathToId = (path) => path.split("/").pop().replace(".md", "");
-    expect(pathToId("../content/hanedanlar/xia.md")).toBe("xia");
-    expect(pathToId("../content/sinema/cinema_1.md")).toBe("cinema_1");
-    expect(pathToId("../content/_index/hanedanlar.md")).toBe("hanedanlar");
+  const pathToId = (path) => path.split("/").pop().replace(".md", "");
+
+  it("dosya yolundan id çıkarır (subfolder item)", () => {
+    expect(pathToId("../content/Dynasties and States/xia.md")).toBe("xia");
+    expect(pathToId("../content/Cinema/Hero (2002).md")).toBe("Hero (2002)");
+  });
+
+  it("header dosyasından id çıkarır (depth-1)", () => {
+    expect(pathToId("../content/Cinema.md")).toBe("Cinema");
+    expect(pathToId("../content/Dynasties and States.md")).toBe("Dynasties and States");
+    expect(pathToId("../content/Literature.md")).toBe("Literature");
+  });
+});
+
+describe("isHeaderPath util", () => {
+  const CONTENT_PREFIX = "../content/";
+  const isHeaderPath = (path) => {
+    const rel = path.slice(CONTENT_PREFIX.length);
+    return !rel.includes("/");
+  };
+
+  it("depth-1 dosyaları header olarak tanır", () => {
+    expect(isHeaderPath("../content/Cinema.md")).toBe(true);
+    expect(isHeaderPath("../content/Dynasties and States.md")).toBe(true);
+    expect(isHeaderPath("../content/Literature.md")).toBe(true);
+  });
+
+  it("subfolder dosyaları header olarak tanımaz", () => {
+    expect(isHeaderPath("../content/Cinema/Hero (2002).md")).toBe(false);
+    expect(isHeaderPath("../content/Dynasties and States/xia.md")).toBe(false);
   });
 });

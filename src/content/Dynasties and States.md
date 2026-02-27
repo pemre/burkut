@@ -1,6 +1,6 @@
 ---
-id: dynasties_and_states
-group: _index
+id: "Dynasties and States"
+group: "Dynasties and States"
 title: "Hanedanlar ve Devletler"
 ---
 
@@ -13,3 +13,4 @@ Zaman çizelgesinde renkli arka planlar altı büyük tarihi dönemi temsil eder
 **Not:** "On Altı Krallık", "Doğu Zhou" ve "Beş Hanedan" gibi bazı girişler tek bir hanedan değil, birden fazla devletin var olduğu tarihsel dönemleri ifade eder.
 
 Sol menüden bir hanedan seçin ya da alttaki zaman çizelgesinde bir kutuya tıklayın.
+
