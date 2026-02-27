@@ -1,107 +1,110 @@
-# China Explorer — Proje Spesifikasyonu
+# Bürküt — History Explorer: Project Specification
 
-## Genel Bakış
+## Overview
 
-Çin tarihi, edebiyatı ve sinemasını interaktif bir zaman çizelgesi üzerinden keşfetmeye yarayan
-Vite + React uygulaması.
+A Vite + React application for exploring civilisations, dynasties, empires, literary movements,
+and cultural milestones across history through an interactive timeline, map, and detail panel.
+Content is entirely Markdown-driven (YAML front matter + body); no database or backend required.
+New countries, civilisations, or categories can be added by dropping a single `.md` file into
+the appropriate folder.
 
 ---
 
-## Mimari
+## Architecture
 
-### Veri Katmanı
-- Her içerik öğesi `src/content/{grup}/{id}.md` formatında ayrı bir Markdown dosyasıdır.
-- Her dosyanın başında **YAML Front Matter** bulunur; timeline metadata'sı buradan okunur.
-- Ana menü gövde sayfaları `src/content/_index/{grup}.md` içindedir.
-- `useMdLoader` hook'u `import.meta.glob` ile tüm dosyaları lazy index'ler.
+### Data Layer
+- Each content item is a separate Markdown file in the `src/content/{group}/{id}.md` format.
+- Every file has a **YAML Front Matter** header from which timeline metadata is read.
+- Main menu body pages live in `src/content/_index/{group}.md`.
+- The `useMdLoader` hook lazily indexes all files via `import.meta.glob`.
 
-### Front Matter Şeması
+### Front Matter Schema
 ```yaml
 ---
-id: string              # vis.js item id ile eşleşmeli
-group: string           # Dynasties and States | Literature | Cinema | _index
-title: string           # Sidebar ve ContentPanel başlığı
-subtitle: string        # Tarih aralığı vs.
-start: string           # vis.js ISO formatı: "-002070-01-01"
+id: string              # must match the vis.js item id
+group: string           # e.g. Dynasties and States | Literature | Cinema | _index
+title: string           # title shown in Sidebar and ContentPanel
+subtitle: string        # date range, etc.
+start: string           # vis.js ISO format: "-002070-01-01"
 end: string
-className: string       # vis.js className (opsiyonel)
+className: string       # vis.js className (optional)
 type: string            # vis.js item type (default: range)
 tags: [string]
 location:
   lat: number
   lng: number
   label: string
-polygon: [[lat, lng]]   # GeoJSON benzeri koordinat listesi (opsiyonel)
+polygon: [[lat, lng]]   # GeoJSON-style coordinate list (optional)
 ---
 ```
 
 ---
 
-## Bileşenler
+## Components
 
-| Bileşen | Sorumluluk |
+| Component | Responsibility |
 |---|---|
 | `App` | Global state (selectedId, activeGroup), layout |
-| `Sidebar` | Grup/item listesi, highlight, expand/collapse |
-| `ContentPanel` | Seçilen id'nin markdown içeriğini render eder |
-| `MapPanel` | OpenStreetMap üzerinde marker + polygon gösterir |
+| `Sidebar` | Group/item list, highlight, expand/collapse |
+| `ContentPanel` | Renders the markdown content of the selected id |
+| `MapPanel` | Displays markers + polygons on OpenStreetMap |
 | `TimelinePanel` | vis.js Timeline, item select → onSelect callback |
-| `useMdLoader` | Tüm .md dosyalarını index'ler, getContent(id) sağlar |
+| `useMdLoader` | Indexes all .md files, provides getContent(id) |
 | `PanelHeader` | Reusable ~32px collapse/expand strip with title + chevron toggle button |
 | `useResizeObserver` | Debounced ResizeObserver hook; triggers Leaflet `invalidateSize()` and vis-timeline `redraw()` |
 | `MapResizeWatcher` | Inner component in MapPanel; uses `useMap()` + `useResizeObserver` to self-contain resize logic |
 
 ---
 
-## State Akışı
+## State Flow
 
 ```
 TimelinePanel.onSelect(id)  ──►  App.selectedId = id
 Sidebar.onSelectItem(id)    ──►  App.selectedId = id
 Sidebar.onSelectGroup(grp)  ──►  App.activeGroup = grp, selectedId = null
 
-App.selectedId ──► ContentPanel (içerik yükle)
-              ──► MapPanel (konum göster)
+App.selectedId ──► ContentPanel (load content)
+              ──► MapPanel (show location)
               ──► TimelinePanel (focus + highlight)
               ──► Sidebar (item highlight)
 ```
 
 ---
 
-## Test Stratejisi (Spec Driven)
+## Test Strategy (Spec Driven)
 
-### Test Dosyaları
+### Test Files
 - `src/hooks/useMdLoader.test.js`      – gray-matter parse, pathToId util
-- `src/components/Sidebar/Sidebar.test.jsx`         – render, tıklama, highlight
-- `src/components/ContentPanel/ContentPanel.test.jsx` – async içerik yükleme, fallback
-- `src/components/MapPanel/MapPanel.test.jsx`       – konum render, react-leaflet mock
-- `src/components/TimelinePanel/TimelinePanel.test.jsx` – buildItems saf fonksiyon
+- `src/components/Sidebar/Sidebar.test.jsx`         – render, click, highlight
+- `src/components/ContentPanel/ContentPanel.test.jsx` – async content loading, fallback
+- `src/components/MapPanel/MapPanel.test.jsx`       – location render, react-leaflet mock
+- `src/components/TimelinePanel/TimelinePanel.test.jsx` – buildItems pure function
 - `src/hooks/useResizeObserver.test.js`                 – debounce behavior, cleanup, mocked ResizeObserver
 
-### Çalıştırma
+### Running Tests
 ```bash
-npm test          # tek seferlik
+npm test          # single run
 npm run test:watch  # watch mode
 npm run test:ui   # Vitest UI
-npm run coverage  # kapsam raporu
+npm run coverage  # coverage report
 ```
 
-### Yeni Item Eklerken Test Akışı
-1. `src/content/{grup}/{id}.md` dosyasını yaz (front matter + içerik)
-2. Varsa yeni bir bileşen davranışı için `*.test.jsx` güncelle
-3. `npm test` ile kontrol et
-4. Timeline ve sidebar otomatik güncellenir (hot-reload)
+### Test Flow When Adding a New Item
+1. Write `src/content/{group}/{id}.md` (front matter + content)
+2. Update `*.test.jsx` for any new component behavior
+3. Verify with `npm test`
+4. Timeline and sidebar update automatically (hot-reload)
 
 ---
 
-## Geliştirme Notları
+## Development Notes
 
-- `import.meta.glob` argümanları **statik literal** olmalı; değişken kullanılamaz.
-- `react-leaflet` jsdom'da tam render etmez; MapPanel testleri mock kullanır.
-- vis-timeline'ın `destroy()` metodu unmount'ta çağrılmalı (memory leak önlemi).
-- Yeni grup eklemek için: `src/config.js` → `groups` dizisine yeni `{ id, translationKey }` ekle ve `src/i18n/locales/*.json` dosyalarında çevirileri tanımla.
-- Tüm UI string'leri `react-i18next` ile çevrilir; çeviri dosyaları `src/i18n/locales/` altındadır.
-- Tema renkleri CSS custom properties ile yönetilir (`src/styles/global.css` → `:root`).
+- `import.meta.glob` arguments must be **static literals**; variables cannot be used.
+- `react-leaflet` does not fully render in jsdom; MapPanel tests use mocks.
+- vis-timeline's `destroy()` method must be called on unmount (prevents memory leaks).
+- To add a new group: add a new `{ id, translationKey }` entry to the `groups` array in `src/config.js` and define translations in `src/i18n/locales/*.json`.
+- All UI strings are translated via `react-i18next`; translation files are under `src/i18n/locales/`.
+- Theme colors are managed with CSS custom properties (`src/styles/global.css` → `:root`).
 
 ---
 
@@ -153,21 +156,21 @@ Panel title keys added to all locale files: `panels.sidebar`, `panels.content`, 
 
 ---
 
-## Yapılacaklar / Roadmap
+## Roadmap
 
-- [ ] Arama çubuğu (title + tag'e göre)
-- [ ] GeoJSON polygon desteği (hanedan sınırları)
-- [x] Dark/light tema toggle — GitHub Primer-inspired, CSS variables + ThemeContext + CartoDB tiles
-- [ ] Mobil responsive düzen
-- [x] i18n (Türkçe / İngilizce / Çince) — `react-i18next` ile merkezi config
-- [ ] E2E testler (Playwright)
+- [ ] Search bar (by title + tag)
+- [ ] GeoJSON polygon support (civilisation / territory borders)
+- [x] Dark/light theme toggle — GitHub Primer-inspired, CSS variables + ThemeContext + CartoDB tiles
+- [ ] Mobile responsive layout
+- [x] i18n (Turkish / English / Chinese) — centralized config via `react-i18next`
+- [ ] E2E tests (Playwright)
 
 ### UI
 
 Further Considerations for Themes
 
-* vis-timeline iç stilleri — vis-timeline kendi panel border, axis text, group bg renklerini inline/class ile enjekte eder. Bunları override etmek !important gerektirebilir; alternatif olarak Timeline options parametresine tema uyumlu CSS class'ı verilebilir. Öneri: CSS override + !important en az invaziv çözüm.
-* useTheme hook vs. CSS-only — MapPanel tile URL değişimi JS gerektirir, bu yüzden minimal bir useTheme custom hook (document attribute dinleyen MutationObserver veya basit state) oluşturulabilir; ya da ThemeToggle'dan bir React context yayılabilir. Öneri: Basit bir ThemeContext ile context approach daha temiz olur, MapPanel ve potansiyel gelecek bileşenler de kullanabilir.
+* vis-timeline internal styles — vis-timeline injects its own panel border, axis text, and group background colors via inline styles/classes. Overriding them may require `!important`; alternatively, a theme-compatible CSS class can be passed to the Timeline `options` parameter. Recommendation: CSS override + `!important` is the least invasive solution.
+* useTheme hook vs. CSS-only — Changing the MapPanel tile URL requires JavaScript, so a minimal `useTheme` custom hook can be created (using a MutationObserver that listens to a document attribute, or simple state); alternatively, a React context can be propagated from `ThemeToggle`. Recommendation: A simple `ThemeContext` approach is cleaner and can also be consumed by MapPanel and future components.
 
 ### Translations
 
