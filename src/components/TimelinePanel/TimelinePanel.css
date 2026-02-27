@@ -1,0 +1,36 @@
+.timeline-panel {
+  border-top: 1px solid #333;
+  background: #0d0d1c;
+  flex-shrink: 0;
+}
+
+.timeline-container {
+  height: 220px;
+}
+
+/* vis-timeline renk override */
+.vis-item {
+  border-radius: 3px;
+  font-size: 0.78rem;
+}
+
+.vis-item.vis-selected {
+  border-color: #c9a84c !important;
+  background-color: rgba(201, 168, 76, 0.3) !important;
+}
+
+.vis-label {
+  color: #aaa;
+  font-size: 0.78rem;
+}
+
+/* Background katmanları */
+.vis-item.vis-background.bg-ancient  { background: rgba(76,175,80,0.12); }
+.vis-item.vis-background.bg-early    { background: rgba(33,150,243,0.12); }
+.vis-item.vis-background.bg-fragment { background: rgba(158,158,158,0.1); }
+.vis-item.vis-background.bg-mid      { background: rgba(255,235,59,0.1); }
+.vis-item.vis-background.bg-late     { background: rgba(255,152,0,0.12); }
+.vis-item.vis-background.bg-modern   { background: rgba(0,188,212,0.1); }
+
+.vis-item.semi-legendary { border-color: #9c7a3a; border-style: dashed; }
+.vis-item.parallel-state { opacity: 0.75; }

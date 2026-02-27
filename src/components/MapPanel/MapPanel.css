@@ -1,0 +1,22 @@
+.map-panel {
+  width: 360px;
+  min-width: 280px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid #333;
+  background: #111;
+}
+
+.map-panel .leaflet-container {
+  flex: 1;
+  border-radius: 0;
+}
+
+.map-info {
+  padding: 0.4rem 0.75rem;
+  font-size: 0.75rem;
+  color: #aaa;
+  background: #0f0f1a;
+  border-top: 1px solid #222;
+}
