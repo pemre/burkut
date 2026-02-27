@@ -17,6 +17,11 @@
   "aria.mapContainer": "中国地图",
 
   "language": "语言",
-  "theme.toggle": "切换深色/浅色主题"
+  "theme.toggle": "切换深色/浅色主题",
+
+  "panels.sidebar": "菜单",
+  "panels.content": "内容",
+  "panels.map": "地图",
+  "panels.timeline": "时间线"
 }
 

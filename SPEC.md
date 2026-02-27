@@ -47,6 +47,9 @@ polygon: [[lat, lng]]   # GeoJSON benzeri koordinat listesi (opsiyonel)
 | `MapPanel` | OpenStreetMap üzerinde marker + polygon gösterir |
 | `TimelinePanel` | vis.js Timeline, item select → onSelect callback |
 | `useMdLoader` | Tüm .md dosyalarını index'ler, getContent(id) sağlar |
+| `PanelHeader` | Reusable ~32px collapse/expand strip with title + chevron toggle button |
+| `useResizeObserver` | Debounced ResizeObserver hook; triggers Leaflet `invalidateSize()` and vis-timeline `redraw()` |
+| `MapResizeWatcher` | Inner component in MapPanel; uses `useMap()` + `useResizeObserver` to self-contain resize logic |
 
 ---
 
@@ -73,6 +76,7 @@ App.selectedId ──► ContentPanel (içerik yükle)
 - `src/components/ContentPanel/ContentPanel.test.jsx` – async içerik yükleme, fallback
 - `src/components/MapPanel/MapPanel.test.jsx`       – konum render, react-leaflet mock
 - `src/components/TimelinePanel/TimelinePanel.test.jsx` – buildItems saf fonksiyon
+- `src/hooks/useResizeObserver.test.js`                 – debounce behavior, cleanup, mocked ResizeObserver
 
 ### Çalıştırma
 ```bash
@@ -101,6 +105,54 @@ npm run coverage  # kapsam raporu
 
 ---
 
+## Draggable Layout
+
+### Overview
+All panels (Sidebar, ContentPanel, MapPanel, TimelinePanel) can be resized by dragging the border between them and collapsed via a toggle button. Panel sizes are persisted to `localStorage` and restored on page reload. No panel reordering is supported.
+
+### Dependency
+`react-resizable-panels` (v4.x) — provides `Group`, `Panel`, `Separator`, and `useDefaultLayout`.
+
+### Feature Flag
+`config.features.draggableLayout` (default: `true`)
+
+### Panel Structure
+Three nested `Group` components, each persisted via `useDefaultLayout`:
+
+```
+Group (horizontal, id="layout-root")
+├── Panel: Sidebar        (collapsible, defaultSize=15%, collapsedSize=2%)
+├── Separator
+└── Panel: Main area
+    └── Group (vertical, id="layout-main")
+        ├── Panel: Top panels
+        │   └── Group (horizontal, id="layout-top")
+        │       ├── Panel: ContentPanel
+        │       ├── Separator
+        │       └── Panel: MapPanel  (collapsible, defaultSize=35%, collapsedSize=2%)
+        ├── Separator
+        └── Panel: TimelinePanel     (collapsible, defaultSize=25%, collapsedSize=3%)
+```
+
+### Collapse Behavior
+- **Sidebar**: collapses to a ~32px narrow strip showing a ☰ hamburger button for discoverability.
+- **MapPanel**: collapses to a ~32px `PanelHeader` bar showing the panel title and an expand chevron.
+- **TimelinePanel**: collapses to a ~32px `PanelHeader` bar showing the panel title and an expand chevron.
+- Collapse/expand is controlled via imperative `panelRef` handles (`panel.collapse()` / `panel.expand()` / `panel.isCollapsed()`). Collapsed state is tracked with `useState` booleans, updated via `onResize` callbacks by checking `size.asPercentage`.
+
+### Persistence
+Each `Group` uses the `useDefaultLayout` hook with `localStorage` for saving/restoring panel sizes across page reloads.
+
+### ResizeObserver Integration
+- **MapPanel**: an inner `MapResizeWatcher` component uses `useMap()` (from `react-leaflet`) and `useResizeObserver` on the `.map-panel` wrapper div. On resize, it calls `map.invalidateSize()` so Leaflet redraws tiles correctly.
+- **TimelinePanel**: `useResizeObserver` is called on `containerRef`. On resize, it calls `timelineRef.current.tl.redraw()` so vis-timeline adjusts to the new dimensions.
+- Callbacks are debounced (~100ms) to avoid excessive redraws during drag.
+
+### i18n
+Panel title keys added to all locale files: `panels.sidebar`, `panels.content`, `panels.map`, `panels.timeline`.
+
+---
+
 ## Yapılacaklar / Roadmap
 
 - [ ] Arama çubuğu (title + tag'e göre)
@@ -111,8 +163,6 @@ npm run coverage  # kapsam raporu
 - [ ] E2E testler (Playwright)
 
 ### UI
-
-* Draggable/collapsible layout: Menu, map, timeline... They all should be able to collapsed and moved.
 
 Further Considerations for Themes
 

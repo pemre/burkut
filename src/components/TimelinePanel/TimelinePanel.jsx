@@ -1,8 +1,9 @@
-import { useEffect, useRef, useMemo } from "react";
+import { useEffect, useRef, useMemo, useCallback } from "react";
 import { Timeline, DataSet } from "vis-timeline/standalone";
 import { useTranslation } from "react-i18next";
 import "vis-timeline/styles/vis-timeline-graph2d.min.css";
 import config from "../../config";
+import { useResizeObserver } from "../../hooks/useResizeObserver";
 import "./TimelinePanel.css";
 
 /**
@@ -87,6 +88,14 @@ export default function TimelinePanel({ index, selectedId, onSelect }) {
     tl.setSelection([selectedId]);
     try { tl.focus(selectedId); } catch (_) {}
   }, [selectedId]);
+
+  // Redraw vis-timeline when the container is resized (e.g. panel drag)
+  const handleResize = useCallback(() => {
+    if (timelineRef.current) {
+      timelineRef.current.tl.redraw();
+    }
+  }, []);
+  useResizeObserver(containerRef, handleResize);
 
   return (
     <div className="timeline-panel" aria-label={t("aria.timeline")}>

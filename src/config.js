@@ -34,6 +34,7 @@ const config = {
   features: {
     search: false,
     darkLightToggle: true,
+    draggableLayout: true,
   },
 };
 

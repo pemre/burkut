@@ -13,6 +13,15 @@ This project started as something personal: a trip to China was coming up, and a
 
 ***
 
+## Features
+
+- 🔀 **Draggable & collapsible panels** — resize and collapse Sidebar, Map, and Timeline by dragging boundaries; layout persisted to `localStorage`
+- 🌗 **Dark / Light theme toggle** — GitHub Primer-inspired, CSS variables + ThemeContext + CartoDB tiles
+- 🌐 **i18n** — Turkish, English, and Chinese via `react-i18next`
+- 📝 **Markdown-driven content** — add entries by dropping a `.md` file with YAML front matter
+- 🗺️ **Interactive map** — Leaflet-based with markers and polygons
+- 📅 **Interactive timeline** — vis.js powered, grouped by category
+
 ## Installation
 
 ```bash

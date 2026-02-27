@@ -1,23 +1,40 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 import { useTranslation } from "react-i18next";
+import { Group, Panel, Separator, useDefaultLayout } from "react-resizable-panels";
 import Sidebar from "./components/Sidebar/Sidebar";
 import ContentPanel from "./components/ContentPanel/ContentPanel";
 import MapPanel from "./components/MapPanel/MapPanel";
 import TimelinePanel from "./components/TimelinePanel/TimelinePanel";
 import ThemeToggle from "./components/ThemeToggle/ThemeToggle";
+import PanelHeader from "./components/PanelHeader/PanelHeader";
 import { useMdLoader } from "./hooks/useMdLoader";
 import config from "./config";
 import "./styles/layout.css";
 
 /**
  * Global state:
- *  selectedId  – tıklanan timeline/sidebar item id'si
- *  activeGroup – hangi grup seçili (config.groups'tan)
+ *  selectedId  – clicked timeline/sidebar item id
+ *  activeGroup – which group is selected (from config.groups)
  */
 export default function App() {
   const { t, i18n } = useTranslation();
   const [selectedId, setSelectedId] = useState(null);
   const [activeGroup, setActiveGroup] = useState(config.defaults.activeGroup);
+
+  // Collapse state for each panel
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [mapCollapsed, setMapCollapsed] = useState(false);
+  const [timelineCollapsed, setTimelineCollapsed] = useState(false);
+
+  // Panel refs for imperative collapse/expand
+  const sidebarPanelRef = useRef(null);
+  const mapPanelRef = useRef(null);
+  const timelinePanelRef = useRef(null);
+
+  // Persistence via useDefaultLayout for each Group
+  const rootLayout = useDefaultLayout({ id: "layout-root", storage: localStorage });
+  const mainLayout = useDefaultLayout({ id: "layout-main", storage: localStorage });
+  const topLayout = useDefaultLayout({ id: "layout-top", storage: localStorage });
 
   const { index, getContent } = useMdLoader();
 
@@ -43,6 +60,40 @@ export default function App() {
     [i18n, t]
   );
 
+  const toggleSidebar = useCallback(() => {
+    const panel = sidebarPanelRef.current;
+    if (!panel) return;
+    if (panel.isCollapsed()) panel.expand();
+    else panel.collapse();
+  }, []);
+
+  const toggleMap = useCallback(() => {
+    const panel = mapPanelRef.current;
+    if (!panel) return;
+    if (panel.isCollapsed()) panel.expand();
+    else panel.collapse();
+  }, []);
+
+  const toggleTimeline = useCallback(() => {
+    const panel = timelinePanelRef.current;
+    if (!panel) return;
+    if (panel.isCollapsed()) panel.expand();
+    else panel.collapse();
+  }, []);
+
+  // Track collapsed state via onResize
+  const handleSidebarResize = useCallback((size) => {
+    setSidebarCollapsed(size.asPercentage <= 2);
+  }, []);
+
+  const handleMapResize = useCallback((size) => {
+    setMapCollapsed(size.asPercentage <= 2);
+  }, []);
+
+  const handleTimelineResize = useCallback((size) => {
+    setTimelineCollapsed(size.asPercentage <= 3);
+  }, []);
+
   return (
     <div className="app-shell">
       <header className="app-header">
@@ -66,34 +117,130 @@ export default function App() {
       </header>
 
       <div className="app-body">
-        {/* ── Sol menü ─────────────────────────────── */}
-        <Sidebar
-          index={index}
-          selectedId={selectedId}
-          activeGroup={activeGroup}
-          onSelectItem={handleSelect}
-          onSelectGroup={handleGroupSelect}
-        />
+        {/* ── Horizontal root: Sidebar | Main ──────────────── */}
+        <Group
+          orientation="horizontal"
+          defaultLayout={rootLayout.defaultLayout}
+          onLayoutChanged={rootLayout.onLayoutChanged}
+        >
+          <Panel
+            id="sidebar"
+            panelRef={sidebarPanelRef}
+            defaultSize="15%"
+            minSize="10%"
+            collapsible
+            collapsedSize="2%"
+            onResize={handleSidebarResize}
+          >
+            {sidebarCollapsed ? (
+              <div className="sidebar-collapsed-strip">
+                <button
+                  className="sidebar-collapsed-btn"
+                  onClick={toggleSidebar}
+                  aria-label={t("panels.sidebar")}
+                  title={t("panels.sidebar")}
+                >
+                  ☰
+                </button>
+              </div>
+            ) : (
+              <div className="sidebar-wrapper">
+                <PanelHeader
+                  title={t("panels.sidebar")}
+                  collapsed={sidebarCollapsed}
+                  onToggle={toggleSidebar}
+                />
+                <Sidebar
+                  index={index}
+                  selectedId={selectedId}
+                  activeGroup={activeGroup}
+                  onSelectItem={handleSelect}
+                  onSelectGroup={handleGroupSelect}
+                />
+              </div>
+            )}
+          </Panel>
 
-        {/* ── Orta + Sağ üst panel ─────────────────── */}
-        <main className="main-area">
-          <div className="top-panels">
-            <ContentPanel
-              selectedId={selectedId}
-              activeGroup={activeGroup}
-              index={index}
-              getContent={getContent}
-            />
-            <MapPanel selectedId={selectedId} index={index} />
-          </div>
+          <Separator className="resize-handle resize-handle--horizontal" />
 
-          {/* ── Alt timeline ────────────────────────── */}
-          <TimelinePanel
-            index={index}
-            selectedId={selectedId}
-            onSelect={handleSelect}
-          />
-        </main>
+          <Panel id="main" defaultSize="85%" minSize="40%">
+            {/* ── Vertical main: Top panels | Timeline ───── */}
+            <Group
+              orientation="vertical"
+              defaultLayout={mainLayout.defaultLayout}
+              onLayoutChanged={mainLayout.onLayoutChanged}
+            >
+              <Panel id="top" defaultSize="75%" minSize="20%">
+                {/* ── Horizontal top: Content | Map ────────── */}
+                <Group
+                  orientation="horizontal"
+                  defaultLayout={topLayout.defaultLayout}
+                  onLayoutChanged={topLayout.onLayoutChanged}
+                >
+                  <Panel id="content" defaultSize="65%" minSize="25%">
+                    <ContentPanel
+                      selectedId={selectedId}
+                      activeGroup={activeGroup}
+                      index={index}
+                      getContent={getContent}
+                    />
+                  </Panel>
+
+                  <Separator className="resize-handle resize-handle--horizontal" />
+
+                  <Panel
+                    id="map"
+                    panelRef={mapPanelRef}
+                    defaultSize="35%"
+                    minSize="15%"
+                    collapsible
+                    collapsedSize="2%"
+                    onResize={handleMapResize}
+                  >
+                    <div className="panel-with-header">
+                      <PanelHeader
+                        title={t("panels.map")}
+                        collapsed={mapCollapsed}
+                        onToggle={toggleMap}
+                      />
+                      {!mapCollapsed && (
+                        <MapPanel selectedId={selectedId} index={index} />
+                      )}
+                    </div>
+                  </Panel>
+                </Group>
+              </Panel>
+
+              <Separator className="resize-handle resize-handle--vertical" />
+
+              <Panel
+                id="timeline"
+                panelRef={timelinePanelRef}
+                defaultSize="25%"
+                minSize="10%"
+                collapsible
+                collapsedSize="3%"
+                onResize={handleTimelineResize}
+              >
+                <div className="panel-with-header panel-with-header--vertical">
+                  <PanelHeader
+                    title={t("panels.timeline")}
+                    collapsed={timelineCollapsed}
+                    onToggle={toggleTimeline}
+                    direction="vertical"
+                  />
+                  {!timelineCollapsed && (
+                    <TimelinePanel
+                      index={index}
+                      selectedId={selectedId}
+                      onSelect={handleSelect}
+                    />
+                  )}
+                </div>
+              </Panel>
+            </Group>
+          </Panel>
+        </Group>
       </div>
     </div>
   );

@@ -1,8 +1,9 @@
 import { MapContainer, TileLayer, Marker, Popup, Polygon, useMap } from "react-leaflet";
-import { useEffect } from "react";
+import { useEffect, useCallback, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import L from "leaflet";
 import { useTheme } from "../../hooks/useTheme";
+import { useResizeObserver } from "../../hooks/useResizeObserver";
 import "./MapPanel.css";
 
 // Leaflet default icon fix (Vite asset pipeline uyumu)
@@ -39,9 +40,20 @@ function FlyTo({ position }) {
   return null;
 }
 
+/** Watches the map container for size changes and calls invalidateSize */
+function MapResizeWatcher({ containerRef }) {
+  const map = useMap();
+  const handleResize = useCallback(() => {
+    map.invalidateSize();
+  }, [map]);
+  useResizeObserver(containerRef, handleResize);
+  return null;
+}
+
 export default function MapPanel({ selectedId, index }) {
   const { t } = useTranslation();
   const { theme } = useTheme();
+  const containerRef = useRef(null);
   const meta = selectedId ? index[selectedId] : null;
   const location = meta?.location || null;
   const polygon = meta?.polygon || null;   // GeoJSON koordinat dizisi [[lat,lng], ...]
@@ -50,7 +62,7 @@ export default function MapPanel({ selectedId, index }) {
   const tileAttr = theme === "dark" ? TILE_ATTR_DARK : TILE_ATTR_LIGHT;
 
   return (
-    <div className="map-panel" aria-label={t("aria.map")}>
+    <div className="map-panel" ref={containerRef} aria-label={t("aria.map")}>
       <MapContainer
         center={CHINA_CENTER}
         zoom={CHINA_ZOOM}
@@ -65,6 +77,7 @@ export default function MapPanel({ selectedId, index }) {
         />
 
         <FlyTo position={location} />
+        <MapResizeWatcher containerRef={containerRef} />
 
         {location && (
           <Marker position={[location.lat, location.lng]}>

@@ -33,19 +33,6 @@
   overflow: hidden;
 }
 
-.main-area {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  overflow: hidden;
-}
-
-.top-panels {
-  display: flex;
-  flex: 1;
-  overflow: hidden;
-}
-
 .language-select {
   background: var(--bg-surface-alt);
   color: var(--text-primary);
@@ -58,4 +45,81 @@
 
 .language-select:hover {
   border-color: var(--accent-a44);
+}
+
+/* ── Resize handles ────────────────────────────────────────── */
+
+.resize-handle {
+  background: var(--border-default);
+  transition: background 0.15s;
+  flex-shrink: 0;
+}
+
+.resize-handle--horizontal {
+  width: 4px;
+  cursor: col-resize;
+}
+
+.resize-handle--vertical {
+  height: 4px;
+  cursor: row-resize;
+}
+
+.resize-handle:hover,
+.resize-handle[data-resize-handle-state="drag"] {
+  background: var(--accent-a30);
+}
+
+/* ── Panel wrappers ────────────────────────────────────────── */
+
+.panel-with-header {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+.panel-with-header--vertical {
+  /* Same as above, used for vertical panels like timeline */
+}
+
+.sidebar-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* ── Collapsed sidebar strip ───────────────────────────────── */
+
+.sidebar-collapsed-strip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  background: var(--bg-sidebar);
+  border-right: 1px solid var(--border-default);
+  padding-top: 0.5rem;
+}
+
+.sidebar-collapsed-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.sidebar-collapsed-btn:hover {
+  background: var(--hover-bg);
+  color: var(--accent);
 }

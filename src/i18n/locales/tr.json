@@ -17,6 +17,11 @@
   "aria.mapContainer": "Çin haritası",
 
   "language": "Dil",
-  "theme.toggle": "Koyu/açık tema değiştir"
+  "theme.toggle": "Koyu/açık tema değiştir",
+
+  "panels.sidebar": "Menü",
+  "panels.content": "İçerik",
+  "panels.map": "Harita",
+  "panels.timeline": "Zaman Çizelgesi"
 }
 

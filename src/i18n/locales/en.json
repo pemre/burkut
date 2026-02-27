@@ -17,6 +17,11 @@
   "aria.mapContainer": "China map",
 
   "language": "Language",
-  "theme.toggle": "Toggle dark/light theme"
+  "theme.toggle": "Toggle dark/light theme",
+
+  "panels.sidebar": "Menu",
+  "panels.content": "Content",
+  "panels.map": "Map",
+  "panels.timeline": "Timeline"
 }
 
