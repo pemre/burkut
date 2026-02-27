@@ -14,7 +14,7 @@ describe("gray-matter parse", () => {
   it("frontmatter'ı doğru parse eder", () => {
     const raw = `---
 id: xia
-group: Hanedanlar
+group: Dynasties and States
 title: "Xia Hanedanı"
 start: "-002070-01-01"
 end: "-001600-01-01"

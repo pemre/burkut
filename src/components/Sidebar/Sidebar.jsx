@@ -1,7 +1,11 @@
 import { useState, useEffect } from "react";
 import "./Sidebar.css";
 
-const GROUPS = ["Hanedanlar", "Edebiyat", "Sinema"];
+const GROUPS = [
+  "Dynasties and States",
+  "Literature",
+  "Cinema"
+];
 
 export default function Sidebar({
   index,

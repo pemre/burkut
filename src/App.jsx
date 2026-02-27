@@ -9,11 +9,11 @@ import "./styles/layout.css";
 /**
  * Global state:
  *  selectedId  – tıklanan timeline/sidebar item id'si
- *  activeGroup – hangi grup seçili (Hanedanlar / Edebiyat / Sinema)
+ *  activeGroup – hangi grup seçili (Dynasties and States / Literature / Cinema)
  */
 export default function App() {
   const [selectedId, setSelectedId] = useState(null);
-  const [activeGroup, setActiveGroup] = useState("Hanedanlar");
+  const [activeGroup, setActiveGroup] = useState("Dynasties and States");
 
   const { index, getContent } = useMdLoader();
 
@@ -33,8 +33,8 @@ export default function App() {
   return (
     <div className="app-shell">
       <header className="app-header">
-        <span className="app-logo">🏯</span>
-        <h1>Tarih Gezgini - Çin</h1>
+        <span className="app-logo">🦅</span>
+        <h1>Bürküt — History Explorer — Çin</h1>
       </header>
 
       <div className="app-body">

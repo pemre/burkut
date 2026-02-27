@@ -4,9 +4,9 @@ import "vis-timeline/styles/vis-timeline-graph2d.min.css";
 import "./TimelinePanel.css";
 
 const GROUPS = [
-  { id: "Hanedanlar", content: "Hanedanlıklar ve devletler" },
-  { id: "Edebiyat", content: "Edebiyat" },
-  { id: "Sinema", content: "Sinema" },
+  { id: "Dynasties and States", content: "Hanedanlıklar ve devletler" },
+  { id: "Literature", content: "Edebiyat" },
+  { id: "Cinema", content: "Sinema" }
 ];
 
 /**

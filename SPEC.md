@@ -19,7 +19,7 @@ Vite + React uygulaması.
 ```yaml
 ---
 id: string              # vis.js item id ile eşleşmeli
-group: string           # Hanedanlar | Edebiyat | Sinema | _index
+group: string           # Dynasties and States | Literature | Cinema | _index
 title: string           # Sidebar ve ContentPanel başlığı
 subtitle: string        # Tarih aralığı vs.
 start: string           # vis.js ISO formatı: "-002070-01-01"
