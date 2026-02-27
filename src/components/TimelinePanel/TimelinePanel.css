@@ -6,11 +6,14 @@
   flex-direction: column;
   min-height: 0;
   overflow: hidden;
+  height: 100%;
+  box-sizing: border-box;
 }
 
 .timeline-container {
   flex: 1;
   min-height: 0;
+  overflow: auto;
 }
 
 /* ── vis-timeline theme overrides ──────────────────────────── */

@@ -178,12 +178,14 @@ export default function App() {
                   onLayoutChanged={topLayout.onLayoutChanged}
                 >
                   <Panel id="content" defaultSize="65%" minSize="25%">
-                    <ContentPanel
-                      selectedId={selectedId}
-                      activeGroup={activeGroup}
-                      index={index}
-                      getContent={getContent}
-                    />
+                    <div className="panel-with-header">
+                      <ContentPanel
+                        selectedId={selectedId}
+                        activeGroup={activeGroup}
+                        index={index}
+                        getContent={getContent}
+                      />
+                    </div>
                   </Panel>
 
                   <Separator className="resize-handle resize-handle--horizontal" />
