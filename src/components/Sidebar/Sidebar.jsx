@@ -1,11 +1,7 @@
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
+import config from "../../config";
 import "./Sidebar.css";
-
-const GROUPS = [
-  "Dynasties and States",
-  "Literature",
-  "Cinema"
-];
 
 export default function Sidebar({
   index,
@@ -14,6 +10,7 @@ export default function Sidebar({
   onSelectItem,
   onSelectGroup,
 }) {
+  const { t } = useTranslation();
   const [expanded, setExpanded] = useState({ [activeGroup]: true });
 
   // Seçilen item'ın grubu otomatik expand edilir
@@ -23,33 +20,33 @@ export default function Sidebar({
     }
   }, [activeGroup]);
 
-  const toggleGroup = (group) => {
-    setExpanded((prev) => ({ ...prev, [group]: !prev[group] }));
-    onSelectGroup(group);
+  const toggleGroup = (groupId) => {
+    setExpanded((prev) => ({ ...prev, [groupId]: !prev[groupId] }));
+    onSelectGroup(groupId);
   };
 
   // index'ten gruba göre item'ları filtrele (background ve _index hariç)
-  const itemsInGroup = (group) =>
+  const itemsInGroup = (groupId) =>
     Object.values(index).filter(
-      (item) => item.group === group && !item.id?.startsWith("bg_")
+      (item) => item.group === groupId && !item.id?.startsWith("bg_")
     );
 
   return (
-    <nav className="sidebar" aria-label="İçerik menüsü">
-      {GROUPS.map((group) => (
-        <div key={group} className="sidebar-group">
+    <nav className="sidebar" aria-label={t("aria.sidebar")}>
+      {config.groups.map((group) => (
+        <div key={group.id} className="sidebar-group">
           <button
-            className={`sidebar-group-btn ${activeGroup === group ? "active" : ""}`}
-            onClick={() => toggleGroup(group)}
-            aria-expanded={!!expanded[group]}
+            className={`sidebar-group-btn ${activeGroup === group.id ? "active" : ""}`}
+            onClick={() => toggleGroup(group.id)}
+            aria-expanded={!!expanded[group.id]}
           >
-            <span className="sidebar-arrow">{expanded[group] ? "▼" : "▶"}</span>
-            {group}
+            <span className="sidebar-arrow">{expanded[group.id] ? "▼" : "▶"}</span>
+            {t(group.translationKey)}
           </button>
 
-          {expanded[group] && (
+          {expanded[group.id] && (
             <ul className="sidebar-items" role="list">
-              {itemsInGroup(group).map((item) => (
+              {itemsInGroup(group.id).map((item) => (
                 <li key={item.id}>
                   <button
                     className={`sidebar-item-btn ${selectedId === item.id ? "selected" : ""}`}

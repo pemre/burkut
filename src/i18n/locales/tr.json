@@ -1,0 +1,21 @@
+{
+  "app.title": "Bürküt — Tarih Gezgini — Çin",
+  "app.htmlTitle": "🦅 Bürküt — Tarih Gezgini",
+
+  "groups.dynasties": "Hanedanlıklar ve devletler",
+  "groups.literature": "Edebiyat",
+  "groups.cinema": "Sinema",
+
+  "content.loading": "Yükleniyor…",
+  "content.notFound": "*İçerik bulunamadı.*",
+  "content.loadError": "*İçerik yüklenemedi.*",
+
+  "aria.contentPanel": "İçerik paneli",
+  "aria.sidebar": "İçerik menüsü",
+  "aria.timeline": "Zaman çizelgesi",
+  "aria.map": "Harita paneli",
+  "aria.mapContainer": "Çin haritası",
+
+  "language": "Dil"
+}
+

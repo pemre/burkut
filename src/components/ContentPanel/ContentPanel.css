@@ -2,7 +2,7 @@
   flex: 1;
   overflow-y: auto;
   padding: 1.25rem 1.5rem;
-  background: #0f0f1a;
+  background: var(--dark-bg);
   color: #ddd;
   min-width: 0;
 }
@@ -15,7 +15,7 @@
 
 .content-meta h2 {
   margin: 0 0 0.25rem;
-  color: #c9a84c;
+  color: var(--accent);
   font-size: 1.3rem;
 }
 
@@ -32,12 +32,12 @@
 }
 
 .tag {
-  background: rgba(201, 168, 76, 0.15);
-  color: #c9a84c;
+  background: var(--accent-a15);
+  color: var(--accent);
   font-size: 0.72rem;
   padding: 0.15rem 0.5rem;
   border-radius: 999px;
-  border: 1px solid rgba(201, 168, 76, 0.3);
+  border: 1px solid var(--accent-a30);
 }
 
 .content-body {
@@ -46,7 +46,7 @@
 }
 
 .content-body h1, .content-body h2, .content-body h3 {
-  color: #c9a84c;
+  color: var(--accent);
 }
 
 .content-body strong {
@@ -54,7 +54,7 @@
 }
 
 .content-body blockquote {
-  border-left: 3px solid #c9a84c;
+  border-left: 3px solid var(--accent);
   margin-left: 0;
   padding-left: 1rem;
   color: #aaa;

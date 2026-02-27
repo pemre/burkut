@@ -1,7 +1,7 @@
 .sidebar {
   width: 220px;
   min-width: 180px;
-  background: #1a1a2e;
+  background: var(--sidebar-bg);
   color: #e0e0e0;
   overflow-y: auto;
   padding: 0.5rem 0;
@@ -17,7 +17,7 @@
   width: 100%;
   background: none;
   border: none;
-  color: #c9a84c;
+  color: var(--accent);
   font-size: 0.85rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -33,7 +33,7 @@
 
 .sidebar-group-btn:hover,
 .sidebar-group-btn.active {
-  background: rgba(201, 168, 76, 0.12);
+  background: var(--accent-a12);
 }
 
 .sidebar-arrow {
@@ -67,7 +67,7 @@
 }
 
 .sidebar-item-btn.selected {
-  background: rgba(201, 168, 76, 0.2);
-  color: #c9a84c;
+  background: var(--accent-a20);
+  color: var(--accent);
   font-weight: 600;
 }

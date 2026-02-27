@@ -43,7 +43,7 @@ describe("MapPanel", () => {
   it("konum bilgisi varsa koordinat gösterilir", () => {
     render(<MapPanel selectedId="shang" index={mockIndex} />);
     expect(screen.getByText(/36.10/)).toBeInTheDocument();
-    expect(screen.getByText(/Yinxu/)).toBeInTheDocument();
+    expect(screen.getAllByText(/Yinxu/).length).toBeGreaterThanOrEqual(1);
   });
 
   it("konum yoksa map-info render olmaz", () => {

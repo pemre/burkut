@@ -1,12 +1,26 @@
 /// <reference types="vitest" />
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
+import config from "./src/config.js";
+
+/** Injects the app title from config into index.html at build time */
+function htmlTitlePlugin() {
+  return {
+    name: "html-title-inject",
+    transformIndexHtml(html) {
+      return html.replace(
+        /<title>.*?<\/title>/,
+        `<title>${config.app.logo} ${config.app.name} — History Explorer</title>`
+      );
+    },
+  };
+}
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), htmlTitlePlugin()],
   assetsInclude: ["**/*.md"],
   define: {
-    "global.Buffer": ["buffer", "Buffer"],
+    "global.Buffer": "globalThis.Buffer",
   },
   optimizeDeps: {
     esbuildOptions: {

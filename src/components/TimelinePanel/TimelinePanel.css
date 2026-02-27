@@ -1,6 +1,6 @@
 .timeline-panel {
   border-top: 1px solid #333;
-  background: #0d0d1c;
+  background: var(--dark-bg-alt);
   flex-shrink: 0;
 }
 
@@ -15,8 +15,8 @@
 }
 
 .vis-item.vis-selected {
-  border-color: #c9a84c !important;
-  background-color: rgba(201, 168, 76, 0.3) !important;
+  border-color: var(--accent) !important;
+  background-color: var(--accent-a30) !important;
 }
 
 .vis-label {

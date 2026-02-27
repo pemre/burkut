@@ -1,6 +1,8 @@
 import { MapContainer, TileLayer, Marker, Popup, Polygon, useMap } from "react-leaflet";
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import L from "leaflet";
+import config from "../../config";
 import "./MapPanel.css";
 
 // Leaflet default icon fix (Vite asset pipeline uyumu)
@@ -28,18 +30,19 @@ function FlyTo({ position }) {
 }
 
 export default function MapPanel({ selectedId, index }) {
+  const { t } = useTranslation();
   const meta = selectedId ? index[selectedId] : null;
   const location = meta?.location || null;
   const polygon = meta?.polygon || null;   // GeoJSON koordinat dizisi [[lat,lng], ...]
 
   return (
-    <div className="map-panel" aria-label="Harita paneli">
+    <div className="map-panel" aria-label={t("aria.map")}>
       <MapContainer
         center={CHINA_CENTER}
         zoom={CHINA_ZOOM}
         scrollWheelZoom
         style={{ width: "100%", height: "100%" }}
-        aria-label="Çin haritası"
+        aria-label={t("aria.mapContainer")}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
@@ -57,7 +60,7 @@ export default function MapPanel({ selectedId, index }) {
         {polygon && (
           <Polygon
             positions={polygon}
-            pathOptions={{ color: "#c9a84c", fillOpacity: 0.2 }}
+            pathOptions={{ color: config.theme.accentColor, fillOpacity: 0.2 }}
           />
         )}
       </MapContainer>

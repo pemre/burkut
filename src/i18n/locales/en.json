@@ -1,0 +1,21 @@
+{
+  "app.title": "Bürküt — History Explorer — China",
+  "app.htmlTitle": "🦅 Bürküt — History Explorer",
+
+  "groups.dynasties": "Dynasties and States",
+  "groups.literature": "Literature",
+  "groups.cinema": "Cinema",
+
+  "content.loading": "Loading…",
+  "content.notFound": "*Content not found.*",
+  "content.loadError": "*Failed to load content.*",
+
+  "aria.contentPanel": "Content panel",
+  "aria.sidebar": "Content menu",
+  "aria.timeline": "Timeline",
+  "aria.map": "Map panel",
+  "aria.mapContainer": "China map",
+
+  "language": "Language"
+}
+

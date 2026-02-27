@@ -1,0 +1,21 @@
+{
+  "app.title": "Bürküt — 历史探索者 — 中国",
+  "app.htmlTitle": "🦅 Bürküt — 历史探索者",
+
+  "groups.dynasties": "朝代与国家",
+  "groups.literature": "文学",
+  "groups.cinema": "电影",
+
+  "content.loading": "加载中…",
+  "content.notFound": "*未找到内容。*",
+  "content.loadError": "*内容加载失败。*",
+
+  "aria.contentPanel": "内容面板",
+  "aria.sidebar": "内容菜单",
+  "aria.timeline": "时间线",
+  "aria.map": "地图面板",
+  "aria.mapContainer": "中国地图",
+
+  "language": "语言"
+}
+

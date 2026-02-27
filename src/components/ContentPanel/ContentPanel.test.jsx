@@ -15,7 +15,7 @@ import ContentPanel from "./ContentPanel";
 const mockIndex = {
   xia: {
     id: "xia",
-    group: "Hanedanlar",
+    group: "Dynasties and States",
     title: "Xia Hanedanı",
     subtitle: "MÖ 2070–1600",
     tags: ["efsanevi", "tunç-çağı-öncesi"],
@@ -28,7 +28,7 @@ describe("ContentPanel", () => {
     render(
       <ContentPanel
         selectedId="xia"
-        activeGroup="Hanedanlar"
+        activeGroup="Dynasties and States"
         index={mockIndex}
         getContent={getContent}
       />
@@ -43,7 +43,7 @@ describe("ContentPanel", () => {
     render(
       <ContentPanel
         selectedId="xia"
-        activeGroup="Hanedanlar"
+        activeGroup="Dynasties and States"
         index={mockIndex}
         getContent={getContent}
       />
@@ -60,13 +60,13 @@ describe("ContentPanel", () => {
     render(
       <ContentPanel
         selectedId="xia"
-        activeGroup="Hanedanlar"
+        activeGroup="Dynasties and States"
         index={mockIndex}
         getContent={getContent}
       />
     );
     await waitFor(() => {
-      expect(screen.getByText(/İçerik bulunamadı/)).toBeInTheDocument();
+      expect(screen.getByText(/content\.notFound/)).toBeInTheDocument();
     });
   });
 });

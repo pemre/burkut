@@ -17,6 +17,6 @@
   padding: 0.4rem 0.75rem;
   font-size: 0.75rem;
   color: #aaa;
-  background: #0f0f1a;
+  background: var(--dark-bg);
   border-top: 1px solid #222;
 }

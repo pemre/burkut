@@ -95,7 +95,9 @@ npm run coverage  # kapsam raporu
 - `import.meta.glob` argümanları **statik literal** olmalı; değişken kullanılamaz.
 - `react-leaflet` jsdom'da tam render etmez; MapPanel testleri mock kullanır.
 - vis-timeline'ın `destroy()` metodu unmount'ta çağrılmalı (memory leak önlemi).
-- Yeni grup eklemek için: `GROUPS` array'ini `TimelinePanel` ve `Sidebar`'da güncelle.
+- Yeni grup eklemek için: `src/config.js` → `groups` dizisine yeni `{ id, translationKey }` ekle ve `src/i18n/locales/*.json` dosyalarında çevirileri tanımla.
+- Tüm UI string'leri `react-i18next` ile çevrilir; çeviri dosyaları `src/i18n/locales/` altındadır.
+- Tema renkleri CSS custom properties ile yönetilir (`src/styles/global.css` → `:root`).
 
 ---
 
@@ -105,5 +107,5 @@ npm run coverage  # kapsam raporu
 - [ ] GeoJSON polygon desteği (hanedan sınırları)
 - [ ] Dark/light tema toggle
 - [ ] Mobil responsive düzen
-- [ ] i18n (Türkçe / İngilizce / Çince)
+- [x] i18n (Türkçe / İngilizce / Çince) — `react-i18next` ile merkezi config
 - [ ] E2E testler (Playwright)

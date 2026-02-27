@@ -26,7 +26,7 @@ end: "-001600-01-01"
 
     const { data, content } = matter(raw);
     expect(data.id).toBe("xia");
-    expect(data.group).toBe("Hanedanlar");
+    expect(data.group).toBe("Dynasties and States");
     expect(content.trim()).toContain("# Xia Hanedanı");
   });
 

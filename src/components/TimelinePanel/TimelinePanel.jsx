@@ -1,13 +1,9 @@
 import { useEffect, useRef, useMemo } from "react";
 import { Timeline, DataSet } from "vis-timeline/standalone";
+import { useTranslation } from "react-i18next";
 import "vis-timeline/styles/vis-timeline-graph2d.min.css";
+import config from "../../config";
 import "./TimelinePanel.css";
-
-const GROUPS = [
-  { id: "Dynasties and States", content: "Hanedanlıklar ve devletler" },
-  { id: "Literature", content: "Edebiyat" },
-  { id: "Cinema", content: "Sinema" }
-];
 
 /**
  * index'teki frontmatter verisinden vis.js item'larını üretir.
@@ -30,19 +26,28 @@ function buildItems(index) {
 }
 
 export default function TimelinePanel({ index, selectedId, onSelect }) {
+  const { t, i18n } = useTranslation();
   const containerRef = useRef(null);
   const timelineRef = useRef(null);
 
   const items = useMemo(() => buildItems(index), [index]);
+
+  /** Build translated vis.js groups from config */
+  const translatedGroups = useMemo(
+    () =>
+      config.groups.map((g) => ({ id: g.id, content: t(g.translationKey) })),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [t, i18n.language]
+  );
 
   // Timeline'ı bir kez init et
   useEffect(() => {
     if (!containerRef.current || timelineRef.current) return;
 
     const ds = new DataSet(items);
-    const groups = new DataSet(GROUPS);
+    const gs = new DataSet(translatedGroups);
 
-    const tl = new Timeline(containerRef.current, ds, groups, {
+    const tl = new Timeline(containerRef.current, ds, gs, {
       start: "-001800-01-01",
       end: "2100-01-01",
     });
@@ -51,7 +56,7 @@ export default function TimelinePanel({ index, selectedId, onSelect }) {
       if (selected.length > 0) onSelect(selected[0]);
     });
 
-    timelineRef.current = { tl, ds };
+    timelineRef.current = { tl, ds, gs };
 
     return () => {
       tl.destroy();
@@ -67,6 +72,14 @@ export default function TimelinePanel({ index, selectedId, onSelect }) {
     ds.add(items);
   }, [items]);
 
+  // Dil değişince group label'larını güncelle
+  useEffect(() => {
+    if (!timelineRef.current) return;
+    const { gs } = timelineRef.current;
+    gs.clear();
+    gs.add(translatedGroups);
+  }, [translatedGroups]);
+
   // Dışarıdan selectedId değişince timeline'ı focus et
   useEffect(() => {
     if (!timelineRef.current || !selectedId) return;
@@ -76,7 +89,7 @@ export default function TimelinePanel({ index, selectedId, onSelect }) {
   }, [selectedId]);
 
   return (
-    <div className="timeline-panel" aria-label="Zaman çizelgesi">
+    <div className="timeline-panel" aria-label={t("aria.timeline")}>
       <div ref={containerRef} className="timeline-container" />
     </div>
   );

@@ -1,19 +1,22 @@
 import { useState, useCallback } from "react";
+import { useTranslation } from "react-i18next";
 import Sidebar from "./components/Sidebar/Sidebar";
 import ContentPanel from "./components/ContentPanel/ContentPanel";
 import MapPanel from "./components/MapPanel/MapPanel";
 import TimelinePanel from "./components/TimelinePanel/TimelinePanel";
 import { useMdLoader } from "./hooks/useMdLoader";
+import config from "./config";
 import "./styles/layout.css";
 
 /**
  * Global state:
  *  selectedId  – tıklanan timeline/sidebar item id'si
- *  activeGroup – hangi grup seçili (Dynasties and States / Literature / Cinema)
+ *  activeGroup – hangi grup seçili (config.groups'tan)
  */
 export default function App() {
+  const { t, i18n } = useTranslation();
   const [selectedId, setSelectedId] = useState(null);
-  const [activeGroup, setActiveGroup] = useState("Dynasties and States");
+  const [activeGroup, setActiveGroup] = useState(config.defaults.activeGroup);
 
   const { index, getContent } = useMdLoader();
 
@@ -30,11 +33,33 @@ export default function App() {
     setSelectedId(null);
   }, []);
 
+  const handleLanguageChange = useCallback(
+    (e) => {
+      const lng = e.target.value;
+      i18n.changeLanguage(lng);
+      document.title = t("app.htmlTitle", { lng });
+    },
+    [i18n, t]
+  );
+
   return (
     <div className="app-shell">
       <header className="app-header">
-        <span className="app-logo">🦅</span>
-        <h1>Bürküt — History Explorer — Çin</h1>
+        <span className="app-logo">{config.app.logo}</span>
+        <h1>{t("app.title")}</h1>
+
+        <select
+          className="language-select"
+          value={i18n.language}
+          onChange={handleLanguageChange}
+          aria-label={t("language")}
+        >
+          {config.app.supportedLocales.map((loc) => (
+            <option key={loc.code} value={loc.code}>
+              {loc.label}
+            </option>
+          ))}
+        </select>
       </header>
 
       <div className="app-body">
