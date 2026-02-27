@@ -4,6 +4,7 @@ import Sidebar from "./components/Sidebar/Sidebar";
 import ContentPanel from "./components/ContentPanel/ContentPanel";
 import MapPanel from "./components/MapPanel/MapPanel";
 import TimelinePanel from "./components/TimelinePanel/TimelinePanel";
+import ThemeToggle from "./components/ThemeToggle/ThemeToggle";
 import { useMdLoader } from "./hooks/useMdLoader";
 import config from "./config";
 import "./styles/layout.css";
@@ -47,6 +48,8 @@ export default function App() {
       <header className="app-header">
         <span className="app-logo">{config.app.logo}</span>
         <h1>{t("app.title")}</h1>
+
+        {config.features.darkLightToggle && <ThemeToggle />}
 
         <select
           className="language-select"

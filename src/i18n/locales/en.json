@@ -16,6 +16,7 @@
   "aria.map": "Map panel",
   "aria.mapContainer": "China map",
 
-  "language": "Language"
+  "language": "Language",
+  "theme.toggle": "Toggle dark/light theme"
 }
 

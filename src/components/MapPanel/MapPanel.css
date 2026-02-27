@@ -4,8 +4,8 @@
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  border-left: 1px solid #333;
-  background: #111;
+  border-left: 1px solid var(--border-default);
+  background: var(--bg-surface-alt);
 }
 
 .map-panel .leaflet-container {
@@ -16,7 +16,7 @@
 .map-info {
   padding: 0.4rem 0.75rem;
   font-size: 0.75rem;
-  color: #aaa;
-  background: var(--dark-bg);
-  border-top: 1px solid #222;
+  color: var(--text-secondary);
+  background: var(--bg-surface);
+  border-top: 1px solid var(--border-subtle);
 }

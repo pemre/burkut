@@ -1,6 +1,6 @@
 .timeline-panel {
-  border-top: 1px solid #333;
-  background: var(--dark-bg-alt);
+  border-top: 1px solid var(--border-default);
+  background: var(--bg-surface-alt);
   flex-shrink: 0;
 }
 
@@ -8,8 +8,46 @@
   height: 220px;
 }
 
-/* vis-timeline renk override */
+/* ── vis-timeline theme overrides ──────────────────────────── */
+.vis-timeline {
+  border-color: var(--vis-border) !important;
+  background: var(--vis-bg) !important;
+}
+
+.vis-panel.vis-bottom,
+.vis-panel.vis-center,
+.vis-panel.vis-left,
+.vis-panel.vis-right,
+.vis-panel.vis-top {
+  border-color: var(--vis-border) !important;
+}
+
+.vis-time-axis .vis-text {
+  color: var(--vis-text) !important;
+}
+
+.vis-time-axis .vis-grid.vis-minor {
+  border-color: var(--border-subtle) !important;
+}
+
+.vis-time-axis .vis-grid.vis-major {
+  border-color: var(--vis-border) !important;
+}
+
+.vis-labelset .vis-label {
+  color: var(--vis-text) !important;
+  border-bottom-color: var(--vis-border) !important;
+}
+
+.vis-foreground .vis-group {
+  border-bottom-color: var(--vis-border) !important;
+}
+
+/* vis items */
 .vis-item {
+  background-color: var(--vis-item-bg) !important;
+  border-color: var(--vis-item-border) !important;
+  color: var(--vis-item-text) !important;
   border-radius: 3px;
   font-size: 0.78rem;
 }
@@ -20,17 +58,37 @@
 }
 
 .vis-label {
-  color: #aaa;
+  color: var(--vis-text);
   font-size: 0.78rem;
 }
 
-/* Background katmanları */
-.vis-item.vis-background.bg-ancient  { background: rgba(76,175,80,0.12); }
-.vis-item.vis-background.bg-early    { background: rgba(33,150,243,0.12); }
-.vis-item.vis-background.bg-fragment { background: rgba(158,158,158,0.1); }
-.vis-item.vis-background.bg-mid      { background: rgba(255,235,59,0.1); }
-.vis-item.vis-background.bg-late     { background: rgba(255,152,0,0.12); }
-.vis-item.vis-background.bg-modern   { background: rgba(0,188,212,0.1); }
+/* ── Background layers (theme-aware) ──────────────────────── */
+.vis-item.vis-background.bg-ancient  { background: var(--tl-bg-ancient) !important; }
+.vis-item.vis-background.bg-early    { background: var(--tl-bg-early) !important; }
+.vis-item.vis-background.bg-fragment { background: var(--tl-bg-fragment) !important; }
+.vis-item.vis-background.bg-mid      { background: var(--tl-bg-mid) !important; }
+.vis-item.vis-background.bg-late     { background: var(--tl-bg-late) !important; }
+.vis-item.vis-background.bg-modern   { background: var(--tl-bg-modern) !important; }
 
-.vis-item.semi-legendary { border-color: #9c7a3a; border-style: dashed; }
+/* Background items should not have item styling */
+.vis-item.vis-background {
+  background-color: transparent !important;
+  border: none !important;
+}
+
+.vis-item.semi-legendary { border-color: var(--accent) !important; border-style: dashed; }
 .vis-item.parallel-state { opacity: 0.75; }
+
+/* vis nested group backgrounds */
+.vis-label.vis-nested-group {
+  background-color: var(--bg-surface-alt) !important;
+}
+
+.vis-panel.vis-background.vis-horizontal .vis-grid.vis-minor {
+  border-color: var(--border-subtle) !important;
+}
+
+.vis-panel.vis-background.vis-horizontal .vis-grid.vis-major {
+  border-color: var(--vis-border) !important;
+}
+

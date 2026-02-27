@@ -37,14 +37,3 @@ See `SPEC.md` for the full content schema and architecture details.
 ***
 
 *Built with Vite + React + vis.js + react-leaflet. Markdown-driven, no backend required.*
-
-## Future
-
-### Translations
-
-Further Considerations
-
-* react-i18next vs react-intl? react-i18next is simpler (plain JSON, no ICU syntax needed), has a smaller footprint, and is the most popular React i18n library. react-intl is better if you need advanced pluralization/number formatting. I recommend react-i18next for this project's needs.
-* Markdown content translation — this plan only covers UI chrome. Translating the actual .md content would require parallel content folders (e.g. src/content/en/, src/content/tr/) and is a separate, larger effort for later.
-* vis-timeline group label reactivity — vis.js DataSet doesn't auto-react to React state. When language changes, the groups DataSet must be explicitly updated (.clear() + .add()), or the Timeline re-initialized. A useEffect on i18n.language can handle this
-* dynamic index.html title tag

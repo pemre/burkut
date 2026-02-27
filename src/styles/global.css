@@ -1,3 +1,4 @@
+/* ── Light theme (default — GitHub Primer inspired) ─────────── */
 :root {
   --accent: #c9a84c;
   --accent-a12: rgba(201, 168, 76, 0.12);
@@ -5,10 +6,84 @@
   --accent-a20: rgba(201, 168, 76, 0.2);
   --accent-a30: rgba(201, 168, 76, 0.3);
   --accent-a44: #c9a84c44;
-  --bg-body: #d0d0dd;
-  --dark-bg: #0f0f1a;
-  --dark-bg-alt: #0d0d1c;
-  --sidebar-bg: #1a1a2e;
+
+  --bg-body: #f0f2f5;
+  --bg-surface: #ffffff;
+  --bg-surface-alt: #f6f8fa;
+  --bg-sidebar: #f6f8fa;
+
+  --text-primary: #1f2328;
+  --text-secondary: #656d76;
+  --text-muted: #8b949e;
+  --text-on-accent: #ffffff;
+
+  --border-default: #d1d9e0;
+  --border-subtle: #e8ebef;
+
+  --code-bg: #eff1f3;
+  --hover-bg: rgba(208, 215, 222, 0.32);
+
+  /* Timeline background layers — light */
+  --tl-bg-ancient:  rgba(76, 175, 80, 0.15);
+  --tl-bg-early:    rgba(33, 150, 243, 0.15);
+  --tl-bg-fragment: rgba(158, 158, 158, 0.12);
+  --tl-bg-mid:      rgba(255, 193, 7, 0.14);
+  --tl-bg-late:     rgba(255, 152, 0, 0.16);
+  --tl-bg-modern:   rgba(0, 188, 212, 0.13);
+
+  /* vis-timeline overrides */
+  --vis-bg: #ffffff;
+  --vis-text: #57606a;
+  --vis-border: #d1d9e0;
+  --vis-item-bg: #dce6f0;
+  --vis-item-border: #97b0f8;
+  --vis-item-text: #1f2328;
+
+  color-scheme: light;
+}
+
+/* ── Dark theme (GitHub Dark Dimmed inspired) ──────────────── */
+[data-theme="dark"] {
+  --accent: #d4af5a;
+  --accent-a12: rgba(212, 175, 90, 0.12);
+  --accent-a15: rgba(212, 175, 90, 0.15);
+  --accent-a20: rgba(212, 175, 90, 0.2);
+  --accent-a30: rgba(212, 175, 90, 0.3);
+  --accent-a44: rgba(212, 175, 90, 0.27);
+
+  --bg-body: #1c2128;
+  --bg-surface: #22272e;
+  --bg-surface-alt: #2d333b;
+  --bg-sidebar: #2d333b;
+
+  --text-primary: #adbac7;
+  --text-secondary: #768390;
+  --text-muted: #545d68;
+  --text-on-accent: #ffffff;
+
+  --border-default: #444c56;
+  --border-subtle: #373e47;
+
+  --code-bg: #2d333b;
+  --hover-bg: rgba(99, 110, 123, 0.16);
+
+  /* Timeline background layers — dark (higher opacity for visibility) */
+  --tl-bg-ancient:  rgba(76, 175, 80, 0.28);
+  --tl-bg-early:    rgba(66, 165, 245, 0.26);
+  --tl-bg-fragment: rgba(158, 158, 158, 0.2);
+  --tl-bg-mid:      rgba(255, 213, 79, 0.22);
+  --tl-bg-late:     rgba(255, 167, 38, 0.26);
+  --tl-bg-modern:   rgba(0, 188, 212, 0.24);
+
+  /* vis-timeline overrides */
+  --vis-bg: #22272e;
+  --vis-text: #768390;
+  --vis-border: #444c56;
+  --vis-item-bg: #3b4450;
+  --vis-item-border: #5a6a7a;
+  --vis-item-text: #adbac7;
+
+  color-scheme: dark;
 }
 
 *, *::before, *::after {
@@ -21,4 +96,5 @@ html, body, #root {
   padding: 0;
   font-family: 'Segoe UI', system-ui, sans-serif;
   background: var(--bg-body);
+  color: var(--text-primary);
 }

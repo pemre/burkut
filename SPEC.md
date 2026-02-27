@@ -105,7 +105,25 @@ npm run coverage  # kapsam raporu
 
 - [ ] Arama çubuğu (title + tag'e göre)
 - [ ] GeoJSON polygon desteği (hanedan sınırları)
-- [ ] Dark/light tema toggle
+- [x] Dark/light tema toggle — GitHub Primer-inspired, CSS variables + ThemeContext + CartoDB tiles
 - [ ] Mobil responsive düzen
 - [x] i18n (Türkçe / İngilizce / Çince) — `react-i18next` ile merkezi config
 - [ ] E2E testler (Playwright)
+
+### UI
+
+* Draggable/collapsible layout: Menu, map, timeline... They all should be able to collapsed and moved.
+
+Further Considerations for Themes
+
+* vis-timeline iç stilleri — vis-timeline kendi panel border, axis text, group bg renklerini inline/class ile enjekte eder. Bunları override etmek !important gerektirebilir; alternatif olarak Timeline options parametresine tema uyumlu CSS class'ı verilebilir. Öneri: CSS override + !important en az invaziv çözüm.
+* useTheme hook vs. CSS-only — MapPanel tile URL değişimi JS gerektirir, bu yüzden minimal bir useTheme custom hook (document attribute dinleyen MutationObserver veya basit state) oluşturulabilir; ya da ThemeToggle'dan bir React context yayılabilir. Öneri: Basit bir ThemeContext ile context approach daha temiz olur, MapPanel ve potansiyel gelecek bileşenler de kullanabilir.
+
+### Translations
+
+Further Considerations
+
+* react-i18next vs react-intl? react-i18next is simpler (plain JSON, no ICU syntax needed), has a smaller footprint, and is the most popular React i18n library. react-intl is better if you need advanced pluralization/number formatting. I recommend react-i18next for this project's needs.
+* Markdown content translation — this plan only covers UI chrome. Translating the actual .md content would require parallel content folders (e.g. src/content/en/, src/content/tr/) and is a separate, larger effort for later.
+* vis-timeline group label reactivity — vis.js DataSet doesn't auto-react to React state. When language changes, the groups DataSet must be explicitly updated (.clear() + .add()), or the Timeline re-initialized. A useEffect on i18n.language can handle this
+* dynamic index.html title tag

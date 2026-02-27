@@ -30,23 +30,10 @@ const config = {
     activeGroup: "Dynasties and States",
   },
 
-  theme: {
-    accentColor: "#c9a84c",
-    accentColorAlpha12: "rgba(201, 168, 76, 0.12)",
-    accentColorAlpha15: "rgba(201, 168, 76, 0.15)",
-    accentColorAlpha20: "rgba(201, 168, 76, 0.2)",
-    accentColorAlpha30: "rgba(201, 168, 76, 0.3)",
-    accentColorAlpha44: "#c9a84c44",
-    bgBody: "#d0d0dd",
-    darkBg: "#0f0f1a",
-    darkBgAlt: "#0d0d1c",
-    sidebarBg: "#1a1a2e",
-  },
-
   /** Feature flags – flip these to enable/disable functionality */
   features: {
     search: false,
-    darkLightToggle: false,
+    darkLightToggle: true,
   },
 };
 

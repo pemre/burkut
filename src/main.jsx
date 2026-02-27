@@ -4,6 +4,7 @@ import { Buffer } from "buffer";
 import "leaflet/dist/leaflet.css";
 import "./styles/global.css";
 import "./i18n"; // i18next initialization — must be imported before App
+import { ThemeProvider } from "./hooks/useTheme";
 import App from "./App";
 
 // Polyfill Buffer for gray-matter in browser
@@ -11,6 +12,8 @@ window.Buffer = Buffer;
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <App />
+    <ThemeProvider>
+      <App />
+    </ThemeProvider>
   </StrictMode>
 );

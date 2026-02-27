@@ -2,7 +2,7 @@ import { MapContainer, TileLayer, Marker, Popup, Polygon, useMap } from "react-l
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import L from "leaflet";
-import config from "../../config";
+import { useTheme } from "../../hooks/useTheme";
 import "./MapPanel.css";
 
 // Leaflet default icon fix (Vite asset pipeline uyumu)
@@ -15,6 +15,16 @@ L.Icon.Default.mergeOptions({
 
 const CHINA_CENTER = [35.86, 104.19];
 const CHINA_ZOOM = 4;
+
+// OpenStreetMaps are using local language for China, I prefered English.
+// It can be a feature in the future to select the style...
+// const TILE_LIGHT = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
+const TILE_LIGHT = "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png";
+const TILE_DARK = "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png";
+const TILE_ATTR_LIGHT = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; CARTO';
+const TILE_ATTR_DARK = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/">CARTO</a>';
+
+const ACCENT_COLOR = "#c9a84c";
 
 /** Seçilen item değişince haritayı fly eder */
 function FlyTo({ position }) {
@@ -31,9 +41,13 @@ function FlyTo({ position }) {
 
 export default function MapPanel({ selectedId, index }) {
   const { t } = useTranslation();
+  const { theme } = useTheme();
   const meta = selectedId ? index[selectedId] : null;
   const location = meta?.location || null;
   const polygon = meta?.polygon || null;   // GeoJSON koordinat dizisi [[lat,lng], ...]
+
+  const tileUrl = theme === "dark" ? TILE_DARK : TILE_LIGHT;
+  const tileAttr = theme === "dark" ? TILE_ATTR_DARK : TILE_ATTR_LIGHT;
 
   return (
     <div className="map-panel" aria-label={t("aria.map")}>
@@ -45,8 +59,9 @@ export default function MapPanel({ selectedId, index }) {
         aria-label={t("aria.mapContainer")}
       >
         <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          key={theme}
+          attribution={tileAttr}
+          url={tileUrl}
         />
 
         <FlyTo position={location} />
@@ -60,7 +75,7 @@ export default function MapPanel({ selectedId, index }) {
         {polygon && (
           <Polygon
             positions={polygon}
-            pathOptions={{ color: config.theme.accentColor, fillOpacity: 0.2 }}
+            pathOptions={{ color: ACCENT_COLOR, fillOpacity: 0.2 }}
           />
         )}
       </MapContainer>
