@@ -53,21 +53,47 @@
   background: var(--border-default);
   transition: background 0.15s;
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .resize-handle--horizontal {
-  width: 4px;
+  width: 8px;
   cursor: col-resize;
 }
 
 .resize-handle--vertical {
-  height: 4px;
+  height: 8px;
   cursor: row-resize;
 }
 
 .resize-handle:hover,
 .resize-handle[data-resize-handle-state="drag"] {
   background: var(--accent-a30);
+}
+
+/* Drag indicator pill */
+.resize-handle__indicator {
+  border-radius: 9999px;
+  background: var(--bg-surface);
+  transition: background 0.15s;
+  flex-shrink: 0;
+}
+
+.resize-handle--horizontal .resize-handle__indicator {
+  width: 3px;
+  height: 24px;
+}
+
+.resize-handle--vertical .resize-handle__indicator {
+  width: 24px;
+  height: 3px;
+}
+
+.resize-handle:hover .resize-handle__indicator,
+.resize-handle[data-resize-handle-state="drag"] .resize-handle__indicator {
+  background: var(--bg-surface);
 }
 
 /* ── Panel wrappers ────────────────────────────────────────── */

@@ -150,7 +150,9 @@ export default function App() {
             )}
           </Panel>
 
-          <Separator className="resize-handle resize-handle--horizontal" />
+          <Separator className="resize-handle resize-handle--horizontal">
+            <div className="resize-handle__indicator" />
+          </Separator>
 
           <Panel id="main" defaultSize="85%" minSize="40%">
             {/* ── Vertical main: Top panels | Timeline ───── */}
@@ -177,7 +179,9 @@ export default function App() {
                     </div>
                   </Panel>
 
-                  <Separator className="resize-handle resize-handle--horizontal" />
+                  <Separator className="resize-handle resize-handle--horizontal">
+                    <div className="resize-handle__indicator" />
+                  </Separator>
 
                   <Panel
                     id="map"
@@ -202,7 +206,9 @@ export default function App() {
                 </Group>
               </Panel>
 
-              <Separator className="resize-handle resize-handle--vertical" />
+              <Separator className="resize-handle resize-handle--vertical">
+                <div className="resize-handle__indicator" />
+              </Separator>
 
               <Panel
                 id="timeline"
