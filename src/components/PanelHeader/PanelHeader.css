@@ -13,7 +13,6 @@
 
 .panel-header--vertical {
   border-bottom: none;
-  border-top: 1px solid var(--border-subtle);
 }
 
 .panel-header__title {

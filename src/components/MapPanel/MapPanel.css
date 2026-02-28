@@ -3,7 +3,6 @@
   flex-direction: column;
   flex: 1;
   min-width: 0;
-  border-left: 1px solid var(--border-default);
   background: var(--bg-surface-alt);
 }
 

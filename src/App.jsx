@@ -129,21 +129,10 @@ export default function App() {
             defaultSize="15%"
             minSize="10%"
             collapsible
-            collapsedSize="2%"
+            collapsedSize="0%"
             onResize={handleSidebarResize}
           >
-            {sidebarCollapsed ? (
-              <div className="sidebar-collapsed-strip">
-                <button
-                  className="sidebar-collapsed-btn"
-                  onClick={toggleSidebar}
-                  aria-label={t("panels.sidebar")}
-                  title={t("panels.sidebar")}
-                >
-                  ☰
-                </button>
-              </div>
-            ) : (
+            {!sidebarCollapsed && (
               <div className="sidebar-wrapper">
                 <PanelHeader
                   title={t("panels.sidebar")}
@@ -196,7 +185,7 @@ export default function App() {
                     defaultSize="35%"
                     minSize="15%"
                     collapsible
-                    collapsedSize="2%"
+                    collapsedSize="0%"
                     onResize={handleMapResize}
                   >
                     <div className="panel-with-header">
@@ -221,7 +210,7 @@ export default function App() {
                 defaultSize="25%"
                 minSize="10%"
                 collapsible
-                collapsedSize="3%"
+                collapsedSize="0%"
                 onResize={handleTimelineResize}
               >
                 <div className="panel-with-header panel-with-header--vertical">
