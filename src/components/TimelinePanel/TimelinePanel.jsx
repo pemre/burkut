@@ -51,6 +51,8 @@ export default function TimelinePanel({ index, selectedId, onSelect }) {
     const tl = new Timeline(containerRef.current, ds, gs, {
       start: "-001800-01-01",
       end: "2100-01-01",
+      min: "-001800-01-01",
+      max: "2100-01-01",
     });
 
     tl.on("select", ({ items: selected }) => {
