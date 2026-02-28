@@ -39,8 +39,6 @@ export default function ContentPanel({ selectedId, activeGroup, index, getConten
     <article className="content-panel" aria-label={t("aria.contentPanel")}>
       {meta && (
         <header className="content-meta">
-          <h2>{meta.title}</h2>
-          {meta.subtitle && <p className="content-subtitle">{meta.subtitle}</p>}
           {meta.tags && (
             <div className="content-tags">
               {meta.tags.map((tag) => (
@@ -48,6 +46,7 @@ export default function ContentPanel({ selectedId, activeGroup, index, getConten
               ))}
             </div>
           )}
+          {meta.subtitle && <p className="content-subtitle">{meta.subtitle}</p>}
         </header>
       )}
 
