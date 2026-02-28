@@ -1,5 +1,5 @@
 ---
-id: Raise the Red Lantern (1991)
+id: "Raise the Red Lantern (1991)"
 group: Cinema
 title: "Raise the Red Lantern (1991)"
 subtitle: "1920'ler (Cumhuriyet Dönemi)"

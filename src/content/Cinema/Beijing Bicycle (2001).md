@@ -1,5 +1,5 @@
 ---
-id: Beijing Bicycle (2001)
+id: "Beijing Bicycle (2001)"
 group: Cinema
 title: "Beijing Bicycle (2001)"
 subtitle: "2001 (Modern Çin)"

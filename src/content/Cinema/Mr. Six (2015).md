@@ -1,5 +1,5 @@
 ---
-id: Mr. Six (2015)
+id: "Mr. Six (2015)"
 group: Cinema
 title: "Mr. Six (2015)"
 subtitle: "2015 (Modern Çin)"

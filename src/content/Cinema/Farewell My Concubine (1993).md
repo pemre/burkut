@@ -1,5 +1,5 @@
 ---
-id: Farewell My Concubine (1993)
+id: "Farewell My Concubine (1993)"
 group: Cinema
 title: "Farewell My Concubine (1993)"
 subtitle: "1920–1977"

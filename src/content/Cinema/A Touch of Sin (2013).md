@@ -1,5 +1,5 @@
 ---
-id: A Touch of Sin (2013)
+id: "A Touch of Sin (2013)"
 group: Cinema
 title: "A Touch of Sin (2013)"
 subtitle: "2013 (Modern Çin)"

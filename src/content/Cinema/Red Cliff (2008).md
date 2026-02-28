@@ -1,5 +1,5 @@
 ---
-id: Red Cliff (2008)
+id: "Red Cliff (2008)"
 group: Cinema
 title: "Red Cliff (2008)"
 subtitle: "MS 208–209"

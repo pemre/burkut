@@ -1,5 +1,5 @@
 ---
-id: The Last Emperor (1987)
+id: "The Last Emperor (1987)"
 group: Cinema
 title: "The Last Emperor (1987)"
 subtitle: "1908–1967"

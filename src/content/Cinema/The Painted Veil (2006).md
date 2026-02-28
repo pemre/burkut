@@ -1,5 +1,5 @@
 ---
-id: The Painted Veil (2006)
+id: "The Painted Veil (2006)"
 group: Cinema
 title: "The Painted Veil (2006)"
 subtitle: "1925 (Cumhuriyet Dönemi)"

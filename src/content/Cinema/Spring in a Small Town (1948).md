@@ -1,5 +1,5 @@
 ---
-id: Spring in a Small Town (1948)
+id: "Spring in a Small Town (1948)"
 group: Cinema
 title: "Spring in a Small Town (1948)"
 subtitle: "1946 (Savaş Sonrası)"

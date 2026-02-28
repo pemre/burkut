@@ -1,5 +1,5 @@
 ---
-id: To Live (1994)
+id: "To Live (1994)"
 group: Cinema
 title: "To Live (1994)"
 subtitle: "1940–1977"

@@ -1,5 +1,5 @@
 ---
-id: Crouching Tiger, Hidden Dragon (2000)
+id: "Crouching Tiger, Hidden Dragon (2000)"
 group: Cinema
 title: "Crouching Tiger, Hidden Dragon (2000)"
 subtitle: "1778 (Qing Hanedanlığı)"
