@@ -30,9 +30,13 @@ export default function Sidebar({
     Object.values(index).filter(
       (item) =>
         item.group === groupId &&
-        !item.id?.startsWith("bg_") &&
+        // Toogle to hide certain files... E.g. We used to hide "type: background" items bcs
+        // they used to have _bg_filename.md naming convention...
+        // !item.id?.startsWith("bg_") &&
         !item._isHeader
     );
+
+  console.log("ite", index);
 
   return (
     <nav className="sidebar" aria-label={t("aria.sidebar")}>
