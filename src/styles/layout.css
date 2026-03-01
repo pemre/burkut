@@ -21,10 +21,11 @@
 
 .app-header h1 {
   margin: 0;
-  font-size: 1rem;
-  font-weight: 700;
+  font-size: 1.2rem;
+  font-weight: normal;
   color: var(--accent);
   letter-spacing: 0.04em;
+  font-family: var(--font-serif);
 }
 
 .app-body {

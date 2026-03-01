@@ -43,6 +43,9 @@
   --vis-item-text: #1f2328;
 
   color-scheme: light;
+
+  /* Font families — set via main.jsx */
+  --font-serif: 'Crimson Pro', serif;
 }
 
 /* ── Dark theme (GitHub Dark Dimmed inspired) ──────────────── */
@@ -57,7 +60,7 @@
   --bg-body: #1c2128;
   --bg-surface: #22272e;
   --bg-surface-alt: #2d333b;
-  --bg-sidebar: #2d333b;
+  --bg-sidebar: #22272e;
 
   --text-primary: #adbac7;
   --text-secondary: #768390;
