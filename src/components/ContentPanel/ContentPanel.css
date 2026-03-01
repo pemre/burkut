@@ -10,9 +10,22 @@
 }
 
 .content-meta {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
   border-bottom: 1px solid var(--border-default);
   margin-bottom: 1rem;
   padding-bottom: 0.75rem;
+}
+
+.content-meta--header-only {
+  justify-content: flex-end;
+}
+
+.content-meta__left {
+  flex: 1;
+  min-width: 0;
 }
 
 .content-meta h2 {
@@ -79,4 +92,39 @@
   font-style: italic;
   padding: 2rem;
   text-align: center;
+}
+
+/* ── Read toggle button ──────────────────────────────────── */
+
+.read-toggle {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: 2px solid var(--text-muted);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+  line-height: 1;
+}
+
+.read-toggle:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.read-toggle--done {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--text-on-accent);
+}
+
+.read-toggle--done:hover {
+  opacity: 0.85;
 }

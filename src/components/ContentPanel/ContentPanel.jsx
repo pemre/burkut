@@ -4,7 +4,7 @@ import remarkGfm from "remark-gfm";
 import { useTranslation } from "react-i18next";
 import "./ContentPanel.css";
 
-export default function ContentPanel({ selectedId, activeGroup, index, getContent }) {
+export default function ContentPanel({ selectedId, activeGroup, index, getContent, isComplete, onToggleComplete }) {
   const { t } = useTranslation();
   const [markdown, setMarkdown] = useState("");
   const [loading, setLoading] = useState(false);
@@ -34,20 +34,49 @@ export default function ContentPanel({ selectedId, activeGroup, index, getConten
   }, [selectedId, activeGroup, getContent]);
 
   const meta = selectedId ? index[selectedId] : null;
+  const currentId = selectedId || activeGroup;
+  const completed = isComplete ? isComplete(currentId) : false;
 
   return (
     <article className="content-panel" aria-label={t("aria.contentPanel")}>
-      {meta && (
+      {meta ? (
         <header className="content-meta">
-          {meta.tags && (
-            <div className="content-tags">
-              {meta.tags.map((tag) => (
-                <span key={tag} className="tag">#{tag}</span>
-              ))}
-            </div>
+          <div className="content-meta__left">
+            {meta.tags && (
+              <div className="content-tags">
+                {meta.tags.map((tag) => (
+                  <span key={tag} className="tag">#{tag}</span>
+                ))}
+              </div>
+            )}
+            {meta.subtitle && <p className="content-subtitle">{meta.subtitle}</p>}
+          </div>
+          {onToggleComplete && (
+            <button
+              className={`read-toggle ${completed ? "read-toggle--done" : ""}`}
+              onClick={() => onToggleComplete(currentId)}
+              aria-label={completed ? t("progress.markUnread") : t("progress.markRead")}
+              title={completed ? t("progress.markUnread") : t("progress.markRead")}
+            >
+              ✓
+            </button>
           )}
-          {meta.subtitle && <p className="content-subtitle">{meta.subtitle}</p>}
         </header>
+      ) : (
+        /* Group header page — still show mark-as-read toggle */
+        onToggleComplete && (
+          <header className="content-meta content-meta--header-only">
+            <div className="content-meta__left" />
+            <button
+              className={`read-toggle ${completed ? "read-toggle--done" : ""}`}
+              onClick={() => onToggleComplete(currentId)}
+              aria-label={completed ? t("progress.markUnread") : t("progress.markRead")}
+              title={completed ? t("progress.markUnread") : t("progress.markRead")}
+            >
+              ✓
+            </button>
+          </header>
+        )
       )}
 
       {loading ? (

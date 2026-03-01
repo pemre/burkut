@@ -1,0 +1,24 @@
+.progress-pie {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
+  cursor: default;
+}
+
+.progress-pie__track {
+  stroke: var(--border-default);
+}
+
+.progress-pie__fill {
+  stroke: var(--success);
+  transition: stroke-dashoffset 0.4s ease;
+}
+
+.progress-pie__text {
+  fill: var(--text-secondary);
+  font-size: 7px;
+  font-weight: 700;
+  user-select: none;
+}
+

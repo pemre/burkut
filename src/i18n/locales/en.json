@@ -22,6 +22,13 @@
   "panels.sidebar": "Menu",
   "panels.content": "Content",
   "panels.map": "Map",
-  "panels.timeline": "Timeline"
+  "panels.timeline": "Timeline",
+
+  "progress.markRead": "Mark as read",
+  "progress.markUnread": "Mark as unread",
+  "progress.title": "Reading Progress",
+  "progress.newContentTitle": "New content added!",
+  "progress.newContentMessage": "The following items have been added since your last visit. Your progress has been updated accordingly.",
+  "progress.dismiss": "Got it"
 }
 

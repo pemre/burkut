@@ -22,6 +22,7 @@ export default function Sidebar({
   activeGroup,
   onSelectItem,
   onSelectGroup,
+  completedSet,
 }) {
   const { t } = useTranslation();
   const [expanded, setExpanded] = useState({ [activeGroup]: true });
@@ -88,6 +89,9 @@ export default function Sidebar({
           >
             <span className="sidebar-arrow">{expanded[group.id] ? "▼" : "▶"}</span>
             {t(group.translationKey)}
+            {completedSet?.has(group.id) && (
+                <span className="sidebar-item-done" aria-label="read">✓</span>
+            )}
           </button>
 
           {expanded[group.id] && (
@@ -106,6 +110,9 @@ export default function Sidebar({
                     title={item.subtitle || ""}
                   >
                     {item.title || item.id}
+                    {completedSet?.has(item.id) && (
+                      <span className="sidebar-item-done" aria-label="read">✓</span>
+                    )}
                   </button>
                 </li>
               ))}

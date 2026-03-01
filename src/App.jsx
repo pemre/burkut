@@ -6,8 +6,11 @@ import ContentPanel from "./components/ContentPanel/ContentPanel";
 import MapPanel from "./components/MapPanel/MapPanel";
 import TimelinePanel from "./components/TimelinePanel/TimelinePanel";
 import ThemeToggle from "./components/ThemeToggle/ThemeToggle";
+import ProgressPie from "./components/ProgressPie/ProgressPie";
+import NewContentModal from "./components/NewContentModal/NewContentModal";
 import PanelHeader from "./components/PanelHeader/PanelHeader";
 import { useMdLoader } from "./hooks/useMdLoader";
+import { useProgress } from "./hooks/useProgress";
 import config from "./config";
 import "./styles/layout.css";
 
@@ -54,6 +57,14 @@ export default function App() {
   const topLayout = useDefaultLayout({ id: "layout-top", storage: localStorage });
 
   const { index, getContent } = useMdLoader();
+  const {
+    toggleComplete,
+    isComplete,
+    percentage,
+    newContentIds,
+    acknowledgeNewContent,
+    completedSet,
+  } = useProgress(index);
 
   const handleSelect = useCallback(
     (id) => {
@@ -127,6 +138,10 @@ export default function App() {
         <span className="app-logo">{config.app.logo}</span>
         <h1>{t("app.title")}</h1>
 
+        {config.features.progressTracker && (
+          <ProgressPie percentage={percentage} />
+        )}
+
         {config.features.darkLightToggle && <ThemeToggle />}
 
         <select
@@ -141,6 +156,13 @@ export default function App() {
             </option>
           ))}
         </select>
+
+
+        <div>
+          <a href="https://github.com/pemre/burkut" target="_blank">
+            GitHub
+          </a>
+        </div>
       </header>
 
       <div className="app-body">
@@ -172,6 +194,7 @@ export default function App() {
                   activeGroup={activeGroup}
                   onSelectItem={handleSelect}
                   onSelectGroup={handleGroupSelect}
+                  completedSet={completedSet}
                 />
               </div>
             )}
@@ -202,6 +225,8 @@ export default function App() {
                         activeGroup={activeGroup}
                         index={index}
                         getContent={getContent}
+                        isComplete={isComplete}
+                        onToggleComplete={toggleComplete}
                       />
                     </div>
                   </Panel>
@@ -291,6 +316,15 @@ export default function App() {
           </Panel>
         </Group>
       </div>
+
+      {config.features.progressTracker && newContentIds.length > 0 && (
+        <NewContentModal
+          newContentIds={newContentIds}
+          index={index}
+          percentage={percentage}
+          onDismiss={acknowledgeNewContent}
+        />
+      )}
     </div>
   );
 }

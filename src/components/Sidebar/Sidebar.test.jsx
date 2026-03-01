@@ -158,4 +158,28 @@ describe("Sidebar", () => {
     expect(idxA).toBeLessThan(idxB);
     expect(idxB).toBeLessThan(idxY);
   });
+
+  it("shows ✓ indicator for completed items", () => {
+    const completedSet = new Set(["xia"]);
+    render(<Sidebar {...defaultProps} completedSet={completedSet} />);
+    const xiaBtn = screen.getByText("Xia Hanedanı").closest("button");
+    const check = xiaBtn.querySelector(".sidebar-item-done");
+    expect(check).toBeInTheDocument();
+    expect(check).toHaveTextContent("✓");
+  });
+
+  it("does not show ✓ indicator for uncompleted items", () => {
+    const completedSet = new Set(["xia"]);
+    render(<Sidebar {...defaultProps} completedSet={completedSet} />);
+    const shangBtn = screen.getByText("Shang Hanedanı").closest("button");
+    const check = shangBtn.querySelector(".sidebar-item-done");
+    expect(check).toBeNull();
+  });
+
+  it("renders without completedSet prop (graceful fallback)", () => {
+    render(<Sidebar {...defaultProps} />);
+    const xiaBtn = screen.getByText("Xia Hanedanı").closest("button");
+    const check = xiaBtn.querySelector(".sidebar-item-done");
+    expect(check).toBeNull();
+  });
 });

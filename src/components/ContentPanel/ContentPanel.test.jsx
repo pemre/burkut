@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import ContentPanel from "./ContentPanel";
 
 /**
@@ -11,6 +11,8 @@ import ContentPanel from "./ContentPanel";
  * 4. Meta bilgileri (title, tags) gösterilir
  * 5. getContent null dönerse fallback mesajı gösterilir
  * 6. selectedId null iken activeGroup header içeriği gösterilir
+ * 7. Mark-as-read toggle renders and works
+ * 8. Mark-as-read toggle shows done state when complete
  */
 
 const mockIndex = {
@@ -91,5 +93,72 @@ describe("ContentPanel", () => {
     await waitFor(() => {
       expect(screen.getByText("Grup açıklaması.")).toBeInTheDocument();
     });
+  });
+
+  it("renders mark-as-read toggle button when onToggleComplete is provided", async () => {
+    const getContent = vi.fn().mockResolvedValue("İçerik.");
+    const onToggle = vi.fn();
+    render(
+      <ContentPanel
+        selectedId="xia"
+        activeGroup="Dynasties and States"
+        index={mockIndex}
+        getContent={getContent}
+        isComplete={() => false}
+        onToggleComplete={onToggle}
+      />
+    );
+    const btn = screen.getByLabelText("progress.markRead");
+    expect(btn).toBeInTheDocument();
+    expect(btn).toHaveTextContent("✓");
+  });
+
+  it("mark-as-read toggle calls onToggleComplete with current id", async () => {
+    const getContent = vi.fn().mockResolvedValue("İçerik.");
+    const onToggle = vi.fn();
+    render(
+      <ContentPanel
+        selectedId="xia"
+        activeGroup="Dynasties and States"
+        index={mockIndex}
+        getContent={getContent}
+        isComplete={() => false}
+        onToggleComplete={onToggle}
+      />
+    );
+    fireEvent.click(screen.getByLabelText("progress.markRead"));
+    expect(onToggle).toHaveBeenCalledWith("xia");
+  });
+
+  it("toggle shows done state when item is complete", async () => {
+    const getContent = vi.fn().mockResolvedValue("İçerik.");
+    render(
+      <ContentPanel
+        selectedId="xia"
+        activeGroup="Dynasties and States"
+        index={mockIndex}
+        getContent={getContent}
+        isComplete={() => true}
+        onToggleComplete={vi.fn()}
+      />
+    );
+    const btn = screen.getByLabelText("progress.markUnread");
+    expect(btn).toHaveClass("read-toggle--done");
+  });
+
+  it("shows mark-as-read toggle for group header pages (no selectedId)", async () => {
+    const getContent = vi.fn().mockResolvedValue("# Header\n\nContent.");
+    render(
+      <ContentPanel
+        selectedId={null}
+        activeGroup="Dynasties and States"
+        index={mockIndex}
+        getContent={getContent}
+        isComplete={() => false}
+        onToggleComplete={vi.fn()}
+      />
+    );
+    const btn = screen.getByLabelText("progress.markRead");
+    expect(btn).toBeInTheDocument();
   });
 });

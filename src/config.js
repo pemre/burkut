@@ -35,6 +35,7 @@ const config = {
     search: false,
     darkLightToggle: true,
     draggableLayout: true,
+    progressTracker: true,
   },
 };
 

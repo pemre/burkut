@@ -22,6 +22,13 @@
   "panels.sidebar": "菜单",
   "panels.content": "内容",
   "panels.map": "地图",
-  "panels.timeline": "时间线"
+  "panels.timeline": "时间线",
+
+  "progress.markRead": "标记为已读",
+  "progress.markUnread": "标记为未读",
+  "progress.title": "阅读进度",
+  "progress.newContentTitle": "新内容已添加！",
+  "progress.newContentMessage": "自上次访问以来，已添加以下内容。您的进度已相应更新。",
+  "progress.dismiss": "知道了"
 }
 

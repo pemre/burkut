@@ -69,6 +69,9 @@ different padding and a subtle top border — creating natural chronological sec
 | `PanelHeader` | Reusable ~32px collapse/expand strip with title + chevron toggle button |
 | `useResizeObserver` | Debounced ResizeObserver hook; triggers Leaflet `invalidateSize()` and vis-timeline `redraw()` |
 | `MapResizeWatcher` | Inner component in MapPanel; uses `useMap()` + `useResizeObserver` to self-contain resize logic |
+| `useProgress` | Reading progress tracker hook; persists completed/known IDs to localStorage, detects new content |
+| `ProgressPie` | SVG donut chart showing overall reading progress percentage |
+| `NewContentModal` | Overlay modal listing newly added content items; shown when new `.md` files are detected |
 
 ---
 
@@ -96,6 +99,9 @@ App.selectedId ──► ContentPanel (load content)
 - `src/components/MapPanel/MapPanel.test.jsx`       – location render, react-leaflet mock
 - `src/components/TimelinePanel/TimelinePanel.test.jsx` – buildItems pure function
 - `src/hooks/useResizeObserver.test.js`                 – debounce behavior, cleanup, mocked ResizeObserver
+- `src/hooks/useProgress.test.js`                       – toggle, percentage, localStorage persist/restore, new content detection
+- `src/components/ProgressPie/ProgressPie.test.jsx`     – SVG render, percentage text, accessibility
+- `src/components/NewContentModal/NewContentModal.test.jsx` – list render, dismiss callback, empty-state guard
 
 ### Running Tests
 ```bash
@@ -172,12 +178,60 @@ Panel title keys added to all locale files: `panels.sidebar`, `panels.content`, 
 
 ---
 
+## Progress Tracker
+
+### Overview
+Users can mark any content item (group header pages and sub-content items) as "read". A global progress percentage is shown as an SVG donut chart in the app header. When new `.md` files are added to the project, a modal notifies the user of the new content and the updated progress.
+
+### Feature Flag
+`config.features.progressTracker` (default: `true`)
+
+### localStorage Schema (v1)
+```json
+{
+  "version": 1,
+  "completedIds": ["xia", "shang", "Cinema"],
+  "knownIds": ["xia", "shang", "Cinema", "Dynasties and States", ...]
+}
+```
+- **`version`** — schema version for future migration support
+- **`completedIds`** — IDs the user has marked as read
+- **`knownIds`** — all content IDs known at the time of last acknowledgement
+
+### Components & Hooks
+
+| Name | Role |
+|------|------|
+| `useProgress(index)` | Core hook. Computes completed/total/percentage. Detects new content by diffing current index keys against stored `knownIds`. Prunes stale completed IDs. |
+| `ProgressPie` | Pure SVG donut chart (track + fill arc + percentage text). Props: `percentage`, `size`. Placed in the app header. |
+| `NewContentModal` | Overlay dialog. Shows list of new content titles, a `ProgressPie`, and a dismiss button. Calls `acknowledgeNewContent()` on dismiss. |
+
+### UI Integration
+
+- **ContentPanel**: A ✓ toggle button appears on the right side of the `content-meta` header. Filled circle = read, hollow circle = unread. Works for both sub-content items and group header pages.
+- **Sidebar**: A small ✓ indicator appears next to completed items in the sidebar list.
+- **App Header**: A `ProgressPie` is rendered to the left of the theme toggle button showing overall progress.
+
+### New Content Detection Flow
+1. On mount, `useProgress` loads `knownIds` from localStorage.
+2. It compares the current `Object.keys(index)` against `knownIds`.
+3. Any IDs in the current index but NOT in `knownIds` are flagged as `newContentIds`.
+4. If `newContentIds.length > 0`, `NewContentModal` is rendered.
+5. When the user clicks "Got it", `acknowledgeNewContent()` updates `knownIds` to the full current set.
+6. **First launch** (no localStorage data): all IDs are treated as known (no modal shown).
+
+### i18n Keys
+`progress.markRead`, `progress.markUnread`, `progress.title`, `progress.newContentTitle`, `progress.newContentMessage`, `progress.dismiss`
+
+---
+
 ## Roadmap
 
 - [ ] Custom localization for Vis.js based on app language
 - [ ] Search bar (by title + tag)
 - [ ] GeoJSON polygon support (civilisation / territory borders)
 - [x] Dark/light theme toggle — GitHub Primer-inspired, CSS variables + ThemeContext + CartoDB tiles
+- [x] Reading progress tracker — per-item "mark as read", pie chart, new content detection modal
 - [ ] Mobile responsive layout
 - [x] i18n (Turkish / English / Chinese) — centralized config via `react-i18next`
 - [ ] E2E tests (Playwright)

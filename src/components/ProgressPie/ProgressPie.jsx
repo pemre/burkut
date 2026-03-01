@@ -1,0 +1,59 @@
+import "./ProgressPie.css";
+
+/**
+ * ProgressPie — SVG donut chart with percentage text in the center.
+ *
+ * @param {number} percentage - 0–100
+ * @param {number} [size=28]  - diameter in px
+ */
+export default function ProgressPie({ percentage = 0, size = 28 }) {
+  const stroke = 3;
+  const radius = (size - stroke) / 2;
+  const circumference = 2 * Math.PI * radius;
+  const offset = circumference - (percentage / 100) * circumference;
+
+  return (
+    <div
+      className="progress-pie"
+      role="img"
+      aria-label={`${percentage}%`}
+      title={`${percentage}%`}
+    >
+      <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
+        {/* Track (background circle) */}
+        <circle
+          className="progress-pie__track"
+          cx={size / 2}
+          cy={size / 2}
+          r={radius}
+          fill="none"
+          strokeWidth={stroke}
+        />
+        {/* Fill (progress arc) */}
+        <circle
+          className="progress-pie__fill"
+          cx={size / 2}
+          cy={size / 2}
+          r={radius}
+          fill="none"
+          strokeWidth={stroke}
+          strokeDasharray={circumference}
+          strokeDashoffset={offset}
+          strokeLinecap="round"
+          transform={`rotate(-90 ${size / 2} ${size / 2})`}
+        />
+        {/* Percentage text */}
+        <text
+          className="progress-pie__text"
+          x="50%"
+          y="50%"
+          dominantBaseline="central"
+          textAnchor="middle"
+        >
+          {percentage}%
+        </text>
+      </svg>
+    </div>
+  );
+}
+
