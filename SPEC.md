@@ -229,7 +229,6 @@ Users can mark any content item (group header pages and sub-content items) as "r
 
 - [ ] Custom localization for Vis.js based on app language
 - [ ] Search bar (by title + tag)
-- [ ] GeoJSON polygon support (civilisation / territory borders)
 - [x] Dark/light theme toggle — GitHub Primer-inspired, CSS variables + ThemeContext + CartoDB tiles
 - [x] Reading progress tracker — per-item "mark as read", pie chart, new content detection modal
 - [ ] Mobile responsive layout
