@@ -2,6 +2,7 @@
 id: "Dynasties and States"
 group: "Dynasties and States"
 title: "Hanedanlar ve Devletler"
+sidebarSort: "start"
 ---
 
 # Hanedanlar ve Devletler

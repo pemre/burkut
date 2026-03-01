@@ -36,8 +36,23 @@ location:
   lng: number
   label: string
 polygon: [[lat, lng]]   # GeoJSON-style coordinate list (optional)
+sidebarSort: string     # (header files only) sidebar sort order: "start" | omit for alphabetical
 ---
 ```
+
+#### Sidebar Sort Order
+
+Group header files (e.g. `src/content/Dynasties and States.md`) can include an optional
+`sidebarSort` field in their front matter:
+
+| Value | Behavior |
+|-------|----------|
+| `"start"` | Items are sorted chronologically by their `start` field (handles BCE negative years) |
+| _(omitted)_ | Items are sorted alphabetically by `title` (default) |
+
+When sorted by `start`, items with `type: "background"` (such as period/era files whose titles
+start with an emoji) are rendered as **visual subheaders** in the sidebar — bolder, slightly
+different padding and a subtle top border — creating natural chronological sections.
 
 ---
 

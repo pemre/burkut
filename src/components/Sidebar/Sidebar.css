@@ -68,3 +68,29 @@
   color: var(--accent);
   font-weight: 600;
 }
+
+/* Subheader items (type: background) — period dividers in chronological lists */
+.sidebar-item-btn.sidebar-item-subheader {
+  font-weight: 700;
+  font-size: 0.78rem;
+  color: var(--text-primary);
+  padding-left: 1.2rem;
+  padding-top: 0.55rem;
+  padding-bottom: 0.25rem;
+  margin-top: 0.35rem;
+  letter-spacing: 0.02em;
+  opacity: 0.85;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.sidebar-item-btn.sidebar-item-subheader:first-child,
+li:first-child > .sidebar-item-btn.sidebar-item-subheader {
+  margin-top: 0;
+  border-top: none;
+}
+
+.sidebar-item-btn.sidebar-item-subheader.selected {
+  color: var(--accent);
+  opacity: 1;
+}
+

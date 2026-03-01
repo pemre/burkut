@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GeoJSON → Leaflet Polygon Converter</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, sans-serif;
+    background: #1a1a2e;
+    color: #e0e0e0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1rem;
+  }
+
+  .container {
+    max-width: 900px;
+    width: 100%;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+    color: #00d4ff;
+    margin-bottom: 0.25rem;
+  }
+
+  .subtitle {
+    font-size: 0.85rem;
+    color: #888;
+    margin-bottom: 1.5rem;
+  }
+
+  .subtitle kbd {
+    background: #2a2a4a;
+    border: 1px solid #444;
+    border-radius: 3px;
+    padding: 1px 5px;
+    font-size: 0.8em;
+    color: #aaa;
+  }
+
+  label {
+    display: block;
+    font-size: 0.85rem;
+    color: #aaa;
+    margin-bottom: 0.35rem;
+  }
+
+  textarea {
+    width: 100%;
+    height: 180px;
+    background: #16213e;
+    color: #e0e0e0;
+    border: 1px solid #333;
+    border-radius: 6px;
+    padding: 0.75rem;
+    font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+    font-size: 0.82rem;
+    resize: vertical;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  textarea:focus {
+    border-color: #00d4ff;
+  }
+
+  .controls {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  button {
+    padding: 0.5rem 1.25rem;
+    border: none;
+    border-radius: 5px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+  }
+
+  button:active { transform: scale(0.97); }
+
+  .btn-convert {
+    background: #00d4ff;
+    color: #111;
+  }
+
+  .btn-convert:hover { background: #00b8e6; }
+
+  .btn-clear {
+    background: #333;
+    color: #ccc;
+  }
+
+  .btn-clear:hover { background: #444; }
+
+  .decimal-control {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-left: auto;
+  }
+
+  .decimal-control label {
+    margin: 0;
+    white-space: nowrap;
+  }
+
+  .decimal-control input[type="number"] {
+    width: 58px;
+    padding: 0.4rem 0.35rem;
+    background: #16213e;
+    color: #e0e0e0;
+    border: 1px solid #333;
+    border-radius: 5px;
+    font-size: 0.85rem;
+    text-align: center;
+    outline: none;
+  }
+
+  .decimal-control input[type="number"]:focus {
+    border-color: #00d4ff;
+  }
+
+  .output-section {
+    margin-top: 1.5rem;
+    display: none;
+  }
+
+  .output-section.visible { display: block; }
+
+  .output-block {
+    margin-bottom: 1.25rem;
+  }
+
+  .output-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #00d4ff;
+    margin-bottom: 0.35rem;
+  }
+
+  .info-chips {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.4rem;
+    flex-wrap: wrap;
+  }
+
+  .chip {
+    font-size: 0.72rem;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: #2a2a4a;
+    color: #aaa;
+    border: 1px solid #3a3a5a;
+  }
+
+  .code-box-wrapper {
+    position: relative;
+  }
+
+  .code-box {
+    width: 100%;
+    background: #0f1729;
+    color: #c8e6c9;
+    border: 1px solid #2a2a4a;
+    border-radius: 6px;
+    padding: 0.7rem 3.5rem 0.7rem 0.75rem;
+    font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+    font-size: 0.78rem;
+    line-height: 1.5;
+    overflow-x: auto;
+    white-space: nowrap;
+    cursor: pointer;
+    user-select: all;
+    transition: border-color 0.2s;
+  }
+
+  .code-box:hover {
+    border-color: #00d4ff55;
+  }
+
+  .btn-copy {
+    position: absolute;
+    top: 50%;
+    right: 6px;
+    transform: translateY(-50%);
+    background: #2a2a4a;
+    color: #ccc;
+    padding: 0.3rem 0.6rem;
+    font-size: 0.75rem;
+    border-radius: 4px;
+    min-width: 60px;
+    text-align: center;
+  }
+
+  .btn-copy:hover { background: #3a3a5a; }
+
+  .btn-copy.copied {
+    background: #1b5e20;
+    color: #a5d6a7;
+  }
+
+  .error-box {
+    margin-top: 1rem;
+    padding: 0.75rem 1rem;
+    background: #3e1111;
+    border: 1px solid #6b2222;
+    border-radius: 6px;
+    color: #ff8a80;
+    font-size: 0.85rem;
+    display: none;
+  }
+
+  .error-box.visible { display: block; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>GeoJSON → Leaflet Polygon Converter</h1>
+  <p class="subtitle">Swap <code>[lng, lat]</code> → <code>[lat, lng]</code> &nbsp;·&nbsp; <kbd>Ctrl</kbd>+<kbd>Enter</kbd> to convert</p>
+
+  <label for="input-area">Paste GeoJSON, geometry object, or raw coordinate array:</label>
+  <textarea id="input-area" placeholder='e.g. {"type":"Polygon","coordinates":[[[lng,lat],[lng,lat],...]]}&#10;or  [[lng, lat], [lng, lat], ...]'></textarea>
+
+  <div class="controls">
+    <button class="btn-convert" id="btn-convert">Convert</button>
+    <button class="btn-clear" id="btn-clear">Clear</button>
+    <div class="decimal-control">
+      <label for="decimal-places">Decimal places</label>
+      <input type="number" id="decimal-places" value="2" min="0" max="8">
+    </div>
+  </div>
+
+  <div class="error-box" id="error-box"></div>
+
+  <div class="output-section" id="output-section">
+    <div class="output-block">
+      <div class="output-label">Full precision</div>
+      <div class="info-chips" id="chips-full"></div>
+      <div class="code-box-wrapper">
+        <div class="code-box" id="output-full"></div>
+        <button class="btn-copy" id="copy-full">Copy</button>
+      </div>
+    </div>
+
+    <div class="output-block">
+      <div class="output-label">Simplified</div>
+      <div class="info-chips" id="chips-simplified"></div>
+      <div class="code-box-wrapper">
+        <div class="code-box" id="output-simplified"></div>
+        <button class="btn-copy" id="copy-simplified">Copy</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  var inputArea = document.getElementById('input-area');
+  var btnConvert = document.getElementById('btn-convert');
+  var btnClear = document.getElementById('btn-clear');
+  var decimalInput = document.getElementById('decimal-places');
+  var errorBox = document.getElementById('error-box');
+  var outputSection = document.getElementById('output-section');
+  var outputFull = document.getElementById('output-full');
+  var outputSimplified = document.getElementById('output-simplified');
+  var chipsFull = document.getElementById('chips-full');
+  var chipsSimplified = document.getElementById('chips-simplified');
+  var copyFull = document.getElementById('copy-full');
+  var copySimplified = document.getElementById('copy-simplified');
+
+  var lastSwapped = null;
+  var lastFormat = '';
+
+  function showError(msg) {
+    errorBox.textContent = msg;
+    errorBox.classList.add('visible');
+    outputSection.classList.remove('visible');
+  }
+
+  function hideError() {
+    errorBox.classList.remove('visible');
+  }
+
+  function extractCoords(input) {
+    var text = input.trim();
+    var parsed;
+    var format = 'Raw coordinate array';
+
+    try {
+      parsed = JSON.parse(text);
+    } catch (e) {
+      // Maybe it's a raw array without outer braces? Try wrapping.
+      // Or it could already be a plain array string — try as-is first.
+      try {
+        parsed = JSON.parse('[' + text + ']');
+      } catch (e2) {
+        throw new Error('Unable to parse input as JSON. Check syntax.');
+      }
+    }
+
+    // Navigate into GeoJSON structures
+    if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
+      if (parsed.type === 'FeatureCollection') {
+        format = 'FeatureCollection';
+        if (!parsed.features || !parsed.features.length) throw new Error('FeatureCollection has no features.');
+        parsed = parsed.features[0];
+      }
+      if (parsed.type === 'Feature') {
+        format = format === 'FeatureCollection' ? format : 'Feature';
+        if (!parsed.geometry) throw new Error('Feature has no geometry.');
+        parsed = parsed.geometry;
+      }
+      if (parsed.type === 'MultiPolygon') {
+        format = format === 'Raw coordinate array' ? 'MultiPolygon' : format;
+        if (!parsed.coordinates || !parsed.coordinates.length) throw new Error('MultiPolygon has no coordinates.');
+        // First polygon, first ring
+        return { coords: parsed.coordinates[0][0], format: format };
+      }
+      if (parsed.type === 'Polygon') {
+        format = format === 'Raw coordinate array' ? 'Polygon' : format;
+        if (!parsed.coordinates || !parsed.coordinates.length) throw new Error('Polygon has no coordinates.');
+        // First ring
+        return { coords: parsed.coordinates[0], format: format };
+      }
+      if (parsed.type === 'LineString') {
+        format = 'LineString';
+        if (!parsed.coordinates) throw new Error('LineString has no coordinates.');
+        return { coords: parsed.coordinates, format: format };
+      }
+      if (parsed.coordinates) {
+        return { coords: Array.isArray(parsed.coordinates[0][0]) ? parsed.coordinates[0] : parsed.coordinates, format: format };
+      }
+      throw new Error('Unrecognized GeoJSON object type: ' + (parsed.type || 'unknown'));
+    }
+
+    // It's an array — drill into nesting to find the coordinate pairs
+    if (Array.isArray(parsed)) {
+      return { coords: drillToRing(parsed), format: format };
+    }
+
+    throw new Error('Input is not a recognized format.');
+  }
+
+  function drillToRing(arr) {
+    // If it's an array of [number, number] pairs, return it
+    if (arr.length > 0 && typeof arr[0] === 'number') {
+      // Single coordinate — wrap it
+      return [arr];
+    }
+    if (arr.length > 0 && Array.isArray(arr[0])) {
+      // Check if first element is a coordinate pair [number, number]
+      if (arr[0].length >= 2 && typeof arr[0][0] === 'number' && typeof arr[0][1] === 'number') {
+        return arr;
+      }
+      // It's nested deeper — take first ring
+      return drillToRing(arr[0]);
+    }
+    throw new Error('Cannot find coordinate pairs in the input array.');
+  }
+
+  function swapCoords(coords) {
+    return coords.map(function (c) {
+      return [c[1], c[0]];
+    });
+  }
+
+  function formatFull(swapped) {
+    return '[' + swapped.map(function (p) {
+      return '[' + p[0] + ', ' + p[1] + ']';
+    }).join(', ') + ']';
+  }
+
+  function formatSimplified(swapped, decimals) {
+    return '[' + swapped.map(function (p) {
+      return '[' + Number(p[0].toFixed(decimals)) + ', ' + Number(p[1].toFixed(decimals)) + ']';
+    }).join(', ') + ']';
+  }
+
+  function makeChips(container, count, format) {
+    container.innerHTML = '';
+    var chipCount = document.createElement('span');
+    chipCount.className = 'chip';
+    chipCount.textContent = count + ' points';
+    container.appendChild(chipCount);
+
+    var chipFormat = document.createElement('span');
+    chipFormat.className = 'chip';
+    chipFormat.textContent = 'Input: ' + format;
+    container.appendChild(chipFormat);
+  }
+
+  function renderOutput() {
+    if (!lastSwapped) return;
+    var decimals = parseInt(decimalInput.value, 10);
+    if (isNaN(decimals) || decimals < 0) decimals = 0;
+    if (decimals > 8) decimals = 8;
+
+    var fullText = formatFull(lastSwapped);
+    var simpleText = formatSimplified(lastSwapped, decimals);
+
+    outputFull.textContent = fullText;
+    outputSimplified.textContent = simpleText;
+
+    makeChips(chipsFull, lastSwapped.length, lastFormat);
+    makeChips(chipsSimplified, lastSwapped.length, lastFormat + ' → ' + decimals + 'dp');
+
+    outputSection.classList.add('visible');
+  }
+
+  function doConvert() {
+    hideError();
+    var raw = inputArea.value;
+    if (!raw.trim()) {
+      showError('Please paste some GeoJSON or coordinate data.');
+      return;
+    }
+    try {
+      var result = extractCoords(raw);
+      lastSwapped = swapCoords(result.coords);
+      lastFormat = result.format;
+      renderOutput();
+    } catch (err) {
+      lastSwapped = null;
+      showError(err.message);
+    }
+  }
+
+  function doClear() {
+    inputArea.value = '';
+    hideError();
+    outputSection.classList.remove('visible');
+    lastSwapped = null;
+    lastFormat = '';
+  }
+
+  function copyToClipboard(text, btn) {
+    navigator.clipboard.writeText(text).then(function () {
+      var original = btn.textContent;
+      btn.textContent = '✓ Copied!';
+      btn.classList.add('copied');
+      setTimeout(function () {
+        btn.textContent = original;
+        btn.classList.remove('copied');
+      }, 2000);
+    });
+  }
+
+  // Event listeners
+  btnConvert.addEventListener('click', doConvert);
+  btnClear.addEventListener('click', doClear);
+
+  decimalInput.addEventListener('input', function () {
+    if (lastSwapped) renderOutput();
+  });
+
+  copyFull.addEventListener('click', function () {
+    copyToClipboard(outputFull.textContent, copyFull);
+  });
+
+  copySimplified.addEventListener('click', function () {
+    copyToClipboard(outputSimplified.textContent, copySimplified);
+  });
+
+  outputFull.addEventListener('click', function () {
+    copyToClipboard(outputFull.textContent, copyFull);
+  });
+
+  outputSimplified.addEventListener('click', function () {
+    copyToClipboard(outputSimplified.textContent, copySimplified);
+  });
+
+  document.addEventListener('keydown', function (e) {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+      e.preventDefault();
+      doConvert();
+    }
+  });
+})();
+</script>
+</body>
+</html>
+
