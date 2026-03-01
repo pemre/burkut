@@ -6,7 +6,7 @@ title: "Hanedanlar ve Devletler"
 
 # Hanedanlar ve Devletler
 
-Çin tarihi, yaklaşık **4000 yıllık** kesintisiz hanedan geleneğiyle dünya tarihinin en uzun soluklu siyasi süreçlerinden birini barındırır. Bu bölümde yarı-efsanevi Xia'dan (MÖ 2070) Qing'in sonuna (1912) kadar uzanan **50'ye yakın hanedan ve dönem** kronolojik olarak incelenebilir.
+Çin tarihi, yaklaşık **4000 yıllık** kesintisiz hanedan geleneğiyle dünya tarihinin en uzun soluklu siyasi süreçlerinden biridir. Bu bölümde yarı-efsanevi Xia'dan (MÖ 2070) Qing'in sonuna (1912) kadar uzanan **50'ye yakın hanedan ve dönem** kronolojik olarak incelenebilir.
 
 Zaman çizelgesinde renkli arka planlar altı büyük tarihi dönemi temsil eder:
 
