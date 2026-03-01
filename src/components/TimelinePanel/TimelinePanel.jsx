@@ -53,6 +53,14 @@ export default function TimelinePanel({ index, selectedId, onSelect }) {
       end: "2100-01-01",
       min: "-001800-01-01",
       max: "2100-01-01",
+      height: "100%",
+      groupHeightMode: "fixed",
+      orientation: "top",
+      horizontalScroll: true,
+      verticalScroll: true,
+      zoomKey: 'ctrlKey',
+      zoomMin: 1000 * 60 * 60 * 24 * 31 * 12, // About 12 months in milliseconds
+      zoomFriction: 10, // Higher zooming friction will slow zooming speed. Default: 5
     });
 
     tl.on("select", ({ items: selected }) => {
@@ -83,13 +91,28 @@ export default function TimelinePanel({ index, selectedId, onSelect }) {
     gs.add(translatedGroups);
   }, [translatedGroups]);
 
-  // Dışarıdan selectedId değişince timeline'ı focus et
+  // When selectedId changes, shift timeline left so there is visible time before the item.
+  // focus() centres the item; we then nudge the centre 40% of the window to the right,
+  // placing the item ~40% from the left edge.
   useEffect(() => {
     if (!timelineRef.current || !selectedId) return;
-    const { tl } = timelineRef.current;
+    const { tl, ds } = timelineRef.current;
     tl.setSelection([selectedId]);
-    try { tl.focus(selectedId); } catch (_) {}
+    try {
+      tl.focus(selectedId);
+      const win = tl.getWindow();
+      const winMs = win.end - win.start;
+      const item = ds.get(selectedId);
+      if (item && item.start) {
+        const itemStart = new Date(item.start).getTime();
+        const newCenter = itemStart + winMs * 0.4;
+        tl.moveTo(new Date(newCenter), {
+          animation: { duration: 500, easingFunction: "easeInOutQuad" },
+        });
+      }
+    } catch (_) {}
   }, [selectedId]);
+
 
   // Redraw vis-timeline when the container is resized (e.g. panel drag)
   const handleResize = useCallback(() => {

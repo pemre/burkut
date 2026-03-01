@@ -20,6 +20,7 @@
 .vis-timeline {
   border-color: var(--vis-border) !important;
   background: var(--vis-bg) !important;
+  border: none !important;
 }
 
 .vis-panel.vis-bottom,
@@ -63,6 +64,7 @@
 .vis-item.vis-selected {
   border-color: var(--accent) !important;
   background-color: var(--accent-a30) !important;
+  backdrop-filter: blur(4px);
 }
 
 .vis-label {
