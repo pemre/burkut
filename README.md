@@ -48,6 +48,16 @@ Create a `src/content/{Group}/{id}.md` file with YAML front matter — the app u
 3. Create a **group header file** at `src/content/{Group}.md` — its filename must match the group `id` exactly (case-sensitive). This markdown is displayed when the group header is clicked in the sidebar.
 4. Create a subfolder `src/content/{Group}/` for individual items.
 
+### Adding map polygons
+
+1. Find a reference map image for the dynasty/state on Wikipedia.
+2. Open [geojson.io](https://geojson.io/).
+3. In your browser DevTools, set the map canvas to **50 % opacity** and add the Wikipedia image as a CSS `background-image` so you can trace over it.
+4. Draw the polygon on geojson.io, tracing the historical borders from the reference image.
+5. Export the result as **GeoJSON**.
+6. Open the included `geojson-converter.html` tool in your browser — it reverses coordinate order (GeoJSON `[lng, lat]` → Leaflet `[lat, lng]`) and simplifies the polygon data.
+7. Paste the converter output into the `polygon` field of the corresponding `.md` file's YAML front matter.
+
 ### Content structure
 ```
 src/content/
