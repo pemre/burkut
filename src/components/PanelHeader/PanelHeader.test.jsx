@@ -33,24 +33,26 @@ describe("PanelHeader", () => {
 
   it("shows expand chevron when collapsed (horizontal)", () => {
     render(<PanelHeader {...baseProps} collapsed={true} />);
-    expect(screen.getByRole("button", { name: /expand/i })).toHaveTextContent("▶");
+    const btn = screen.getByRole("button", { name: /expand/i });
+    expect(btn.querySelector("svg")).toBeInTheDocument();
   });
 
   it("shows collapse chevron when expanded (horizontal)", () => {
     render(<PanelHeader {...baseProps} collapsed={false} />);
-    expect(screen.getByRole("button", { name: /collapse/i })).toHaveTextContent("◀");
+    const btn = screen.getByRole("button", { name: /collapse/i });
+    expect(btn.querySelector("svg")).toBeInTheDocument();
   });
 
   it("shows vertical chevrons when direction is vertical", () => {
     const { rerender } = render(
       <PanelHeader {...baseProps} direction="vertical" collapsed={false} />
     );
-    expect(screen.getByRole("button", { name: /collapse/i })).toHaveTextContent("▼");
+    expect(screen.getByRole("button", { name: /collapse/i }).querySelector("svg")).toBeInTheDocument();
 
     rerender(
       <PanelHeader {...baseProps} direction="vertical" collapsed={true} />
     );
-    expect(screen.getByRole("button", { name: /expand/i })).toHaveTextContent("▲");
+    expect(screen.getByRole("button", { name: /expand/i }).querySelector("svg")).toBeInTheDocument();
   });
 
   it("renders children in actions area when provided", () => {

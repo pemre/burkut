@@ -110,7 +110,7 @@ describe("ContentPanel", () => {
     );
     const btn = screen.getByLabelText("progress.markRead");
     expect(btn).toBeInTheDocument();
-    expect(btn).toHaveTextContent("✓");
+    expect(btn.querySelector("svg")).toBeInTheDocument();
   });
 
   it("mark-as-read toggle calls onToggleComplete with current id", async () => {

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { ChevronDown, ChevronRight, Check } from "lucide-react";
 import config from "../../config";
 import "./Sidebar.css";
 
@@ -87,10 +88,10 @@ export default function Sidebar({
             onClick={() => toggleGroup(group.id)}
             aria-expanded={!!expanded[group.id]}
           >
-            <span className="sidebar-arrow">{expanded[group.id] ? "▼" : "▶"}</span>
+            <span className="sidebar-arrow">{expanded[group.id] ? <ChevronDown size={14} /> : <ChevronRight size={14} />}</span>
             {t(group.translationKey)}
             {completedSet?.has(group.id) && (
-                <span className="sidebar-item-done" aria-label="read">✓</span>
+                <span className="sidebar-item-done" aria-label="read"><Check size={12} /></span>
             )}
           </button>
 
@@ -111,7 +112,7 @@ export default function Sidebar({
                   >
                     {item.title || item.id}
                     {completedSet?.has(item.id) && (
-                      <span className="sidebar-item-done" aria-label="read">✓</span>
+                      <span className="sidebar-item-done" aria-label="read"><Check size={12} /></span>
                     )}
                   </button>
                 </li>

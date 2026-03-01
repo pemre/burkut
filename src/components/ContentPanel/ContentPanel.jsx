@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { useTranslation } from "react-i18next";
+import { Check } from "lucide-react";
 import "./ContentPanel.css";
 
 export default function ContentPanel({ selectedId, activeGroup, index, getContent, isComplete, onToggleComplete }) {
@@ -58,7 +59,7 @@ export default function ContentPanel({ selectedId, activeGroup, index, getConten
               aria-label={completed ? t("progress.markUnread") : t("progress.markRead")}
               title={completed ? t("progress.markUnread") : t("progress.markRead")}
             >
-              ✓
+              <Check size={16} />
             </button>
           )}
         </header>
@@ -73,7 +74,7 @@ export default function ContentPanel({ selectedId, activeGroup, index, getConten
               aria-label={completed ? t("progress.markUnread") : t("progress.markRead")}
               title={completed ? t("progress.markUnread") : t("progress.markRead")}
             >
-              ✓
+              <Check size={16} />
             </button>
           </header>
         )

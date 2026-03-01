@@ -34,7 +34,8 @@
 }
 
 .sidebar-arrow {
-  font-size: 0.65rem;
+  display: inline-flex;
+  align-items: center;
 }
 
 .sidebar-items {
@@ -102,8 +103,8 @@ li:first-child > .sidebar-item-btn.sidebar-item-subheader {
 .sidebar-item-done {
   margin-left: auto;
   flex-shrink: 0;
-  font-size: 0.65rem;
-  color: var(--accent);
-  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  color: var(--success);
   opacity: 0.7;
 }

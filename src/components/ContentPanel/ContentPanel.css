@@ -107,21 +107,19 @@
   border-radius: 50%;
   background: transparent;
   color: var(--text-muted);
-  font-size: 0.9rem;
-  font-weight: 700;
   cursor: pointer;
   transition: border-color 0.15s, color 0.15s, background 0.15s;
   line-height: 1;
 }
 
 .read-toggle:hover {
-  border-color: var(--accent);
-  color: var(--accent);
+  border-color: var(--success);
+  color: var(--success-a30);
 }
 
 .read-toggle--done {
-  border-color: var(--accent);
-  background: var(--accent);
+  border-color: var(--success);
+  background: var(--success-a30);
   color: var(--text-on-accent);
 }
 

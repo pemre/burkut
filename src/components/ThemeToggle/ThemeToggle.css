@@ -3,9 +3,12 @@
   border: 1px solid var(--border-default);
   border-radius: 6px;
   cursor: pointer;
-  font-size: 1.1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   padding: 0.25rem 0.5rem;
   line-height: 1;
+  color: var(--text-primary);
   transition: background 0.15s, border-color 0.15s;
 }
 

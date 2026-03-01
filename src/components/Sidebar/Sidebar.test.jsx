@@ -165,7 +165,7 @@ describe("Sidebar", () => {
     const xiaBtn = screen.getByText("Xia Hanedanı").closest("button");
     const check = xiaBtn.querySelector(".sidebar-item-done");
     expect(check).toBeInTheDocument();
-    expect(check).toHaveTextContent("✓");
+    expect(check.querySelector("svg")).toBeInTheDocument();
   });
 
   it("does not show ✓ indicator for uncompleted items", () => {

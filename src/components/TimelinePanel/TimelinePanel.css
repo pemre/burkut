@@ -123,14 +123,12 @@
 
 .timeline-group-toggle:hover {
   background: var(--hover-bg);
-  color: var(--accent);
-  border-color: var(--accent);
 }
 
 .timeline-group-toggle--active {
-  background: var(--accent-a30, rgba(47, 129, 247, 0.15));
-  color: var(--accent);
-  border-color: var(--accent);
+  background: var(--success-a30);
+  color: var(--text-primary);
+  border-color: var(--success-a30);
 }
 
 .timeline-group-toggle--hidden {

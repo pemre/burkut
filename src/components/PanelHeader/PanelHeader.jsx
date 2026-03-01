@@ -1,3 +1,4 @@
+import { ChevronLeft, ChevronRight, ChevronUp, ChevronDown } from "lucide-react";
 import "./PanelHeader.css";
 
 /**
@@ -15,11 +16,11 @@ export default function PanelHeader({ title, collapsed, onToggle, direction = "h
   const isVertical = direction === "vertical";
 
   // Chevron points toward the collapsible edge
-  let chevron;
+  let Chevron;
   if (isVertical) {
-    chevron = collapsed ? "▲" : "▼";
+    Chevron = collapsed ? ChevronUp : ChevronDown;
   } else {
-    chevron = collapsed ? "▶" : "◀";
+    Chevron = collapsed ? ChevronRight : ChevronLeft;
   }
 
   return (
@@ -32,7 +33,7 @@ export default function PanelHeader({ title, collapsed, onToggle, direction = "h
         aria-label={collapsed ? `Expand ${title}` : `Collapse ${title}`}
         title={collapsed ? `Expand ${title}` : `Collapse ${title}`}
       >
-        {chevron}
+        <Chevron size={14} />
       </button>
     </div>
   );

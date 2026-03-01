@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { Group, Panel, Separator, useDefaultLayout } from "react-resizable-panels";
+import { Github } from "lucide-react";
 import Sidebar from "./components/Sidebar/Sidebar";
 import ContentPanel from "./components/ContentPanel/ContentPanel";
 import MapPanel from "./components/MapPanel/MapPanel";
@@ -157,12 +158,9 @@ export default function App() {
           ))}
         </select>
 
-
-        <div>
-          <a href="https://github.com/pemre/burkut" target="_blank">
-            GitHub
-          </a>
-        </div>
+        <a href="https://github.com/pemre/burkut" target="_blank" aria-label="GitHub" title="GitHub" style={{ lineHeight: 1 }}>
+          <Github size={18} />
+        </a>
       </header>
 
       <div className="app-body">
