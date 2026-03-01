@@ -11,6 +11,10 @@
   border-radius: 0;
 }
 
+.map-panel .leaflet-container .leaflet-control-attribution {
+  background: rgba(255, 255, 255, 0.1);
+}
+
 .map-info {
   padding: 0.4rem 0.75rem;
   font-size: 0.75rem;
