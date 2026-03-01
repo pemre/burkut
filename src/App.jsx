@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { Group, Panel, Separator, useDefaultLayout } from "react-resizable-panels";
 import Sidebar from "./components/Sidebar/Sidebar";
@@ -25,6 +25,23 @@ export default function App() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mapCollapsed, setMapCollapsed] = useState(false);
   const [timelineCollapsed, setTimelineCollapsed] = useState(false);
+
+  /** Set of vis.js group ids currently hidden on the timeline (persisted) */
+  const [hiddenGroups, setHiddenGroups] = useState(() => {
+    try {
+      const stored = localStorage.getItem("hiddenGroups");
+      return stored ? new Set(JSON.parse(stored)) : new Set();
+    } catch {
+      return new Set();
+    }
+  });
+
+  // Persist hidden groups to localStorage
+  useEffect(() => {
+    try {
+      localStorage.setItem("hiddenGroups", JSON.stringify([...hiddenGroups]));
+    } catch { /* quota exceeded or private browsing — silently ignore */ }
+  }, [hiddenGroups]);
 
   // Panel refs for imperative collapse/expand
   const sidebarPanelRef = useRef(null);
@@ -79,6 +96,16 @@ export default function App() {
     if (!panel) return;
     if (panel.isCollapsed()) panel.expand();
     else panel.collapse();
+  }, []);
+
+  /** Toggle a vis.js group's visibility on the timeline */
+  const toggleGroup = useCallback((groupId) => {
+    setHiddenGroups((prev) => {
+      const next = new Set(prev);
+      if (next.has(groupId)) next.delete(groupId);
+      else next.add(groupId);
+      return next;
+    });
   }, []);
 
   // Track collapsed state via onResize
@@ -225,12 +252,37 @@ export default function App() {
                     collapsed={timelineCollapsed}
                     onToggle={toggleTimeline}
                     direction="vertical"
-                  />
+                  >
+                    {!timelineCollapsed &&
+                      config.groups.map((g) => {
+                        const isHidden = hiddenGroups.has(g.id);
+                        return (
+                          <button
+                            key={g.id}
+                            className={`timeline-group-toggle ${
+                              isHidden
+                                ? "timeline-group-toggle--hidden"
+                                : "timeline-group-toggle--active"
+                            }`}
+                            onClick={() => toggleGroup(g.id)}
+                            aria-pressed={!isHidden}
+                            title={
+                              isHidden
+                                ? `Show ${t(g.translationKey)}`
+                                : `Hide ${t(g.translationKey)}`
+                            }
+                          >
+                            {t(g.translationKey)}
+                          </button>
+                        );
+                      })}
+                  </PanelHeader>
                   {!timelineCollapsed && (
                     <TimelinePanel
                       index={index}
                       selectedId={selectedId}
                       onSelect={handleSelect}
+                      hiddenGroups={hiddenGroups}
                     />
                   )}
                 </div>

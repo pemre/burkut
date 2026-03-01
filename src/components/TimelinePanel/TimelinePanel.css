@@ -102,3 +102,39 @@
   border-color: var(--vis-border) !important;
 }
 
+/* ── Group visibility toggle buttons ──────────────────────── */
+.timeline-group-toggle {
+  display: inline-flex;
+  align-items: center;
+  padding: 1px 8px;
+  border: 1px solid var(--border-default);
+  border-radius: 10px;
+  background: var(--bg-surface-alt);
+  color: var(--text-secondary);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s, color 0.15s, border-color 0.15s, opacity 0.15s;
+  user-select: none;
+  line-height: 1.5;
+}
+
+.timeline-group-toggle:hover {
+  background: var(--hover-bg);
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.timeline-group-toggle--active {
+  background: var(--accent-a30, rgba(47, 129, 247, 0.15));
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.timeline-group-toggle--hidden {
+  opacity: 0.45;
+  text-decoration: line-through;
+}
+

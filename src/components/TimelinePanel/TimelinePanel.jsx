@@ -26,19 +26,24 @@ function buildItems(index) {
     }));
 }
 
-export default function TimelinePanel({ index, selectedId, onSelect }) {
+export default function TimelinePanel({ index, selectedId, onSelect, hiddenGroups }) {
   const { t, i18n } = useTranslation();
   const containerRef = useRef(null);
   const timelineRef = useRef(null);
 
   const items = useMemo(() => buildItems(index), [index]);
 
-  /** Build translated vis.js groups from config */
+
+  /** Build translated vis.js groups from config, with visibility */
   const translatedGroups = useMemo(
     () =>
-      config.groups.map((g) => ({ id: g.id, content: t(g.translationKey) })),
+      config.groups.map((g) => ({
+        id: g.id,
+        content: t(g.translationKey),
+        visible: !hiddenGroups.has(g.id),
+      })),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [t, i18n.language]
+    [t, i18n.language, hiddenGroups]
   );
 
   // Timeline'ı bir kez init et
