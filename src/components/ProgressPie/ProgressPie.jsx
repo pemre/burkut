@@ -1,4 +1,5 @@
 import "./ProgressPie.css";
+import { useTranslation } from "react-i18next";
 
 /**
  * ProgressPie — SVG donut chart with percentage text in the center.
@@ -7,7 +8,8 @@ import "./ProgressPie.css";
  * @param {number} [size=28]  - diameter in px
  */
 export default function ProgressPie({ percentage = 0, size = 28 }) {
-  const stroke = 3;
+  const { t } = useTranslation();
+  const stroke = 2.5;
   const radius = (size - stroke) / 2;
   const circumference = 2 * Math.PI * radius;
   const offset = circumference - (percentage / 100) * circumference;
@@ -16,8 +18,8 @@ export default function ProgressPie({ percentage = 0, size = 28 }) {
     <div
       className="progress-pie"
       role="img"
-      aria-label={`${percentage}%`}
-      title={`${percentage}%`}
+      aria-label={`${t("progress.title")}: ${percentage}%`}
+      title={`${t("progress.title")}: ${percentage}%`}
     >
       <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
         {/* Track (background circle) */}
@@ -50,7 +52,7 @@ export default function ProgressPie({ percentage = 0, size = 28 }) {
           dominantBaseline="central"
           textAnchor="middle"
         >
-          {percentage}%
+          {percentage}
         </text>
       </svg>
     </div>

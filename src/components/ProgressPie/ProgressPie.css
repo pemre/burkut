@@ -16,8 +16,8 @@
 }
 
 .progress-pie__text {
-  fill: var(--text-secondary);
-  font-size: 7px;
+  fill: var(--text-primary);
+  font-size: 10px;
   font-weight: 700;
   user-select: none;
 }
