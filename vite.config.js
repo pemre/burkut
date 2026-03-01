@@ -17,6 +17,7 @@ function htmlTitlePlugin() {
 }
 
 export default defineConfig({
+  base: process.env.GITHUB_PAGES ? "/burkut/" : "/",
   plugins: [react(), htmlTitlePlugin()],
   assetsInclude: ["**/*.md"],
   define: {
