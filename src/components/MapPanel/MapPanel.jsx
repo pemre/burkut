@@ -88,7 +88,7 @@ export default function MapPanel({ selectedId, index }) {
         {polygon && (
           <Polygon
             positions={polygon}
-            pathOptions={{ color: ACCENT_COLOR, fillOpacity: 0.2 }}
+            pathOptions={{ color: ACCENT_COLOR, fillOpacity: 0.1 }}
           />
         )}
       </MapContainer>
