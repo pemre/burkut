@@ -58,12 +58,13 @@
 .content-body {
   font-size: 0.9rem;
   line-height: 1.7;
+  position: relative;
 }
 
 .content-body h1, .content-body h2, .content-body h3 {
   color: var(--accent);
   font-weight: normal;
-  font-family: var(--font-serif);
+  font-family: var(--font-serif), serif;
   margin-bottom: 0;
 }
 
@@ -100,8 +101,10 @@
 /* ── Read toggle button ──────────────────────────────────── */
 
 .read-toggle {
-  flex-shrink: 0;
-  display: inline-flex;
+  position: absolute;
+  right: 0;
+  top: 0.75rem;
+  display: flex;
   align-items: center;
   justify-content: center;
   width: 28px;

@@ -112,7 +112,7 @@ export default function Sidebar({
                   >
                     {item.title || item.id}
                     {completedSet?.has(item.id) && (
-                      <span className="sidebar-item-done" aria-label="read"><Check size={12} /></span>
+                        <span className="sidebar-item-done" aria-label="read"><Check size={12} /></span>
                     )}
                   </button>
                 </li>

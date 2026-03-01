@@ -40,7 +40,7 @@ export default function ContentPanel({ selectedId, activeGroup, index, getConten
 
   return (
     <article className="content-panel" aria-label={t("aria.contentPanel")}>
-      {meta ? (
+      {meta && (
         <header className="content-meta">
           <div className="content-meta__left">
             {meta.tags && (
@@ -52,38 +52,23 @@ export default function ContentPanel({ selectedId, activeGroup, index, getConten
             )}
             {meta.subtitle && <p className="content-subtitle">{meta.subtitle}</p>}
           </div>
-          {onToggleComplete && (
-            <button
-              className={`read-toggle ${completed ? "read-toggle--done" : ""}`}
-              onClick={() => onToggleComplete(currentId)}
-              aria-label={completed ? t("progress.markUnread") : t("progress.markRead")}
-              title={completed ? t("progress.markUnread") : t("progress.markRead")}
-            >
-              <Check size={16} />
-            </button>
-          )}
         </header>
-      ) : (
-        /* Group header page — still show mark-as-read toggle */
-        onToggleComplete && (
-          <header className="content-meta content-meta--header-only">
-            <div className="content-meta__left" />
-            <button
-              className={`read-toggle ${completed ? "read-toggle--done" : ""}`}
-              onClick={() => onToggleComplete(currentId)}
-              aria-label={completed ? t("progress.markUnread") : t("progress.markRead")}
-              title={completed ? t("progress.markUnread") : t("progress.markRead")}
-            >
-              <Check size={16} />
-            </button>
-          </header>
-        )
       )}
 
       {loading ? (
         <div className="content-loading">{t("content.loading")}</div>
       ) : (
         <div className="content-body">
+          {onToggleComplete && (
+              <button
+                  className={`read-toggle ${completed ? "read-toggle--done" : ""}`}
+                  onClick={() => onToggleComplete(currentId)}
+                  aria-label={completed ? t("progress.markUnread") : t("progress.markRead")}
+                  title={completed ? t("progress.markUnread") : t("progress.markRead")}
+              >
+                <Check size={16} />
+              </button>
+          )}
           <ReactMarkdown remarkPlugins={[remarkGfm]}>{markdown}</ReactMarkdown>
         </div>
       )}
