@@ -171,7 +171,6 @@ Panel title keys added to all locale files: `panels.sidebar`, `panels.content`, 
 
 Further Considerations for Themes
 
-* vis-timeline internal styles — vis-timeline injects its own panel border, axis text, and group background colors via inline styles/classes. Overriding them may require `!important`; alternatively, a theme-compatible CSS class can be passed to the Timeline `options` parameter. Recommendation: CSS override + `!important` is the least invasive solution.
 * useTheme hook vs. CSS-only — Changing the MapPanel tile URL requires JavaScript, so a minimal `useTheme` custom hook can be created (using a MutationObserver that listens to a document attribute, or simple state); alternatively, a React context can be propagated from `ThemeToggle`. Recommendation: A simple `ThemeContext` approach is cleaner and can also be consumed by MapPanel and future components.
 
 ### Translations
