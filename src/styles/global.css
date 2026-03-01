@@ -1,11 +1,11 @@
 /* ── Light theme (default — GitHub Primer inspired) ─────────── */
 :root {
-  --accent: #c9a84c;
-  --accent-a12: rgba(201, 168, 76, 0.12);
-  --accent-a15: rgba(201, 168, 76, 0.15);
-  --accent-a20: rgba(201, 168, 76, 0.2);
-  --accent-a30: rgba(201, 168, 76, 0.3);
-  --accent-a44: #c9a84c44;
+  --accent: #f29b17;
+  --accent-a12: rgba(242, 155, 23, 0.12);
+  --accent-a15: rgba(242, 155, 23, 0.15);
+  --accent-a20: rgba(242, 155, 23, 0.2);
+  --accent-a30: rgba(242, 155, 23, 0.3);
+  --accent-a44: #f29b1744;
 
   --bg-body: #f0f2f5;
   --bg-surface: #ffffff;
@@ -24,12 +24,12 @@
   --hover-bg: rgba(208, 215, 222, 0.32);
 
   /* Timeline background layers — light */
-  --tl-bg-ancient:  rgba(76, 175, 80, 0.15);
-  --tl-bg-early:    rgba(33, 150, 243, 0.15);
-  --tl-bg-fragment: rgba(158, 158, 158, 0.12);
-  --tl-bg-mid:      rgba(255, 193, 7, 0.14);
-  --tl-bg-late:     rgba(255, 152, 0, 0.16);
-  --tl-bg-modern:   rgba(0, 188, 212, 0.13);
+  --tl-bg-ancient:  rgba(56, 161, 74,  0.14);   /* 🟢 green   */
+  --tl-bg-early:    rgba(220, 110, 20, 0.14);   /* 🟠 orange  */
+  --tl-bg-fragment: rgba(140, 88,  44, 0.18);   /* 🟤 brown   */
+  --tl-bg-mid:      rgba(30,  120, 210, 0.14);  /* 🔵 blue    */
+  --tl-bg-late:     rgba(140, 60,  185, 0.14);  /* 🟣 purple  */
+  --tl-bg-modern:   rgba(210, 40,  40,  0.14);  /* 🔴 red     */
 
   /* vis-timeline overrides */
   --vis-bg: #ffffff;
@@ -44,12 +44,12 @@
 
 /* ── Dark theme (GitHub Dark Dimmed inspired) ──────────────── */
 [data-theme="dark"] {
-  --accent: #d4af5a;
-  --accent-a12: rgba(212, 175, 90, 0.12);
-  --accent-a15: rgba(212, 175, 90, 0.15);
-  --accent-a20: rgba(212, 175, 90, 0.2);
-  --accent-a30: rgba(212, 175, 90, 0.3);
-  --accent-a44: rgba(212, 175, 90, 0.27);
+  --accent: #f5ab35;
+  --accent-a12: rgba(245, 171, 53, 0.12);
+  --accent-a15: rgba(245, 171, 53, 0.15);
+  --accent-a20: rgba(245, 171, 53, 0.2);
+  --accent-a30: rgba(245, 171, 53, 0.3);
+  --accent-a44: rgba(245, 171, 53, 0.27);
 
   --bg-body: #1c2128;
   --bg-surface: #22272e;
@@ -68,12 +68,12 @@
   --hover-bg: rgba(99, 110, 123, 0.16);
 
   /* Timeline background layers — dark (higher opacity for visibility) */
-  --tl-bg-ancient:  rgba(76, 175, 80, 0.28);
-  --tl-bg-early:    rgba(66, 165, 245, 0.26);
-  --tl-bg-fragment: rgba(158, 158, 158, 0.2);
-  --tl-bg-mid:      rgba(255, 213, 79, 0.22);
-  --tl-bg-late:     rgba(255, 167, 38, 0.26);
-  --tl-bg-modern:   rgba(0, 188, 212, 0.24);
+  --tl-bg-ancient:  rgba(80,  200, 95,  0.24);  /* 🟢 green   */
+  --tl-bg-early:    rgba(255, 145, 45,  0.24);  /* 🟠 orange  */
+  --tl-bg-fragment: rgba(185, 125, 70,  0.22);  /* 🟤 brown   */
+  --tl-bg-mid:      rgba(66,  160, 250, 0.24);  /* 🔵 blue    */
+  --tl-bg-late:     rgba(185, 100, 230, 0.24);  /* 🟣 purple  */
+  --tl-bg-modern:   rgba(240, 75,  75,  0.24);  /* 🔴 red     */
 
   /* vis-timeline overrides */
   --vis-bg: #22272e;
