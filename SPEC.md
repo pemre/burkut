@@ -159,6 +159,7 @@ Panel title keys added to all locale files: `panels.sidebar`, `panels.content`, 
 
 ## Roadmap
 
+- [ ] Custom localization for Vis.js based on app language
 - [ ] Search bar (by title + tag)
 - [ ] GeoJSON polygon support (civilisation / territory borders)
 - [x] Dark/light theme toggle — GitHub Primer-inspired, CSS variables + ThemeContext + CartoDB tiles
