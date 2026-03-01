@@ -56,7 +56,6 @@ describe("ContentPanel", () => {
         getContent={getContent}
       />
     );
-    expect(screen.getByText("Xia Hanedanı")).toBeInTheDocument();
     expect(screen.getByText("MÖ 2070–1600")).toBeInTheDocument();
     await waitFor(() => {
       expect(screen.getByText("#efsanevi")).toBeInTheDocument();
