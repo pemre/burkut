@@ -1,3 +1,5 @@
+/* biome-ignore-all lint/complexity/noImportantStyles: needed for third-party vis.js override */
+
 .timeline-panel {
   border-top: 1px solid var(--border-default);
   background: var(--bg-surface-alt);
@@ -18,9 +20,8 @@
 
 /* ── vis-timeline theme overrides ──────────────────────────── */
 .vis-timeline {
-  border-color: var(--vis-border) !important;
-  background: var(--vis-bg) !important;
   border: none !important;
+  background: var(--vis-bg);
 }
 
 .vis-panel.vis-bottom,
@@ -41,6 +42,11 @@
 
 .vis-time-axis .vis-grid.vis-major {
   border-color: var(--vis-border) !important;
+}
+
+.vis-label {
+  color: var(--vis-text);
+  font-size: 0.78rem;
 }
 
 .vis-labelset .vis-label {
@@ -67,18 +73,25 @@
   backdrop-filter: blur(4px);
 }
 
-.vis-label {
-  color: var(--vis-text);
-  font-size: 0.78rem;
-}
-
 /* ── Background layers (theme-aware) ──────────────────────── */
-.vis-item.vis-background.bg-ancient  { background: var(--tl-bg-ancient) !important; }
-.vis-item.vis-background.bg-early    { background: var(--tl-bg-early) !important; }
-.vis-item.vis-background.bg-fragment { background: var(--tl-bg-fragment) !important; }
-.vis-item.vis-background.bg-mid      { background: var(--tl-bg-mid) !important; }
-.vis-item.vis-background.bg-late     { background: var(--tl-bg-late) !important; }
-.vis-item.vis-background.bg-modern   { background: var(--tl-bg-modern) !important; }
+.vis-item.vis-background.bg-ancient {
+  background: var(--tl-bg-ancient) !important;
+}
+.vis-item.vis-background.bg-early {
+  background: var(--tl-bg-early) !important;
+}
+.vis-item.vis-background.bg-fragment {
+  background: var(--tl-bg-fragment) !important;
+}
+.vis-item.vis-background.bg-mid {
+  background: var(--tl-bg-mid) !important;
+}
+.vis-item.vis-background.bg-late {
+  background: var(--tl-bg-late) !important;
+}
+.vis-item.vis-background.bg-modern {
+  background: var(--tl-bg-modern) !important;
+}
 
 /* Background items should not have item styling */
 .vis-item.vis-background {
@@ -86,8 +99,13 @@
   border: none !important;
 }
 
-.vis-item.semi-legendary { border-color: var(--accent) !important; border-style: dashed; }
-.vis-item.parallel-state { opacity: 0.75; }
+.vis-item.semi-legendary {
+  border-color: var(--accent) !important;
+  border-style: dashed;
+}
+.vis-item.parallel-state {
+  opacity: 0.75;
+}
 
 /* vis nested group backgrounds */
 .vis-label.vis-nested-group {
@@ -116,7 +134,11 @@
   letter-spacing: 0.02em;
   cursor: pointer;
   white-space: nowrap;
-  transition: background 0.15s, color 0.15s, border-color 0.15s, opacity 0.15s;
+  transition:
+    background 0.15s,
+    color 0.15s,
+    border-color 0.15s,
+    opacity 0.15s;
   user-select: none;
   line-height: 1.5;
 }
@@ -135,4 +157,3 @@
   opacity: 0.45;
   text-decoration: line-through;
 }
-

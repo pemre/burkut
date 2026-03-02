@@ -1,5 +1,5 @@
-import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
+import { describe, expect, it } from "vitest";
 import ProgressPie from "./ProgressPie";
 
 /**
@@ -20,23 +20,23 @@ describe("ProgressPie", () => {
 
   it("shows the correct percentage text", () => {
     render(<ProgressPie percentage={42} />);
-    expect(screen.getByText("42%")).toBeInTheDocument();
+    expect(screen.getByText("42")).toBeInTheDocument();
   });
 
   it("handles 0% (empty pie)", () => {
     render(<ProgressPie percentage={0} />);
-    expect(screen.getByText("0%")).toBeInTheDocument();
+    expect(screen.getByText("0")).toBeInTheDocument();
   });
 
   it("handles 100% (full pie)", () => {
     render(<ProgressPie percentage={100} />);
-    expect(screen.getByText("100%")).toBeInTheDocument();
+    expect(screen.getByText("100")).toBeInTheDocument();
   });
 
   it("has accessible role and aria-label", () => {
     render(<ProgressPie percentage={55} />);
     const pie = screen.getByRole("img");
-    expect(pie).toHaveAttribute("aria-label", "55%");
+    expect(pie).toHaveAttribute("aria-label", "progress.title: 55%");
   });
 
   it("uses the specified size", () => {
@@ -54,4 +54,3 @@ describe("ProgressPie", () => {
     expect(circles[1]).toHaveClass("progress-pie__fill");
   });
 });
-

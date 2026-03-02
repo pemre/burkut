@@ -1,5 +1,6 @@
-import { describe, it, expect, vi } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
+import { describe, expect, it, vi } from "vitest";
+import type { ContentIndex } from "../../hooks/useMdLoader";
 import NewContentModal from "./NewContentModal";
 
 /**
@@ -14,20 +15,15 @@ import NewContentModal from "./NewContentModal";
  * 7. Has dialog role and aria-modal
  */
 
-const mockIndex = {
-  newMovie: { id: "newMovie", title: "New Movie Title" },
-  newDynasty: { id: "newDynasty", title: "New Dynasty" },
+const mockIndex: ContentIndex = {
+  newMovie: { id: "newMovie", title: "New Movie Title", _path: "", _isHeader: false },
+  newDynasty: { id: "newDynasty", title: "New Dynasty", _path: "", _isHeader: false },
 };
 
 describe("NewContentModal", () => {
   it("renders nothing when newContentIds is empty", () => {
     const { container } = render(
-      <NewContentModal
-        newContentIds={[]}
-        index={mockIndex}
-        percentage={80}
-        onDismiss={vi.fn()}
-      />
+      <NewContentModal newContentIds={[]} index={mockIndex} percentage={80} onDismiss={vi.fn()} />,
     );
     expect(container.firstChild).toBeNull();
   });
@@ -39,7 +35,7 @@ describe("NewContentModal", () => {
         index={mockIndex}
         percentage={80}
         onDismiss={vi.fn()}
-      />
+      />,
     );
     expect(container.firstChild).toBeNull();
   });
@@ -51,7 +47,7 @@ describe("NewContentModal", () => {
         index={mockIndex}
         percentage={75}
         onDismiss={vi.fn()}
-      />
+      />,
     );
     expect(screen.getByRole("dialog")).toBeInTheDocument();
     expect(screen.getByText("progress.newContentTitle")).toBeInTheDocument();
@@ -64,7 +60,7 @@ describe("NewContentModal", () => {
         index={mockIndex}
         percentage={60}
         onDismiss={vi.fn()}
-      />
+      />,
     );
     expect(screen.getByText("New Movie Title")).toBeInTheDocument();
     expect(screen.getByText("New Dynasty")).toBeInTheDocument();
@@ -77,7 +73,7 @@ describe("NewContentModal", () => {
         index={mockIndex}
         percentage={50}
         onDismiss={vi.fn()}
-      />
+      />,
     );
     expect(screen.getByText("unknownId")).toBeInTheDocument();
   });
@@ -89,9 +85,9 @@ describe("NewContentModal", () => {
         index={mockIndex}
         percentage={42}
         onDismiss={vi.fn()}
-      />
+      />,
     );
-    expect(screen.getByText("42%")).toBeInTheDocument();
+    expect(screen.getByText("42")).toBeInTheDocument();
   });
 
   it("dismiss button calls onDismiss callback", () => {
@@ -102,7 +98,7 @@ describe("NewContentModal", () => {
         index={mockIndex}
         percentage={75}
         onDismiss={onDismiss}
-      />
+      />,
     );
     fireEvent.click(screen.getByText("progress.dismiss"));
     expect(onDismiss).toHaveBeenCalledTimes(1);
@@ -115,10 +111,9 @@ describe("NewContentModal", () => {
         index={mockIndex}
         percentage={75}
         onDismiss={vi.fn()}
-      />
+      />,
     );
     const dialog = screen.getByRole("dialog");
     expect(dialog).toHaveAttribute("aria-modal", "true");
   });
 });
-

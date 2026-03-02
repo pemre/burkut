@@ -27,12 +27,12 @@
   --success-a30: rgba(45, 164, 78, 0.3);
 
   /* Timeline background layers — light */
-  --tl-bg-ancient:  rgba(56, 161, 74,  0.14);   /* 🟢 green   */
-  --tl-bg-early:    rgba(220, 110, 20, 0.14);   /* 🟠 orange  */
-  --tl-bg-fragment: rgba(140, 88,  44, 0.18);   /* 🟤 brown   */
-  --tl-bg-mid:      rgba(30,  120, 210, 0.14);  /* 🔵 blue    */
-  --tl-bg-late:     rgba(140, 60,  185, 0.14);  /* 🟣 purple  */
-  --tl-bg-modern:   rgba(210, 40,  40,  0.14);  /* 🔴 red     */
+  --tl-bg-ancient: rgba(56, 161, 74, 0.14); /* 🟢 green   */
+  --tl-bg-early: rgba(220, 110, 20, 0.14); /* 🟠 orange  */
+  --tl-bg-fragment: rgba(140, 88, 44, 0.18); /* 🟤 brown   */
+  --tl-bg-mid: rgba(30, 120, 210, 0.14); /* 🔵 blue    */
+  --tl-bg-late: rgba(140, 60, 185, 0.14); /* 🟣 purple  */
+  --tl-bg-modern: rgba(210, 40, 40, 0.14); /* 🔴 red     */
 
   /* vis-timeline overrides */
   --vis-bg: #ffffff;
@@ -45,7 +45,7 @@
   color-scheme: light;
 
   /* Font families — set via main.jsx */
-  --font-serif: 'Crimson Pro', serif;
+  --font-serif: "Crimson Pro", serif;
 }
 
 /* ── Dark theme (GitHub Dark Dimmed inspired) ──────────────── */
@@ -77,12 +77,12 @@
   --success-a30: rgba(63, 185, 80, 0.3);
 
   /* Timeline background layers — dark (higher opacity for visibility) */
-  --tl-bg-ancient:  rgba(80,  200, 95,  0.24);  /* 🟢 green   */
-  --tl-bg-early:    rgba(255, 145, 45,  0.24);  /* 🟠 orange  */
-  --tl-bg-fragment: rgba(185, 125, 70,  0.22);  /* 🟤 brown   */
-  --tl-bg-mid:      rgba(66,  160, 250, 0.24);  /* 🔵 blue    */
-  --tl-bg-late:     rgba(185, 100, 230, 0.24);  /* 🟣 purple  */
-  --tl-bg-modern:   rgba(240, 75,  75,  0.24);  /* 🔴 red     */
+  --tl-bg-ancient: rgba(80, 200, 95, 0.24); /* 🟢 green   */
+  --tl-bg-early: rgba(255, 145, 45, 0.24); /* 🟠 orange  */
+  --tl-bg-fragment: rgba(185, 125, 70, 0.22); /* 🟤 brown   */
+  --tl-bg-mid: rgba(66, 160, 250, 0.24); /* 🔵 blue    */
+  --tl-bg-late: rgba(185, 100, 230, 0.24); /* 🟣 purple  */
+  --tl-bg-modern: rgba(240, 75, 75, 0.24); /* 🔴 red     */
 
   /* vis-timeline overrides */
   --vis-bg: #22272e;
@@ -95,15 +95,19 @@
   color-scheme: dark;
 }
 
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
-html, body, #root {
+html,
+body,
+#root {
   height: 100%;
   margin: 0;
   padding: 0;
-  font-family: 'Segoe UI', system-ui, sans-serif;
+  font-family: "Segoe UI", system-ui, sans-serif;
   background: var(--bg-body);
   color: var(--text-primary);
 }

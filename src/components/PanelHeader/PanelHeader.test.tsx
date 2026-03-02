@@ -1,9 +1,9 @@
-import { describe, it, expect, vi } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
+import { describe, expect, it, vi } from "vitest";
 import PanelHeader from "./PanelHeader";
 
 /**
- * SPEC: PanelHeader bileşeni
+ * SPEC: PanelHeader component
  * --------------------------
  * 1. Renders title and toggle button
  * 2. Chevron reflects collapsed state (horizontal / vertical)
@@ -45,24 +45,27 @@ describe("PanelHeader", () => {
 
   it("shows vertical chevrons when direction is vertical", () => {
     const { rerender } = render(
-      <PanelHeader {...baseProps} direction="vertical" collapsed={false} />
+      <PanelHeader {...baseProps} direction="vertical" collapsed={false} />,
     );
-    expect(screen.getByRole("button", { name: /collapse/i }).querySelector("svg")).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /collapse/i }).querySelector("svg"),
+    ).toBeInTheDocument();
 
-    rerender(
-      <PanelHeader {...baseProps} direction="vertical" collapsed={true} />
-    );
-    expect(screen.getByRole("button", { name: /expand/i }).querySelector("svg")).toBeInTheDocument();
+    rerender(<PanelHeader {...baseProps} direction="vertical" collapsed={true} />);
+    expect(
+      screen.getByRole("button", { name: /expand/i }).querySelector("svg"),
+    ).toBeInTheDocument();
   });
 
   it("renders children in actions area when provided", () => {
     render(
       <PanelHeader {...baseProps}>
-        <button data-testid="child-btn">Action</button>
-      </PanelHeader>
+        <button type="button" data-testid="child-btn">
+          Action
+        </button>
+      </PanelHeader>,
     );
     expect(screen.getByTestId("child-btn")).toBeInTheDocument();
-    // actions wrapper should exist
     expect(screen.getByTestId("child-btn").closest(".panel-header__actions")).toBeTruthy();
   });
 
@@ -71,4 +74,3 @@ describe("PanelHeader", () => {
     expect(container.querySelector(".panel-header__actions")).toBeNull();
   });
 });
-

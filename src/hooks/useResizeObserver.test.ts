@@ -1,5 +1,5 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { renderHook } from "@testing-library/react";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { useResizeObserver } from "./useResizeObserver";
 
 /**
@@ -11,13 +11,18 @@ import { useResizeObserver } from "./useResizeObserver";
  * 4. Clears pending timers on unmount
  */
 
-let mockObserverInstances = [];
-let MockResizeObserver;
+interface MockObserverInstance {
+  observe: ReturnType<typeof vi.fn>;
+  disconnect: ReturnType<typeof vi.fn>;
+  _cb: (entries: ResizeObserverEntry[]) => void;
+}
+
+let mockObserverInstances: MockObserverInstance[] = [];
 
 beforeEach(() => {
   mockObserverInstances = [];
-  MockResizeObserver = vi.fn((cb) => {
-    const instance = {
+  const MockResizeObserver = vi.fn((cb: (entries: ResizeObserverEntry[]) => void) => {
+    const instance: MockObserverInstance = {
       observe: vi.fn(),
       disconnect: vi.fn(),
       _cb: cb,
@@ -52,7 +57,7 @@ describe("useResizeObserver", () => {
 
     renderHook(() => useResizeObserver(ref, callback, 50));
 
-    const entry = { contentRect: { width: 100, height: 200 } };
+    const entry = { contentRect: { width: 100, height: 200 } } as ResizeObserverEntry;
     mockObserverInstances[0]._cb([entry]);
 
     expect(callback).not.toHaveBeenCalled();
@@ -82,4 +87,3 @@ describe("useResizeObserver", () => {
     expect(mockObserverInstances).toHaveLength(0);
   });
 });
-

@@ -1,38 +1,66 @@
-import { useEffect, useRef, useMemo, useCallback } from "react";
-import { Timeline, DataSet } from "vis-timeline/standalone";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import { useTranslation } from "react-i18next";
+import { DataSet, Timeline } from "vis-timeline/standalone";
 import "vis-timeline/styles/vis-timeline-graph2d.min.css";
 import config from "../../config";
+import type { ContentEntry, ContentIndex } from "../../hooks/useMdLoader";
 import { useResizeObserver } from "../../hooks/useResizeObserver";
 import "./TimelinePanel.css";
 
+interface TimelineItem {
+  id: string;
+  content: string;
+  start: string;
+  end: string;
+  group: string;
+  className: string;
+  type: string;
+}
+
+interface TimelineRef {
+  tl: Timeline;
+  ds: DataSet<TimelineItem>;
+  gs: DataSet;
+}
+
 /**
- * index'teki frontmatter verisinden vis.js item'larını üretir.
- * Başlık: title + subtitle (yoksa id)
+ * Builds vis.js items from index front-matter data.
+ * Title: title + subtitle (falls back to id)
  */
-function buildItems(index) {
+export function buildItems(index: ContentIndex): TimelineItem[] {
   return Object.values(index)
-    .filter((m) => m.start && m.end && m.group)
-    .map((m) => ({
+    .filter((m: ContentEntry) => m.start && m.end && m.group)
+    .map((m: ContentEntry) => ({
       id: m.id,
       content: m.subtitle
         ? `${m.title || m.id}<br><small>${m.subtitle}</small>`
-        : m.title || m.id,
-      start: m.start,
-      end: m.end,
-      group: m.group,
+        : ((m.title || m.id) as string),
+      start: m.start as string,
+      end: m.end as string,
+      group: m.group as string,
       className: m.className || "",
       type: m.type || "range",
     }));
 }
 
-export default function TimelinePanel({ index, selectedId, onSelect, hiddenGroups }) {
-  const { t, i18n } = useTranslation();
-  const containerRef = useRef(null);
-  const timelineRef = useRef(null);
+interface TimelinePanelProps {
+  index: ContentIndex;
+  selectedId: string | null;
+  onSelect: (id: string) => void;
+  hiddenGroups: Set<string>;
+}
+
+export default function TimelinePanel({
+  index,
+  selectedId,
+  onSelect,
+  hiddenGroups,
+}: TimelinePanelProps) {
+  const { t } = useTranslation();
+  const containerRef = useRef<HTMLDivElement>(null);
+  const timelineRef = useRef<TimelineRef | null>(null);
 
   const items = useMemo(() => buildItems(index), [index]);
-
 
   /** Build translated vis.js groups from config, with visibility */
   const translatedGroups = useMemo(
@@ -42,11 +70,10 @@ export default function TimelinePanel({ index, selectedId, onSelect, hiddenGroup
         content: t(g.translationKey),
         visible: !hiddenGroups.has(g.id),
       })),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [t, i18n.language, hiddenGroups]
+    [t, hiddenGroups],
   );
 
-  // Timeline'ı bir kez init et
+  // Initialize timeline once
   useEffect(() => {
     if (!containerRef.current || timelineRef.current) return;
 
@@ -63,12 +90,13 @@ export default function TimelinePanel({ index, selectedId, onSelect, hiddenGroup
       orientation: "top",
       horizontalScroll: true,
       verticalScroll: true,
-      zoomKey: 'ctrlKey',
+      zoomKey: "ctrlKey",
       zoomMin: 1000 * 60 * 60 * 24 * 31 * 12, // About 12 months in milliseconds
       zoomFriction: 10, // Higher zooming friction will slow zooming speed. Default: 5
     });
 
-    tl.on("select", ({ items: selected }) => {
+    tl.on("select", (props: Record<string, unknown>) => {
+      const selected = props.items as string[];
       if (selected.length > 0) onSelect(selected[0]);
     });
 
@@ -78,9 +106,9 @@ export default function TimelinePanel({ index, selectedId, onSelect, hiddenGroup
       tl.destroy();
       timelineRef.current = null;
     };
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [items, onSelect, translatedGroups]);
 
-  // items güncellenince DataSet'i güncelle
+  // Update DataSet when items change
   useEffect(() => {
     if (!timelineRef.current) return;
     const { ds } = timelineRef.current;
@@ -88,7 +116,7 @@ export default function TimelinePanel({ index, selectedId, onSelect, hiddenGroup
     ds.add(items);
   }, [items]);
 
-  // Dil değişince group label'larını güncelle
+  // Update group labels when language changes
   useEffect(() => {
     if (!timelineRef.current) return;
     const { gs } = timelineRef.current;
@@ -96,9 +124,7 @@ export default function TimelinePanel({ index, selectedId, onSelect, hiddenGroup
     gs.add(translatedGroups);
   }, [translatedGroups]);
 
-  // When selectedId changes, shift timeline left so there is visible time before the item.
-  // focus() centres the item; we then nudge the centre 40% of the window to the right,
-  // placing the item ~40% from the left edge.
+  // When selectedId changes, shift timeline so the item is visible
   useEffect(() => {
     if (!timelineRef.current || !selectedId) return;
     const { tl, ds } = timelineRef.current;
@@ -108,16 +134,17 @@ export default function TimelinePanel({ index, selectedId, onSelect, hiddenGroup
       const win = tl.getWindow();
       const winMs = win.end - win.start;
       const item = ds.get(selectedId);
-      if (item && item.start) {
+      if (item?.start) {
         const itemStart = new Date(item.start).getTime();
         const newCenter = itemStart + winMs * 0.4;
         tl.moveTo(new Date(newCenter), {
           animation: { duration: 500, easingFunction: "easeInOutQuad" },
         });
       }
-    } catch (_) {}
+    } catch {
+      // item may not exist in the dataset
+    }
   }, [selectedId]);
-
 
   // Redraw vis-timeline when the container is resized (e.g. panel drag)
   const handleResize = useCallback(() => {
@@ -128,8 +155,8 @@ export default function TimelinePanel({ index, selectedId, onSelect, hiddenGroup
   useResizeObserver(containerRef, handleResize);
 
   return (
-    <div className="timeline-panel" aria-label={t("aria.timeline")}>
+    <section className="timeline-panel" aria-label={t("aria.timeline")}>
       <div ref={containerRef} className="timeline-container" />
-    </div>
+    </section>
   );
 }

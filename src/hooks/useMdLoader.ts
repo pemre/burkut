@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
 import matter from "gray-matter";
+import { useEffect, useState } from "react";
 
 /**
- * Vite import.meta.glob ile /src/content/**\/*.md dosyalarını lazy index'ler.
+ * Lazily indexes all .md files under /src/content/ via Vite's import.meta.glob.
  *
  * Content structure:
  *   src/content/{Group}.md           → group header file (displayed when group is selected)
@@ -12,13 +12,38 @@ import matter from "gray-matter";
  * are headers; files inside subfolders (depth 2+) are regular items.
  * Header file names must match the group id in config exactly (case-sensitive).
  *
- * Dönen değerler:
- *   index   – { [id]: frontmatter }   (tüm metadata, içerik hariç)
- *   getContent(id) – Promise<string>  (markdown body, lazy)
+ * Return values:
+ *   index       – { [id]: frontmatter }   (all metadata, content excluded)
+ *   getContent(id) – Promise<string>       (markdown body, lazy-loaded)
  */
 
-// Glob statik olmalı – Vite build-time analiz eder
-const rawModules = import.meta.glob("../content/**/*.md", { as: "raw" });
+export interface ContentEntry {
+  id: string;
+  group?: string;
+  title?: string;
+  subtitle?: string;
+  start?: string;
+  end?: string;
+  className?: string;
+  type?: string;
+  tags?: string[];
+  location?: { lat: number; lng: number; label?: string };
+  polygon?: [number, number][];
+  sidebarSort?: string;
+  _path: string;
+  _isHeader: boolean;
+  [key: string]: unknown;
+}
+
+export interface ContentIndex {
+  [id: string]: ContentEntry;
+}
+
+// Glob must be static — Vite analyzes it at build time
+const rawModules = import.meta.glob("../content/**/*.md", {
+  query: "?raw",
+  import: "default",
+}) as Record<string, () => Promise<string>>;
 
 /** Content root prefix used to calculate path depth */
 const CONTENT_PREFIX = "../content/";
@@ -28,25 +53,25 @@ const CONTENT_PREFIX = "../content/";
  * Header files:  "../content/Cinema.md" → "Cinema"
  * Content files: "../content/Cinema/Hero (2002).md" → "Hero (2002)"
  */
-function pathToId(path) {
-  return path.split("/").pop().replace(".md", "");
+export function pathToId(path: string): string {
+  return (path.split("/").pop() ?? "").replace(".md", "");
 }
 
 /**
  * A file is a group header when it sits directly under the content root,
  * i.e. the relative part after "../content/" contains no "/" separator.
  */
-function isHeaderPath(path) {
+export function isHeaderPath(path: string): boolean {
   const rel = path.slice(CONTENT_PREFIX.length); // e.g. "Cinema.md" or "Cinema/Hero (2002).md"
   return !rel.includes("/");
 }
 
 export function useMdLoader() {
-  const [index, setIndex] = useState({});
+  const [index, setIndex] = useState<ContentIndex>({});
 
   useEffect(() => {
     async function buildIndex() {
-      const entries = {};
+      const entries: ContentIndex = {};
       for (const [path, loader] of Object.entries(rawModules)) {
         const id = pathToId(path);
         try {
@@ -57,9 +82,9 @@ export function useMdLoader() {
             ...data,
             _path: path,
             _isHeader: isHeaderPath(path),
-          };
+          } as ContentEntry;
         } catch (e) {
-          console.warn("MD parse hatası:", path, e);
+          console.warn("MD parse error:", path, e);
         }
       }
       setIndex(entries);
@@ -67,7 +92,7 @@ export function useMdLoader() {
     buildIndex();
   }, []);
 
-  const getContent = async (id) => {
+  const getContent = async (id: string): Promise<string | null> => {
     const meta = index[id];
     if (!meta) return null;
     const raw = await rawModules[meta._path]();

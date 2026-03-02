@@ -9,11 +9,12 @@
   padding: 0.25rem 0.5rem;
   line-height: 1;
   color: var(--text-primary);
-  transition: background 0.15s, border-color 0.15s;
+  transition:
+    background 0.15s,
+    border-color 0.15s;
 }
 
 .theme-toggle:hover {
   background: var(--hover-bg);
   border-color: var(--accent-a44);
 }
-

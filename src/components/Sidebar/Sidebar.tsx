@@ -1,17 +1,26 @@
-import { useState, useEffect } from "react";
+import { Check, ChevronDown, ChevronRight } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { ChevronDown, ChevronRight, Check } from "lucide-react";
 import config from "../../config";
+import type { ContentEntry, ContentIndex } from "../../hooks/useMdLoader";
 import "./Sidebar.css";
+
+interface SidebarProps {
+  index: ContentIndex;
+  selectedId: string | null;
+  activeGroup: string;
+  onSelectItem: (id: string) => void;
+  onSelectGroup: (group: string) => void;
+  completedSet?: Set<string>;
+}
 
 /**
  * Parse a front-matter `start` string (e.g. "-002070-01-01", "0581-01-01")
  * into a comparable numeric value. Handles negative (BCE) years correctly.
  * Returns NaN for missing/invalid values so they sort to the end.
  */
-function parseStartValue(start) {
+function parseStartValue(start?: string): number {
   if (!start) return NaN;
-  // Negative years like "-002070-01-01"
   const match = start.match(/^(-?\d+)-(\d{2})-(\d{2})$/);
   if (!match) return NaN;
   return parseInt(match[1], 10);
@@ -24,55 +33,46 @@ export default function Sidebar({
   onSelectItem,
   onSelectGroup,
   completedSet,
-}) {
+}: SidebarProps) {
   const { t } = useTranslation();
-  const [expanded, setExpanded] = useState({ [activeGroup]: true });
+  const [expanded, setExpanded] = useState<Record<string, boolean>>({ [activeGroup]: true });
 
-  // Seçilen item'ın grubu otomatik expand edilir
+  // Auto-expand the active group
   useEffect(() => {
     if (activeGroup) {
       setExpanded((prev) => ({ ...prev, [activeGroup]: true }));
     }
   }, [activeGroup]);
 
-  const toggleGroup = (groupId) => {
+  const toggleGroup = (groupId: string) => {
     setExpanded((prev) => ({ ...prev, [groupId]: !prev[groupId] }));
     onSelectGroup(groupId);
   };
 
   // Find the group header entry to read sidebarSort config
-  const getGroupHeader = (groupId) =>
-    Object.values(index).find(
-      (item) => item.group === groupId && item._isHeader
-    );
+  const getGroupHeader = (groupId: string): ContentEntry | undefined =>
+    Object.values(index).find((item) => item.group === groupId && item._isHeader);
 
-  // index'ten gruba göre item'ları filtrele (background ve header hariç)
-  const itemsInGroup = (groupId) => {
+  // Filter items in a group (exclude headers)
+  const itemsInGroup = (groupId: string): ContentEntry[] => {
     const header = getGroupHeader(groupId);
     const sortMode = header?.sidebarSort;
 
-    const items = Object.values(index).filter(
-      (item) =>
-        item.group === groupId &&
-        !item._isHeader
-    );
+    const items = Object.values(index).filter((item) => item.group === groupId && !item._isHeader);
 
     if (sortMode === "start") {
       items.sort((a, b) => {
         const aVal = parseStartValue(a.start);
         const bVal = parseStartValue(b.start);
-        // Items without a valid start go to the end
-        if (isNaN(aVal) && isNaN(bVal)) return 0;
-        if (isNaN(aVal)) return 1;
-        if (isNaN(bVal)) return -1;
+        if (Number.isNaN(aVal) && Number.isNaN(bVal)) return 0;
+        if (Number.isNaN(aVal)) return 1;
+        if (Number.isNaN(bVal)) return -1;
         if (aVal !== bVal) return aVal - bVal;
-        // Equal start: background (period) items come first
         const aBg = a.type === "background" ? 0 : 1;
         const bBg = b.type === "background" ? 0 : 1;
         return aBg - bBg;
       });
     } else {
-      // Default: alphabetical by title
       items.sort((a, b) => (a.title || a.id).localeCompare(b.title || b.id));
     }
 
@@ -84,22 +84,28 @@ export default function Sidebar({
       {config.groups.map((group) => (
         <div key={group.id} className="sidebar-group">
           <button
+            type="button"
             className={`sidebar-group-btn ${activeGroup === group.id ? "active" : ""}`}
             onClick={() => toggleGroup(group.id)}
             aria-expanded={!!expanded[group.id]}
           >
-            <span className="sidebar-arrow">{expanded[group.id] ? <ChevronDown size={14} /> : <ChevronRight size={14} />}</span>
+            <span className="sidebar-arrow">
+              {expanded[group.id] ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
+            </span>
             {t(group.translationKey)}
             {completedSet?.has(group.id) && (
-                <span className="sidebar-item-done" aria-label="read"><Check size={12} /></span>
+              <span className="sidebar-item-done" role="img" aria-label="read">
+                <Check size={12} />
+              </span>
             )}
           </button>
 
           {expanded[group.id] && (
-            <ul className="sidebar-items" role="list">
+            <ul className="sidebar-items">
               {itemsInGroup(group.id).map((item) => (
                 <li key={item.id}>
                   <button
+                    type="button"
                     className={[
                       "sidebar-item-btn",
                       selectedId === item.id ? "selected" : "",
@@ -112,7 +118,9 @@ export default function Sidebar({
                   >
                     {item.title || item.id}
                     {completedSet?.has(item.id) && (
-                        <span className="sidebar-item-done" aria-label="read"><Check size={12} /></span>
+                      <span className="sidebar-item-done" role="img" aria-label="read">
+                        <Check size={12} />
+                      </span>
                     )}
                   </button>
                 </li>

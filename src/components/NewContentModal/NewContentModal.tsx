@@ -1,23 +1,26 @@
 import { useTranslation } from "react-i18next";
+import type { ContentIndex } from "../../hooks/useMdLoader";
 import ProgressPie from "../ProgressPie/ProgressPie";
 import "./NewContentModal.css";
+
+interface NewContentModalProps {
+  newContentIds: string[] | null;
+  index: ContentIndex;
+  percentage: number;
+  onDismiss: () => void;
+}
 
 /**
  * NewContentModal — overlay shown when new .md content is detected.
  *
  * Displays a list of newly added items and the updated progress percentage.
- *
- * @param {string[]} newContentIds — IDs of newly detected content
- * @param {Object}   index         — md-loader index (to resolve titles)
- * @param {number}   percentage    — current overall progress percentage
- * @param {Function} onDismiss     — called when user acknowledges
  */
 export default function NewContentModal({
   newContentIds,
   index,
   percentage,
   onDismiss,
-}) {
+}: NewContentModalProps) {
   const { t } = useTranslation();
 
   if (!newContentIds || newContentIds.length === 0) return null;
@@ -28,7 +31,7 @@ export default function NewContentModal({
         <h2 className="modal-title">{t("progress.newContentTitle")}</h2>
         <p className="modal-message">{t("progress.newContentMessage")}</p>
 
-        <ul className="modal-list" role="list">
+        <ul className="modal-list">
           {newContentIds.map((id) => {
             const entry = index[id];
             return (
@@ -43,11 +46,10 @@ export default function NewContentModal({
           <ProgressPie percentage={percentage} size={48} />
         </div>
 
-        <button className="modal-dismiss-btn" onClick={onDismiss}>
+        <button type="button" className="modal-dismiss-btn" onClick={onDismiss}>
           {t("progress.dismiss")}
         </button>
       </div>
     </div>
   );
 }
-

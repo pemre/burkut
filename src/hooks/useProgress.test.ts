@@ -1,6 +1,7 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { renderHook, act } from "@testing-library/react";
-import { useProgress, getAllContentIds } from "./useProgress";
+import { act, renderHook } from "@testing-library/react";
+import { beforeEach, describe, expect, it } from "vitest";
+import type { ContentIndex } from "./useMdLoader";
+import { getAllContentIds, useProgress } from "./useProgress";
 
 /**
  * SPEC: useProgress hook
@@ -16,10 +17,16 @@ import { useProgress, getAllContentIds } from "./useProgress";
  * 9. First launch: all ids become known, no newContentIds
  */
 
-const mockIndex = {
-  xia: { id: "xia", group: "Dynasties and States", title: "Xia" },
-  shang: { id: "shang", group: "Dynasties and States", title: "Shang" },
-  Cinema: { id: "Cinema", group: "Cinema", title: "Cinema", _isHeader: true },
+const mockIndex: ContentIndex = {
+  xia: { id: "xia", group: "Dynasties and States", title: "Xia", _path: "", _isHeader: false },
+  shang: {
+    id: "shang",
+    group: "Dynasties and States",
+    title: "Shang",
+    _path: "",
+    _isHeader: false,
+  },
+  Cinema: { id: "Cinema", group: "Cinema", title: "Cinema", _path: "", _isHeader: true },
 };
 
 beforeEach(() => {
@@ -76,7 +83,7 @@ describe("useProgress", () => {
     const { result } = renderHook(() => useProgress(mockIndex));
     act(() => result.current.toggleComplete("xia"));
 
-    const stored = JSON.parse(localStorage.getItem("readingProgress"));
+    const stored = JSON.parse(localStorage.getItem("readingProgress") ?? "{}");
     expect(stored.completedIds).toContain("xia");
     expect(stored.version).toBe(1);
   });
@@ -88,7 +95,7 @@ describe("useProgress", () => {
         version: 1,
         completedIds: ["shang"],
         knownIds: ["xia", "shang", "Cinema"],
-      })
+      }),
     );
 
     const { result } = renderHook(() => useProgress(mockIndex));
@@ -103,16 +110,15 @@ describe("useProgress", () => {
         version: 1,
         completedIds: ["xia"],
         knownIds: ["xia", "shang"],
-      })
+      }),
     );
 
-    const expandedIndex = {
+    const expandedIndex: ContentIndex = {
       ...mockIndex,
-      newItem: { id: "newItem", group: "Cinema", title: "New Movie" },
+      newItem: { id: "newItem", group: "Cinema", title: "New Movie", _path: "", _isHeader: false },
     };
 
     const { result } = renderHook(() => useProgress(expandedIndex));
-    // Cinema was already in mockIndex but not in knownIds, so it's also new
     expect(result.current.newContentIds).toContain("newItem");
     expect(result.current.newContentIds).toContain("Cinema");
   });
@@ -124,7 +130,7 @@ describe("useProgress", () => {
         version: 1,
         completedIds: [],
         knownIds: ["xia"],
-      })
+      }),
     );
 
     const { result } = renderHook(() => useProgress(mockIndex));
@@ -133,8 +139,7 @@ describe("useProgress", () => {
     act(() => result.current.acknowledgeNewContent());
     expect(result.current.newContentIds).toEqual([]);
 
-    // Verify knownIds updated in localStorage
-    const stored = JSON.parse(localStorage.getItem("readingProgress"));
+    const stored = JSON.parse(localStorage.getItem("readingProgress") ?? "{}");
     expect(stored.knownIds).toContain("xia");
     expect(stored.knownIds).toContain("shang");
     expect(stored.knownIds).toContain("Cinema");
@@ -147,17 +152,15 @@ describe("useProgress", () => {
         version: 1,
         completedIds: ["xia", "removedItem"],
         knownIds: ["xia", "shang", "Cinema", "removedItem"],
-      })
+      }),
     );
 
     const { result } = renderHook(() => useProgress(mockIndex));
     expect(result.current.isComplete("xia")).toBe(true);
-    // removedItem should have been pruned
     expect(result.current.completedSet.has("removedItem")).toBe(false);
   });
 
   it("first launch: all ids become known, no newContentIds", () => {
-    // No localStorage data (first visit)
     const { result } = renderHook(() => useProgress(mockIndex));
     expect(result.current.newContentIds).toEqual([]);
   });
@@ -171,12 +174,10 @@ describe("useProgress", () => {
   it("ignores invalid localStorage data (wrong version)", () => {
     localStorage.setItem(
       "readingProgress",
-      JSON.stringify({ version: 999, completedIds: ["xia"], knownIds: ["xia"] })
+      JSON.stringify({ version: 999, completedIds: ["xia"], knownIds: ["xia"] }),
     );
 
     const { result } = renderHook(() => useProgress(mockIndex));
-    // Should reset — xia should NOT be complete
     expect(result.current.isComplete("xia")).toBe(false);
   });
 });
-

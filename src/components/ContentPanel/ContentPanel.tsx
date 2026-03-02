@@ -1,15 +1,33 @@
-import { useState, useEffect } from "react";
+import { Check } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { useTranslation } from "react-i18next";
-import { Check } from "lucide-react";
+import type { ContentIndex } from "../../hooks/useMdLoader";
 import "./ContentPanel.css";
 
-export default function ContentPanel({ selectedId, activeGroup, index, getContent, isComplete, onToggleComplete }) {
+interface ContentPanelProps {
+  selectedId: string | null;
+  activeGroup: string;
+  index: ContentIndex;
+  getContent: (id: string) => Promise<string | null>;
+  isComplete?: (id: string) => boolean;
+  onToggleComplete?: (id: string) => void;
+}
+
+export default function ContentPanel({
+  selectedId,
+  activeGroup,
+  index,
+  getContent,
+  isComplete,
+  onToggleComplete,
+}: ContentPanelProps) {
   const { t } = useTranslation();
   const [markdown, setMarkdown] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: getContent and t are stable by reference in production
   useEffect(() => {
     let cancelled = false;
     setLoading(true);
@@ -30,9 +48,10 @@ export default function ContentPanel({ selectedId, activeGroup, index, getConten
         }
       });
 
-    return () => { cancelled = true; };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedId, activeGroup, getContent]);
+    return () => {
+      cancelled = true;
+    };
+  }, [selectedId, activeGroup]);
 
   const meta = selectedId ? index[selectedId] : null;
   const currentId = selectedId || activeGroup;
@@ -46,7 +65,9 @@ export default function ContentPanel({ selectedId, activeGroup, index, getConten
             {meta.tags && (
               <div className="content-tags">
                 {meta.tags.map((tag) => (
-                  <span key={tag} className="tag">#{tag}</span>
+                  <span key={tag} className="tag">
+                    #{tag}
+                  </span>
                 ))}
               </div>
             )}
@@ -60,14 +81,15 @@ export default function ContentPanel({ selectedId, activeGroup, index, getConten
       ) : (
         <div className="content-body">
           {onToggleComplete && (
-              <button
-                  className={`read-toggle ${completed ? "read-toggle--done" : ""}`}
-                  onClick={() => onToggleComplete(currentId)}
-                  aria-label={completed ? t("progress.markUnread") : t("progress.markRead")}
-                  title={completed ? t("progress.markUnread") : t("progress.markRead")}
-              >
-                <Check size={16} />
-              </button>
+            <button
+              type="button"
+              className={`read-toggle ${completed ? "read-toggle--done" : ""}`}
+              onClick={() => onToggleComplete(currentId)}
+              aria-label={completed ? t("progress.markUnread") : t("progress.markRead")}
+              title={completed ? t("progress.markUnread") : t("progress.markRead")}
+            >
+              <Check size={16} />
+            </button>
           )}
           <ReactMarkdown remarkPlugins={[remarkGfm]}>{markdown}</ReactMarkdown>
         </div>

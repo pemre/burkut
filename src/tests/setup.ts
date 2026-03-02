@@ -1,22 +1,25 @@
 import "@testing-library/jest-dom";
-import { vi } from "vitest";
 import { Buffer } from "buffer";
+import { vi } from "vitest";
 
 // Polyfill Buffer for gray-matter in jsdom test environment
-globalThis.Buffer = Buffer;
+(globalThis as Record<string, unknown>).Buffer = Buffer;
 
 // Polyfill ResizeObserver for jsdom test environment
 globalThis.ResizeObserver = class ResizeObserver {
-  constructor(cb) { this._cb = cb; }
+  _cb: ResizeObserverCallback;
+  constructor(cb: ResizeObserverCallback) {
+    this._cb = cb;
+  }
   observe() {}
   unobserve() {}
   disconnect() {}
-};
+} as unknown as typeof ResizeObserver;
 
 // Global react-i18next mock — returns translation keys as-is
 vi.mock("react-i18next", () => ({
   useTranslation: () => ({
-    t: (key) => key,
+    t: (key: string) => key,
     i18n: {
       language: "tr",
       changeLanguage: vi.fn(),
@@ -24,4 +27,3 @@ vi.mock("react-i18next", () => ({
   }),
   initReactI18next: { type: "3rdParty", init: () => {} },
 }));
-

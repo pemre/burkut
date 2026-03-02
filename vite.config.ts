@@ -1,16 +1,17 @@
 /// <reference types="vitest" />
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
-import config from "./src/config.js";
+import type { PluginOption } from "vite";
+import config from "./src/config.ts";
 
 /** Injects the app title from config into index.html at build time */
-function htmlTitlePlugin() {
+function htmlTitlePlugin(): PluginOption {
   return {
     name: "html-title-inject",
-    transformIndexHtml(html) {
+    transformIndexHtml(html: string) {
       return html.replace(
         /<title>.*?<\/title>/,
-        `<title>${config.app.logo} ${config.app.name} — History Explorer</title>`
+        `<title>${config.app.logo} ${config.app.name} — History Explorer</title>`,
       );
     },
   };
@@ -33,11 +34,12 @@ export default defineConfig({
   test: {
     globals: true,
     environment: "jsdom",
-    setupFiles: "./src/tests/setup.js",
-    include: ["src/**/*.{test,spec}.{js,jsx}"],
+    setupFiles: "./src/tests/setup.ts",
+    include: ["src/**/*.{test,spec}.{ts,tsx}"],
     coverage: {
       provider: "v8",
       reporter: ["text", "html"],
     },
   },
 });
+

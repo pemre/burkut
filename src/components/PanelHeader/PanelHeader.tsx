@@ -1,22 +1,31 @@
-import { ChevronLeft, ChevronRight, ChevronUp, ChevronDown } from "lucide-react";
+import { ChevronDown, ChevronLeft, ChevronRight, ChevronUp } from "lucide-react";
+import type { ReactNode } from "react";
 import "./PanelHeader.css";
+
+interface PanelHeaderProps {
+  title: string;
+  collapsed: boolean;
+  onToggle: () => void;
+  direction?: "horizontal" | "vertical";
+  children?: ReactNode;
+}
 
 /**
  * Thin header bar for collapsible panels.
  * Shows a title, optional children (e.g. action buttons), and a chevron button
  * to toggle collapse/expand.
- *
- * @param {string}   title     — translated panel title
- * @param {boolean}  collapsed — whether the panel is currently collapsed
- * @param {Function} onToggle  — called when the chevron button is clicked
- * @param {"horizontal"|"vertical"} direction — panel resize axis
- * @param {React.ReactNode} children — optional action elements rendered between title and toggle
  */
-export default function PanelHeader({ title, collapsed, onToggle, direction = "horizontal", children }) {
+export default function PanelHeader({
+  title,
+  collapsed,
+  onToggle,
+  direction = "horizontal",
+  children,
+}: PanelHeaderProps) {
   const isVertical = direction === "vertical";
 
   // Chevron points toward the collapsible edge
-  let Chevron;
+  let Chevron: typeof ChevronUp;
   if (isVertical) {
     Chevron = collapsed ? ChevronUp : ChevronDown;
   } else {
@@ -28,6 +37,7 @@ export default function PanelHeader({ title, collapsed, onToggle, direction = "h
       <span className="panel-header__title">{title}</span>
       {children && <div className="panel-header__actions">{children}</div>}
       <button
+        type="button"
         className="panel-header__toggle"
         onClick={onToggle}
         aria-label={collapsed ? `Expand ${title}` : `Collapse ${title}`}
@@ -38,4 +48,3 @@ export default function PanelHeader({ title, collapsed, onToggle, direction = "h
     </div>
   );
 }
-

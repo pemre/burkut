@@ -1,34 +1,39 @@
-import { MapContainer, TileLayer, Marker, Popup, Polygon, useMap } from "react-leaflet";
-import { useEffect, useCallback, useRef } from "react";
-import { useTranslation } from "react-i18next";
 import L from "leaflet";
-import { useTheme } from "../../hooks/useTheme";
+import { type RefObject, useCallback, useEffect, useRef } from "react";
+import { useTranslation } from "react-i18next";
+import { MapContainer, Marker, Polygon, Popup, TileLayer, useMap } from "react-leaflet";
+import type { ContentIndex } from "../../hooks/useMdLoader";
 import { useResizeObserver } from "../../hooks/useResizeObserver";
+import { useTheme } from "../../hooks/useTheme";
 import "./MapPanel.css";
 
-// Leaflet default icon fix (Vite asset pipeline uyumu)
-delete L.Icon.Default.prototype._getIconUrl;
+// Leaflet default icon fix (Vite asset pipeline compatibility)
+// biome-ignore lint/suspicious/noExplicitAny: Leaflet internal API requires prototype mutation
+delete (L.Icon.Default.prototype as any)._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
   iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
   shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
 });
 
-const CHINA_CENTER = [35.86, 104.19];
+const CHINA_CENTER: [number, number] = [35.86, 104.19];
 const CHINA_ZOOM = 4;
 
-// OpenStreetMaps are using local language for China, I prefered English.
+// OpenStreetMaps are using local language for China, I preferred English.
 // It can be a feature in the future to select the style...
-// const TILE_LIGHT = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
 const TILE_LIGHT = "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png";
 const TILE_DARK = "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png";
-const TILE_ATTR_LIGHT = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/">CARTO</a>';
-const TILE_ATTR_DARK = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/">CARTO</a>';
+const TILE_ATTR =
+  '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/">CARTO</a>';
 
 const ACCENT_COLOR = "#c9a84c";
 
-/** Seçilen item değişince haritayı fly eder */
-function FlyTo({ position }) {
+interface FlyToProps {
+  position: { lat: number; lng: number } | null;
+}
+
+/** Fly the map to the selected item's position */
+function FlyTo({ position }: FlyToProps) {
   const map = useMap();
   useEffect(() => {
     if (position) {
@@ -41,7 +46,7 @@ function FlyTo({ position }) {
 }
 
 /** Watches the map container for size changes and calls invalidateSize */
-function MapResizeWatcher({ containerRef }) {
+function MapResizeWatcher({ containerRef }: { containerRef: RefObject<HTMLDivElement | null> }) {
   const map = useMap();
   const handleResize = useCallback(() => {
     map.invalidateSize();
@@ -50,19 +55,23 @@ function MapResizeWatcher({ containerRef }) {
   return null;
 }
 
-export default function MapPanel({ selectedId, index }) {
+interface MapPanelProps {
+  selectedId: string | null;
+  index: ContentIndex;
+}
+
+export default function MapPanel({ selectedId, index }: MapPanelProps) {
   const { t } = useTranslation();
   const { theme } = useTheme();
-  const containerRef = useRef(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const meta = selectedId ? index[selectedId] : null;
   const location = meta?.location || null;
-  const polygon = meta?.polygon || null;   // GeoJSON koordinat dizisi [[lat,lng], ...]
+  const polygon = (meta?.polygon as [number, number][] | undefined) || null;
 
   const tileUrl = theme === "dark" ? TILE_DARK : TILE_LIGHT;
-  const tileAttr = theme === "dark" ? TILE_ATTR_DARK : TILE_ATTR_LIGHT;
 
   return (
-    <div className="map-panel" ref={containerRef} aria-label={t("aria.map")}>
+    <section className="map-panel" ref={containerRef} aria-label={t("aria.map")}>
       <MapContainer
         center={CHINA_CENTER}
         zoom={CHINA_ZOOM}
@@ -70,11 +79,7 @@ export default function MapPanel({ selectedId, index }) {
         style={{ width: "100%", height: "100%" }}
         aria-label={t("aria.mapContainer")}
       >
-        <TileLayer
-          key={theme}
-          attribution={tileAttr}
-          url={tileUrl}
-        />
+        <TileLayer key={theme} attribution={TILE_ATTR} url={tileUrl} />
 
         <FlyTo position={location} />
         <MapResizeWatcher containerRef={containerRef} />
@@ -86,10 +91,7 @@ export default function MapPanel({ selectedId, index }) {
         )}
 
         {polygon && (
-          <Polygon
-            positions={polygon}
-            pathOptions={{ color: ACCENT_COLOR, fillOpacity: 0.1 }}
-          />
+          <Polygon positions={polygon} pathOptions={{ color: ACCENT_COLOR, fillOpacity: 0.1 }} />
         )}
       </MapContainer>
 
@@ -99,6 +101,6 @@ export default function MapPanel({ selectedId, index }) {
           &nbsp;—&nbsp;{location.lat.toFixed(2)}°N, {location.lng.toFixed(2)}°E
         </div>
       )}
-    </div>
+    </section>
   );
 }

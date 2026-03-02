@@ -93,15 +93,15 @@ App.selectedId ──► ContentPanel (load content)
 ## Test Strategy (Spec Driven)
 
 ### Test Files
-- `src/hooks/useMdLoader.test.js`      – gray-matter parse, pathToId util
-- `src/components/Sidebar/Sidebar.test.jsx`         – render, click, highlight
-- `src/components/ContentPanel/ContentPanel.test.jsx` – async content loading, fallback
-- `src/components/MapPanel/MapPanel.test.jsx`       – location render, react-leaflet mock
-- `src/components/TimelinePanel/TimelinePanel.test.jsx` – buildItems pure function
-- `src/hooks/useResizeObserver.test.js`                 – debounce behavior, cleanup, mocked ResizeObserver
-- `src/hooks/useProgress.test.js`                       – toggle, percentage, localStorage persist/restore, new content detection
-- `src/components/ProgressPie/ProgressPie.test.jsx`     – SVG render, percentage text, accessibility
-- `src/components/NewContentModal/NewContentModal.test.jsx` – list render, dismiss callback, empty-state guard
+- `src/hooks/useMdLoader.test.ts`      – gray-matter parse, pathToId util
+- `src/components/Sidebar/Sidebar.test.tsx`         – render, click, highlight
+- `src/components/ContentPanel/ContentPanel.test.tsx` – async content loading, fallback
+- `src/components/MapPanel/MapPanel.test.tsx`       – location render, react-leaflet mock
+- `src/components/TimelinePanel/TimelinePanel.test.tsx` – buildItems pure function
+- `src/hooks/useResizeObserver.test.ts`                 – debounce behavior, cleanup, mocked ResizeObserver
+- `src/hooks/useProgress.test.ts`                       – toggle, percentage, localStorage persist/restore, new content detection
+- `src/components/ProgressPie/ProgressPie.test.tsx`     – SVG render, percentage text, accessibility
+- `src/components/NewContentModal/NewContentModal.test.tsx` – list render, dismiss callback, empty-state guard
 
 ### Running Tests
 ```bash
@@ -113,7 +113,7 @@ npm run coverage  # coverage report
 
 ### Test Flow When Adding a New Item
 1. Write `src/content/{group}/{id}.md` (front matter + content)
-2. Update `*.test.jsx` for any new component behavior
+2. Update `*.test.tsx` / `*.test.ts` for any new component behavior
 3. Verify with `npm test`
 4. Timeline and sidebar update automatically (hot-reload)
 
@@ -124,9 +124,53 @@ npm run coverage  # coverage report
 - `import.meta.glob` arguments must be **static literals**; variables cannot be used.
 - `react-leaflet` does not fully render in jsdom; MapPanel tests use mocks.
 - vis-timeline's `destroy()` method must be called on unmount (prevents memory leaks).
-- To add a new group: add a new `{ id, translationKey }` entry to the `groups` array in `src/config.js` and define translations in `src/i18n/locales/*.json`.
+- To add a new group: add a new `{ id, translationKey }` entry to the `groups` array in `src/config.ts` and define translations in `src/i18n/locales/*.json`.
 - All UI strings are translated via `react-i18next`; translation files are under `src/i18n/locales/`.
 - Theme colors are managed with CSS custom properties (`src/styles/global.css` → `:root`).
+
+---
+
+
+## Tech Stack
+
+| Layer | Technology |
+|-------|------------|
+| Language | TypeScript (strict mode) |
+| Framework | React 18 + Vite |
+| Timeline | vis-timeline |
+| Map | react-leaflet + Leaflet |
+| Styling | CSS custom properties (no CSS-in-JS) |
+| i18n | react-i18next |
+| Testing | Vitest + @testing-library/react |
+| Linting & Formatting | Biome |
+
+---
+
+## Quality Gates
+
+All code must pass the following checks before merging:
+
+```bash
+npx tsc --noEmit           # zero type errors
+npx biome check src        # zero diagnostics (lint + format)
+npm test                   # all tests pass
+npm run build              # production build succeeds
+```
+
+### Biome Rules (enforced)
+- `lint/a11y/useButtonType` — all `<button>` elements must have an explicit `type` prop
+- `lint/a11y/useAriaPropsSupportedByRole` — ARIA attributes must be valid for the element's role
+- `lint/a11y/noSvgWithoutTitle` — `<svg>` elements must contain a `<title>`
+- `lint/style/noNonNullAssertion` — prefer nullish coalescing (`??`) or type assertions over `!`
+- `lint/suspicious/noImplicitAnyLet` — all `let` declarations must have a type or initializer
+- `lint/style/noDescendingSpecificity` — CSS selectors must not decrease in specificity
+- `lint/suspicious/noShorthandPropertyOverrides` — shorthand CSS must not override longhand
+
+### Contribution Workflow
+1. Write or modify `src/content/{group}/{id}.md` (front matter + body)
+2. Update `*.test.tsx` / `*.test.ts` if component behavior changes
+3. Run all quality gate checks (see above)
+4. Timeline, sidebar, and map update automatically via hot-reload
 
 ---
 
@@ -230,7 +274,6 @@ Users can mark any content item (group header pages and sub-content items) as "r
 - [ ] Custom localization for Vis.js based on app language
 - [ ] Search bar (by title + tag)
 - [x] Dark/light theme toggle — GitHub Primer-inspired, CSS variables + ThemeContext + CartoDB tiles
-- [x] Reading progress tracker — per-item "mark as read", pie chart, new content detection modal
 - [ ] Mobile responsive layout
 - [x] i18n (Turkish / English / Chinese) — centralized config via `react-i18next`
 - [ ] E2E tests (Playwright)
@@ -249,3 +292,19 @@ Further Considerations
 * Markdown content translation — this plan only covers UI chrome. Translating the actual .md content would require parallel content folders (e.g. src/content/en/, src/content/tr/) and is a separate, larger effort for later.
 * vis-timeline group label reactivity — vis.js DataSet doesn't auto-react to React state. When language changes, the groups DataSet must be explicitly updated (.clear() + .add()), or the Timeline re-initialized. A useEffect on i18n.language can handle this
 * dynamic index.html title tag
+
+## AI Instructions
+
+* [ ] Create prompts/[feature].md — the master checklist file with all sub-tasks below, organized in phases.
+* [ ] Each task is a [ ] checkbox. The agent marks [x] after completing and verifying each one.
+* [ ] Update SPEC.md
+* [ ] Update README.md
+* [ ] Final verification:
+  npm run dev — app runs without errors
+  npm run build — production build succeeds
+  npm test — all tests pass
+  npx tsc --noEmit — zero type errors
+  npx biome check src — zero diagnostics
+* [ ] Suggest commit with message: "feat: implement [Feature Name] (see SPEC.md for details)"
+* [ ] After implementation, update the checklist with any deviations from the original spec
+  and note any important architectural decisions or trade-offs made during development.

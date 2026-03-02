@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { type RefObject, useEffect, useRef } from "react";
 
 /**
  * Observes size changes on the element referenced by `ref`
@@ -8,8 +8,12 @@ import { useEffect, useRef } from "react";
  * @param {Function}        callback — called on resize (receives ResizeObserverEntry)
  * @param {number}          delay    — debounce delay in ms (default 100)
  */
-export function useResizeObserver(ref, callback, delay = 100) {
-  const timerRef = useRef(null);
+export function useResizeObserver(
+  ref: RefObject<HTMLElement | null>,
+  callback: (entry: ResizeObserverEntry) => void,
+  delay = 100,
+): void {
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     const element = ref.current;
@@ -30,4 +34,3 @@ export function useResizeObserver(ref, callback, delay = 100) {
     };
   }, [ref, callback, delay]);
 }
-

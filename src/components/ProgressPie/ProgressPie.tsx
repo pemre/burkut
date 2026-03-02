@@ -1,13 +1,15 @@
 import "./ProgressPie.css";
 import { useTranslation } from "react-i18next";
 
+interface ProgressPieProps {
+  percentage?: number;
+  size?: number;
+}
+
 /**
  * ProgressPie — SVG donut chart with percentage text in the center.
- *
- * @param {number} percentage - 0–100
- * @param {number} [size=28]  - diameter in px
  */
-export default function ProgressPie({ percentage = 0, size = 28 }) {
+export default function ProgressPie({ percentage = 0, size = 28 }: ProgressPieProps) {
   const { t } = useTranslation();
   const stroke = 2.5;
   const radius = (size - stroke) / 2;
@@ -22,6 +24,7 @@ export default function ProgressPie({ percentage = 0, size = 28 }) {
       title={`${t("progress.title")}: ${percentage}%`}
     >
       <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
+        <title>{`${t("progress.title")}: ${percentage}%`}</title>
         {/* Track (background circle) */}
         <circle
           className="progress-pie__track"
@@ -58,4 +61,3 @@ export default function ProgressPie({ percentage = 0, size = 28 }) {
     </div>
   );
 }
-

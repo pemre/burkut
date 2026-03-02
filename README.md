@@ -43,7 +43,7 @@ npm run coverage    # coverage report
 Create a `src/content/{Group}/{id}.md` file with YAML front matter — the app updates automatically.
 
 ### Adding a new group
-1. Add a `{ id, translationKey }` entry to `groups` in `src/config.js`.
+1. Add a `{ id, translationKey }` entry to `groups` in `src/config.ts`.
 2. Add translations in `src/i18n/locales/*.json`.
 3. Create a **group header file** at `src/content/{Group}.md` — its filename must match the group `id` exactly (case-sensitive). This markdown is displayed when the group header is clicked in the sidebar.
 4. Create a subfolder `src/content/{Group}/` for individual items.
@@ -74,6 +74,17 @@ src/content/
 
 See `SPEC.md` for the full content schema and architecture details.
 
+## Quality Gates
+
+All code is written in **TypeScript** (strict mode) and linted/formatted by **Biome**.
+
+```bash
+npx tsc --noEmit           # zero type errors
+npx biome check src        # zero diagnostics (lint + format)
+npm test                   # all tests pass
+npm run build              # production build succeeds
+```
+
 ***
 
-*Built with Vite + React + vis.js + react-leaflet. Markdown-driven, no backend required.*
+*Built with TypeScript + Vite + React + vis.js + react-leaflet + Biome. Markdown-driven, no backend required.*

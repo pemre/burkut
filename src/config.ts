@@ -3,7 +3,36 @@
  * Single source of truth for groups, app identity, theme, defaults, and features.
  */
 
-const config = {
+export interface SupportedLocale {
+  code: string;
+  label: string;
+}
+
+export interface GroupConfig {
+  id: string;
+  translationKey: string;
+}
+
+export interface AppConfig {
+  app: {
+    name: string;
+    logo: string;
+    defaultLocale: string;
+    supportedLocales: SupportedLocale[];
+  };
+  groups: GroupConfig[];
+  defaults: {
+    activeGroup: string;
+  };
+  features: {
+    search: boolean;
+    darkLightToggle: boolean;
+    draggableLayout: boolean;
+    progressTracker: boolean;
+  };
+}
+
+const config: AppConfig = {
   app: {
     name: "Bürküt",
     logo: "🦅",
@@ -22,8 +51,8 @@ const config = {
    */
   groups: [
     { id: "Dynasties and States", translationKey: "groups.dynasties" },
-    { id: "Literature",           translationKey: "groups.literature" },
-    { id: "Cinema",               translationKey: "groups.cinema" },
+    { id: "Literature", translationKey: "groups.literature" },
+    { id: "Cinema", translationKey: "groups.cinema" },
   ],
 
   defaults: {
@@ -40,4 +69,3 @@ const config = {
 };
 
 export default config;
-

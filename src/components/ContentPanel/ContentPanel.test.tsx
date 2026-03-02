@@ -1,70 +1,73 @@
-import { describe, it, expect, vi } from "vitest";
-import { render, screen, waitFor, fireEvent } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { describe, expect, it, vi } from "vitest";
+import type { ContentIndex } from "../../hooks/useMdLoader";
 import ContentPanel from "./ContentPanel";
 
 /**
- * SPEC: ContentPanel bileşeni
+ * SPEC: ContentPanel component
  * ---------------------------
- * 1. selectedId için getContent çağrılır
- * 2. Yükleme sırasında "Yükleniyor" gösterilir
- * 3. Markdown içerik render edilir
- * 4. Meta bilgileri (title, tags) gösterilir
- * 5. getContent null dönerse fallback mesajı gösterilir
- * 6. selectedId null iken activeGroup header içeriği gösterilir
+ * 1. getContent is called for selectedId
+ * 2. Loading indicator is shown while loading
+ * 3. Markdown content is rendered
+ * 4. Meta info (title, tags) is displayed
+ * 5. Fallback message shown when getContent returns null
+ * 6. When selectedId is null, activeGroup header content is loaded
  * 7. Mark-as-read toggle renders and works
  * 8. Mark-as-read toggle shows done state when complete
  */
 
-const mockIndex = {
+const mockIndex: ContentIndex = {
   xia: {
     id: "xia",
     group: "Dynasties and States",
-    title: "Xia Hanedanı",
-    subtitle: "MÖ 2070–1600",
-    tags: ["efsanevi", "tunç-çağı-öncesi"],
+    title: "Xia Dynasty",
+    subtitle: "2070–1600 BCE",
+    tags: ["legendary", "pre-bronze-age"],
+    _path: "",
     _isHeader: false,
   },
   "Dynasties and States": {
     id: "Dynasties and States",
     group: "Dynasties and States",
-    title: "Hanedanlar ve Devletler",
+    title: "Dynasties and States",
+    _path: "",
     _isHeader: true,
   },
 };
 
 describe("ContentPanel", () => {
-  it("içeriği markdown olarak render eder", async () => {
-    const getContent = vi.fn().mockResolvedValue("## Test Başlık\n\nTest içerik.");
+  it("renders content as markdown", async () => {
+    const getContent = vi.fn().mockResolvedValue("## Test Heading\n\nTest content.");
     render(
       <ContentPanel
         selectedId="xia"
         activeGroup="Dynasties and States"
         index={mockIndex}
         getContent={getContent}
-      />
+      />,
     );
     await waitFor(() => {
-      expect(screen.getByText("Test içerik.")).toBeInTheDocument();
+      expect(screen.getByText("Test content.")).toBeInTheDocument();
     });
   });
 
-  it("meta başlık ve tag'leri gösterir", async () => {
-    const getContent = vi.fn().mockResolvedValue("İçerik.");
+  it("shows meta title and tags", async () => {
+    const getContent = vi.fn().mockResolvedValue("Content.");
     render(
       <ContentPanel
         selectedId="xia"
         activeGroup="Dynasties and States"
         index={mockIndex}
         getContent={getContent}
-      />
+      />,
     );
-    expect(screen.getByText("MÖ 2070–1600")).toBeInTheDocument();
+    expect(screen.getByText("2070–1600 BCE")).toBeInTheDocument();
     await waitFor(() => {
-      expect(screen.getByText("#efsanevi")).toBeInTheDocument();
+      expect(screen.getByText("#legendary")).toBeInTheDocument();
     });
   });
 
-  it("getContent null dönünce fallback gösterilir", async () => {
+  it("shows fallback when getContent returns null", async () => {
     const getContent = vi.fn().mockResolvedValue(null);
     render(
       <ContentPanel
@@ -72,31 +75,31 @@ describe("ContentPanel", () => {
         activeGroup="Dynasties and States"
         index={mockIndex}
         getContent={getContent}
-      />
+      />,
     );
     await waitFor(() => {
       expect(screen.getByText(/content\.notFound/)).toBeInTheDocument();
     });
   });
 
-  it("selectedId null iken activeGroup header içeriği yüklenir", async () => {
-    const getContent = vi.fn().mockResolvedValue("# Hanedanlar ve Devletler\n\nGrup açıklaması.");
+  it("loads activeGroup header content when selectedId is null", async () => {
+    const getContent = vi.fn().mockResolvedValue("# Dynasties and States\n\nGroup description.");
     render(
       <ContentPanel
         selectedId={null}
         activeGroup="Dynasties and States"
         index={mockIndex}
         getContent={getContent}
-      />
+      />,
     );
     expect(getContent).toHaveBeenCalledWith("Dynasties and States");
     await waitFor(() => {
-      expect(screen.getByText("Grup açıklaması.")).toBeInTheDocument();
+      expect(screen.getByText("Group description.")).toBeInTheDocument();
     });
   });
 
   it("renders mark-as-read toggle button when onToggleComplete is provided", async () => {
-    const getContent = vi.fn().mockResolvedValue("İçerik.");
+    const getContent = vi.fn().mockResolvedValue("Content.");
     const onToggle = vi.fn();
     render(
       <ContentPanel
@@ -106,15 +109,17 @@ describe("ContentPanel", () => {
         getContent={getContent}
         isComplete={() => false}
         onToggleComplete={onToggle}
-      />
+      />,
     );
+    await waitFor(() => {
+      expect(screen.getByLabelText("progress.markRead")).toBeInTheDocument();
+    });
     const btn = screen.getByLabelText("progress.markRead");
-    expect(btn).toBeInTheDocument();
     expect(btn.querySelector("svg")).toBeInTheDocument();
   });
 
   it("mark-as-read toggle calls onToggleComplete with current id", async () => {
-    const getContent = vi.fn().mockResolvedValue("İçerik.");
+    const getContent = vi.fn().mockResolvedValue("Content.");
     const onToggle = vi.fn();
     render(
       <ContentPanel
@@ -124,14 +129,17 @@ describe("ContentPanel", () => {
         getContent={getContent}
         isComplete={() => false}
         onToggleComplete={onToggle}
-      />
+      />,
     );
+    await waitFor(() => {
+      expect(screen.getByLabelText("progress.markRead")).toBeInTheDocument();
+    });
     fireEvent.click(screen.getByLabelText("progress.markRead"));
     expect(onToggle).toHaveBeenCalledWith("xia");
   });
 
   it("toggle shows done state when item is complete", async () => {
-    const getContent = vi.fn().mockResolvedValue("İçerik.");
+    const getContent = vi.fn().mockResolvedValue("Content.");
     render(
       <ContentPanel
         selectedId="xia"
@@ -140,8 +148,11 @@ describe("ContentPanel", () => {
         getContent={getContent}
         isComplete={() => true}
         onToggleComplete={vi.fn()}
-      />
+      />,
     );
+    await waitFor(() => {
+      expect(screen.getByLabelText("progress.markUnread")).toBeInTheDocument();
+    });
     const btn = screen.getByLabelText("progress.markUnread");
     expect(btn).toHaveClass("read-toggle--done");
   });
@@ -156,9 +167,10 @@ describe("ContentPanel", () => {
         getContent={getContent}
         isComplete={() => false}
         onToggleComplete={vi.fn()}
-      />
+      />,
     );
-    const btn = screen.getByLabelText("progress.markRead");
-    expect(btn).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByLabelText("progress.markRead")).toBeInTheDocument();
+    });
   });
 });

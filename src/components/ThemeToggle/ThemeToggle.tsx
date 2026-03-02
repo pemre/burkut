@@ -1,6 +1,6 @@
-import { useTheme } from "../../hooks/useTheme";
+import { Moon, Sun } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { Sun, Moon } from "lucide-react";
+import { useTheme } from "../../hooks/useTheme";
 import "./ThemeToggle.css";
 
 export default function ThemeToggle() {
@@ -9,6 +9,7 @@ export default function ThemeToggle() {
 
   return (
     <button
+      type="button"
       className="theme-toggle"
       onClick={toggleTheme}
       aria-label={t("theme.toggle")}
@@ -18,4 +19,3 @@ export default function ThemeToggle() {
     </button>
   );
 }
-

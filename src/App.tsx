@@ -1,18 +1,18 @@
-import { useState, useCallback, useEffect, useRef } from "react";
+import { Github } from "lucide-react";
+import { type ChangeEvent, useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Group, Panel, Separator, useDefaultLayout } from "react-resizable-panels";
-import { Github } from "lucide-react";
-import Sidebar from "./components/Sidebar/Sidebar";
 import ContentPanel from "./components/ContentPanel/ContentPanel";
 import MapPanel from "./components/MapPanel/MapPanel";
-import TimelinePanel from "./components/TimelinePanel/TimelinePanel";
-import ThemeToggle from "./components/ThemeToggle/ThemeToggle";
-import ProgressPie from "./components/ProgressPie/ProgressPie";
 import NewContentModal from "./components/NewContentModal/NewContentModal";
 import PanelHeader from "./components/PanelHeader/PanelHeader";
+import ProgressPie from "./components/ProgressPie/ProgressPie";
+import Sidebar from "./components/Sidebar/Sidebar";
+import ThemeToggle from "./components/ThemeToggle/ThemeToggle";
+import TimelinePanel from "./components/TimelinePanel/TimelinePanel";
+import config from "./config";
 import { useMdLoader } from "./hooks/useMdLoader";
 import { useProgress } from "./hooks/useProgress";
-import config from "./config";
 import "./styles/layout.css";
 
 /**
@@ -22,7 +22,7 @@ import "./styles/layout.css";
  */
 export default function App() {
   const { t, i18n } = useTranslation();
-  const [selectedId, setSelectedId] = useState(null);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
   const [activeGroup, setActiveGroup] = useState(config.defaults.activeGroup);
 
   // Collapse state for each panel
@@ -31,10 +31,10 @@ export default function App() {
   const [timelineCollapsed, setTimelineCollapsed] = useState(false);
 
   /** Set of vis.js group ids currently hidden on the timeline (persisted) */
-  const [hiddenGroups, setHiddenGroups] = useState(() => {
+  const [hiddenGroups, setHiddenGroups] = useState<Set<string>>(() => {
     try {
       const stored = localStorage.getItem("hiddenGroups");
-      return stored ? new Set(JSON.parse(stored)) : new Set();
+      return stored ? new Set(JSON.parse(stored) as string[]) : new Set();
     } catch {
       return new Set();
     }
@@ -44,7 +44,9 @@ export default function App() {
   useEffect(() => {
     try {
       localStorage.setItem("hiddenGroups", JSON.stringify([...hiddenGroups]));
-    } catch { /* quota exceeded or private browsing — silently ignore */ }
+    } catch {
+      /* quota exceeded or private browsing — silently ignore */
+    }
   }, [hiddenGroups]);
 
   // Panel refs for imperative collapse/expand
@@ -68,50 +70,62 @@ export default function App() {
   } = useProgress(index);
 
   const handleSelect = useCallback(
-    (id) => {
+    (id: string) => {
       setSelectedId(id);
-      if (index[id]) setActiveGroup(index[id].group);
+      if (index[id]?.group) setActiveGroup(index[id].group);
     },
-    [index]
+    [index],
   );
 
-  const handleGroupSelect = useCallback((group) => {
+  const handleGroupSelect = useCallback((group: string) => {
     setActiveGroup(group);
     setSelectedId(null);
   }, []);
 
   const handleLanguageChange = useCallback(
-    (e) => {
+    (e: ChangeEvent<HTMLSelectElement>) => {
       const lng = e.target.value;
       i18n.changeLanguage(lng);
       document.title = t("app.htmlTitle", { lng });
     },
-    [i18n, t]
+    [i18n, t],
   );
 
   const toggleSidebar = useCallback(() => {
-    const panel = sidebarPanelRef.current;
+    const panel = sidebarPanelRef.current as {
+      isCollapsed: () => boolean;
+      expand: () => void;
+      collapse: () => void;
+    } | null;
     if (!panel) return;
     if (panel.isCollapsed()) panel.expand();
     else panel.collapse();
   }, []);
 
   const toggleMap = useCallback(() => {
-    const panel = mapPanelRef.current;
+    const panel = mapPanelRef.current as {
+      isCollapsed: () => boolean;
+      expand: () => void;
+      collapse: () => void;
+    } | null;
     if (!panel) return;
     if (panel.isCollapsed()) panel.expand();
     else panel.collapse();
   }, []);
 
   const toggleTimeline = useCallback(() => {
-    const panel = timelinePanelRef.current;
+    const panel = timelinePanelRef.current as {
+      isCollapsed: () => boolean;
+      expand: () => void;
+      collapse: () => void;
+    } | null;
     if (!panel) return;
     if (panel.isCollapsed()) panel.expand();
     else panel.collapse();
   }, []);
 
   /** Toggle a vis.js group's visibility on the timeline */
-  const toggleGroup = useCallback((groupId) => {
+  const toggleGroup = useCallback((groupId: string) => {
     setHiddenGroups((prev) => {
       const next = new Set(prev);
       if (next.has(groupId)) next.delete(groupId);
@@ -121,15 +135,15 @@ export default function App() {
   }, []);
 
   // Track collapsed state via onResize
-  const handleSidebarResize = useCallback((size) => {
+  const handleSidebarResize = useCallback((size: { asPercentage: number }) => {
     setSidebarCollapsed(size.asPercentage <= 2);
   }, []);
 
-  const handleMapResize = useCallback((size) => {
+  const handleMapResize = useCallback((size: { asPercentage: number }) => {
     setMapCollapsed(size.asPercentage <= 2);
   }, []);
 
-  const handleTimelineResize = useCallback((size) => {
+  const handleTimelineResize = useCallback((size: { asPercentage: number }) => {
     setTimelineCollapsed(size.asPercentage <= 3);
   }, []);
 
@@ -139,9 +153,7 @@ export default function App() {
         <span className="app-logo">{config.app.logo}</span>
         <h1>{t("app.title")}</h1>
 
-        {config.features.progressTracker && (
-          <ProgressPie percentage={percentage} />
-        )}
+        {config.features.progressTracker && <ProgressPie percentage={percentage} />}
 
         {config.features.darkLightToggle && <ThemeToggle />}
 
@@ -158,7 +170,14 @@ export default function App() {
           ))}
         </select>
 
-        <a href="https://github.com/pemre/burkut" target="_blank" aria-label="GitHub" title="GitHub" style={{ lineHeight: 1 }}>
+        <a
+          href="https://github.com/pemre/burkut"
+          target="_blank"
+          aria-label="GitHub"
+          title="GitHub"
+          style={{ lineHeight: 1 }}
+          rel="noreferrer"
+        >
           <Github size={18} />
         </a>
       </header>
@@ -248,9 +267,7 @@ export default function App() {
                         collapsed={mapCollapsed}
                         onToggle={toggleMap}
                       />
-                      {!mapCollapsed && (
-                        <MapPanel selectedId={selectedId} index={index} />
-                      )}
+                      {!mapCollapsed && <MapPanel selectedId={selectedId} index={index} />}
                     </div>
                   </Panel>
                 </Group>
@@ -281,6 +298,7 @@ export default function App() {
                         const isHidden = hiddenGroups.has(g.id);
                         return (
                           <button
+                            type="button"
                             key={g.id}
                             className={`timeline-group-toggle ${
                               isHidden
