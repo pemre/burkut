@@ -3,6 +3,7 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import type { PluginOption } from "vite";
 import config from "./src/config.ts";
+import mdContent from "./vite-plugins/md-content.ts";
 
 /** Injects the app title from config into index.html at build time */
 function htmlTitlePlugin(): PluginOption {
@@ -19,18 +20,7 @@ function htmlTitlePlugin(): PluginOption {
 
 export default defineConfig({
   base: process.env.GITHUB_PAGES ? "/burkut/" : "/",
-  plugins: [react(), htmlTitlePlugin()],
-  assetsInclude: ["**/*.md"],
-  define: {
-    "global.Buffer": "globalThis.Buffer",
-  },
-  optimizeDeps: {
-    esbuildOptions: {
-      define: {
-        global: "globalThis",
-      },
-    },
-  },
+  plugins: [react(), htmlTitlePlugin(), mdContent()],
   test: {
     globals: true,
     environment: "jsdom",

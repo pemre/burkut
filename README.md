@@ -15,6 +15,7 @@ This project started as something personal: a trip to China was coming up, and a
 
 ## Features
 
+- ⚡ **Instant loading** — all content pre-parsed at build time via a custom Vite plugin, zero runtime fetches
 - 🔀 **Draggable & collapsible panels** — resize and collapse Sidebar, Map, and Timeline by dragging boundaries; layout persisted to `localStorage`
 - 🌗 **Dark / Light theme toggle** — GitHub Primer-inspired, CSS variables + ThemeContext + CartoDB tiles
 - 🌐 **i18n** — Turkish, English, and Chinese via `react-i18next`

@@ -1,9 +1,5 @@
 import "@testing-library/jest-dom";
-import { Buffer } from "buffer";
 import { vi } from "vitest";
-
-// Polyfill Buffer for gray-matter in jsdom test environment
-(globalThis as Record<string, unknown>).Buffer = Buffer;
 
 // Polyfill ResizeObserver for jsdom test environment
 globalThis.ResizeObserver = class ResizeObserver {

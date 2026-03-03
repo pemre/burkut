@@ -1,56 +1,85 @@
-import matter from "gray-matter";
 import { describe, expect, it } from "vitest";
-import { isHeaderPath, pathToId } from "./useMdLoader";
+import { buildIndex, isHeaderPath, type MdModule, pathToId } from "./useMdLoader";
 
 /**
  * SPEC: useMdLoader
  * -----------------
- * 1. Scans all .md files and adds frontmatter to the index
- * 2. getContent(id) returns the markdown body (excluding frontmatter)
- * 3. getContent returns null for an invalid id
+ * 1. buildIndex builds an index from pre-parsed { data, content } modules
+ * 2. pathToId extracts the id from a file path
+ * 3. isHeaderPath recognizes header vs subfolder files
  */
 
-// gray-matter parse test (unit test independent of hook)
-describe("gray-matter parse", () => {
-  it("correctly parses frontmatter", () => {
-    const raw = `---
-id: xia
-group: Dynasties and States
-title: "Xia Dynasty"
-start: "-002070-01-01"
-end: "-001600-01-01"
----
+// buildIndex tests — uses pre-parsed module format (output of vite-plugin-md-content)
+describe("buildIndex", () => {
+  it("builds index from pre-parsed modules", () => {
+    const modules: Record<string, MdModule> = {
+      "../content/Dynasties and States/xia.md": {
+        data: {
+          id: "xia",
+          group: "Dynasties and States",
+          title: "Xia Dynasty",
+          start: "-002070-01-01",
+          end: "-001600-01-01",
+        },
+        content: "\n# Xia Dynasty\n\nContent goes here.",
+      },
+    };
 
-# Xia Dynasty
-
-Content goes here.`;
-
-    const { data, content } = matter(raw);
-    expect(data.id).toBe("xia");
-    expect(data.group).toBe("Dynasties and States");
-    expect(content.trim()).toContain("# Xia Dynasty");
+    const index = buildIndex(modules);
+    expect(index.xia).toBeDefined();
+    expect(index.xia.id).toBe("xia");
+    expect(index.xia.group).toBe("Dynasties and States");
+    expect(index.xia.title).toBe("Xia Dynasty");
+    expect(index.xia._isHeader).toBe(false);
+    expect(index.xia._path).toBe("../content/Dynasties and States/xia.md");
   });
 
-  it("returns empty data object when no frontmatter is present", () => {
-    const raw = "# Just content\n\nNo metadata.";
-    const { data, content } = matter(raw);
-    expect(data).toEqual({});
-    expect(content).toContain("Just content");
+  it("handles modules with no frontmatter data", () => {
+    const modules: Record<string, MdModule> = {
+      "../content/Notes/empty.md": {
+        data: {},
+        content: "# Just content\n\nNo metadata.",
+      },
+    };
+
+    const index = buildIndex(modules);
+    expect(index.empty).toBeDefined();
+    expect(index.empty.id).toBe("empty");
+    expect(index.empty._isHeader).toBe(false);
   });
 
-  it("parses location object", () => {
-    const raw = `---
-id: shang
-location:
-  lat: 36.1
-  lng: 114.3
-  label: "Yinxu (Anyang)"
----
-Content`;
-    const { data } = matter(raw);
-    const location = data.location as { lat: number; lng: number; label: string };
-    expect(location.lat).toBe(36.1);
-    expect(location.label).toBe("Yinxu (Anyang)");
+  it("parses location object from pre-parsed data", () => {
+    const modules: Record<string, MdModule> = {
+      "../content/Dynasties and States/shang.md": {
+        data: {
+          id: "shang",
+          location: { lat: 36.1, lng: 114.3, label: "Yinxu (Anyang)" },
+        },
+        content: "Content",
+      },
+    };
+
+    const index = buildIndex(modules);
+    const location = index.shang.location;
+    expect(location?.lat).toBe(36.1);
+    expect(location?.label).toBe("Yinxu (Anyang)");
+  });
+
+  it("detects header files by path depth", () => {
+    const modules: Record<string, MdModule> = {
+      "../content/Cinema.md": {
+        data: { id: "Cinema", group: "Cinema", title: "Cinema" },
+        content: "Header content",
+      },
+      "../content/Cinema/Hero (2002).md": {
+        data: { id: "Hero (2002)", group: "Cinema", title: "Hero" },
+        content: "Movie content",
+      },
+    };
+
+    const index = buildIndex(modules);
+    expect(index.Cinema._isHeader).toBe(true);
+    expect(index["Hero (2002)"]._isHeader).toBe(false);
   });
 });
 

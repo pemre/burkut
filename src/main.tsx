@@ -1,4 +1,3 @@
-import { Buffer } from "buffer";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "leaflet/dist/leaflet.css";
@@ -9,9 +8,6 @@ import "./styles/global.css";
 import "./i18n"; // i18next initialization — must be imported before App
 import App from "./App";
 import { ThemeProvider } from "./hooks/useTheme";
-
-// Polyfill Buffer for gray-matter in browser
-window.Buffer = Buffer;
 
 const rootEl = document.getElementById("root");
 if (!rootEl) throw new Error("Root element not found");
