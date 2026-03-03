@@ -80,6 +80,10 @@ sidebarSort: string     # header files only: "start" or omit for alphabetical
 ---
 ```
 
+## Design System
+
+Bürküt uses a three-tier design token architecture (core → semantic → component) and reusable UI primitives in `src/components/ui/`. See the [Design System Guidelines](src/components/ui/GUIDELINES.md) for token naming conventions, component APIs, and patterns for extending the system.
+
 ## Documentation
 
 Detailed project documentation lives in `.kiro/steering/`:

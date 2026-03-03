@@ -15,7 +15,11 @@
 │   │   ├── WidgetVisibilityMenu/ # Dropdown to toggle widget visibility
 │   │   ├── ThemeToggle/         # Dark/light theme switch
 │   │   ├── ProgressPie/         # SVG donut chart for reading progress
-│   │   └── NewContentModal/     # Modal for newly detected content
+│   │   ├── NewContentModal/     # Modal for newly detected content
+│   │   └── ui/                  # Design system primitives (Button, etc.)
+│   │       ├── Button/          # Polymorphic button component
+│   │       ├── GUIDELINES.md    # Design system conventions
+│   │       └── index.ts         # Barrel export
 │   ├── hooks/
 │   │   ├── useLayoutPersistence.ts # Widget grid layout + visibility state (localStorage)
 │   │   ├── useMdLoader.ts       # Loads pre-parsed markdown from virtual module
@@ -52,3 +56,5 @@
 - CSS uses custom properties defined in `global.css` for theming. No CSS-in-JS.
 - `react-leaflet` doesn't render in jsdom — MapPanel tests use mocks.
 - vis-timeline requires explicit `destroy()` on unmount to prevent memory leaks.
+- UI primitives live in `src/components/ui/` — use these for all new interactive elements instead of creating ad-hoc styled elements. Import from the barrel: `import { Button } from "../ui";`
+- See `src/components/ui/GUIDELINES.md` for the full design system conventions.

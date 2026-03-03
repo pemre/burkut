@@ -4,21 +4,7 @@
 }
 
 .widget-visibility-menu__toggle {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  padding: 4px 10px;
-  border: 1px solid var(--border-subtle);
-  border-radius: 4px;
-  background: var(--bg-surface-alt);
-  color: var(--text-primary);
-  font-size: 0.85rem;
-  cursor: pointer;
   white-space: nowrap;
-}
-
-.widget-visibility-menu__toggle:hover {
-  background: var(--border-subtle);
 }
 
 .widget-visibility-menu__dropdown {

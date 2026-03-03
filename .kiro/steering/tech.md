@@ -58,6 +58,22 @@ npm run build           # production build succeeds
 - Module resolution: bundler
 - `allowImportingTsExtensions` is enabled
 
+## Design System
+
+Bürküt uses a three-tier CSS custom property architecture for design tokens, following the W3C DTCG conceptual model:
+
+| Tier | Naming Pattern | Location | Example |
+|------|---------------|----------|---------|
+| Core | `--{category}-{name}-{scale}` | `global.css :root` | `--color-amber-500`, `--space-2`, `--radius-md` |
+| Semantic | `--{category}-{context}` | `global.css :root` + `[data-theme="dark"]` | `--color-primary`, `--color-border-default` |
+| Component | `--{component}-{property}` | Component `.css` file | `--btn-height`, `--btn-border-radius` |
+
+Components consume semantic tokens. Core tokens are never referenced directly by component CSS.
+
+UI primitives live in `src/components/ui/` with co-located `.tsx`, `.css`, and `.test.tsx` files. A barrel `index.ts` re-exports all primitives. When building new interactive elements, always use existing UI primitives from `src/components/ui/` instead of creating ad-hoc styled elements.
+
+Full conventions, component APIs, and patterns: [`src/components/ui/GUIDELINES.md`](../src/components/ui/GUIDELINES.md).
+
 ## Custom Vite Plugin
 
 `vite-plugins/md-content.ts` scans all `.md` files under `src/content/`, parses them with `gray-matter` at build/dev time, and serves them as a single virtual module (`virtual:md-content`). This keeps `gray-matter` and `Buffer` out of the browser bundle. The plugin watches the content directory for HMR.

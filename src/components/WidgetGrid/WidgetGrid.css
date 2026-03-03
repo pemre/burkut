@@ -38,24 +38,25 @@
   user-select: none;
 }
 
-.react-grid-item>.react-resizable-handle::after {
+.react-grid-item > .react-resizable-handle::after {
   width: 8px;
   height: 8px;
+  z-index: 9999;
 }
 
-.react-grid-item>.react-resizable-handle:hover::after {
+.react-grid-item > .react-resizable-handle:hover::after {
   width: 12px;
   height: 12px;
   border-right: 2px solid var(--accent);
   border-bottom: 2px solid var(--accent);
 }
 
-[data-theme="dark"] .react-grid-item>.react-resizable-handle:hover::after {
+[data-theme="dark"] .react-grid-item > .react-resizable-handle:hover::after {
   border-right: 2px solid var(--accent);
   border-bottom: 2px solid var(--accent);
 }
 
-[data-theme="dark"] .react-grid-item>.react-resizable-handle::after {
+[data-theme="dark"] .react-grid-item > .react-resizable-handle::after {
   border-right: 2px solid var(--accent-a44);
   border-bottom: 2px solid var(--accent-a44);
 }

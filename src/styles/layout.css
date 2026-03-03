@@ -35,37 +35,16 @@
 }
 
 .language-select {
+  height: 28px;
   background: var(--bg-surface-alt);
   color: var(--text-primary);
-  border: 1px solid var(--border-default);
-  border-radius: 6px;
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-control);
   padding: 0.2rem 0.4rem;
   font-size: 0.8rem;
   cursor: pointer;
 }
 
 .language-select:hover {
-  border-color: var(--accent-a44);
-}
-
-/* ── Reset layout button ───────────────────────────────────── */
-
-.reset-layout-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
-  padding: 0;
-  border: 1px solid var(--border-subtle);
-  border-radius: 4px;
-  background: var(--bg-surface-alt);
-  color: var(--text-secondary);
-  cursor: pointer;
-  flex-shrink: 0;
-}
-
-.reset-layout-btn:hover {
-  background: var(--border-subtle);
-  color: var(--text-primary);
+  border-color: var(--color-border-hover);
 }

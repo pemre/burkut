@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { Button } from "../ui";
 import { WIDGET_REGISTRY } from "../WidgetGrid/widgetRegistry";
 import "./WidgetVisibilityMenu.css";
 
@@ -31,15 +32,16 @@ export function WidgetVisibilityMenu({
 
   return (
     <div className="widget-visibility-menu" ref={containerRef}>
-      <button
-        type="button"
+      <Button
+        variant="text"
         className="widget-visibility-menu__toggle"
         aria-label={t("widget.visibility.label")}
         aria-expanded={open}
+        title={t("widget.visibility.label")}
         onClick={() => setOpen((prev) => !prev)}
       >
         {t("widget.visibility.label")}
-      </button>
+      </Button>
       {open && (
         <div className="widget-visibility-menu__dropdown" role="menu">
           {WIDGET_REGISTRY.map((widget) => (

@@ -14,6 +14,31 @@ function openMenu() {
 }
 
 describe("WidgetVisibilityMenu", () => {
+  it("toggle button has btn and btn--text classes", () => {
+    render(<WidgetVisibilityMenu visibilityState={allVisible()} setWidgetVisible={vi.fn()} />);
+    const toggle = screen.getByRole("button", { name: "widget.visibility.label" });
+    expect(toggle).toHaveClass("btn", "btn--text");
+  });
+
+  it("toggle button forwards aria-expanded when closed", () => {
+    render(<WidgetVisibilityMenu visibilityState={allVisible()} setWidgetVisible={vi.fn()} />);
+    const toggle = screen.getByRole("button", { name: "widget.visibility.label" });
+    expect(toggle).toHaveAttribute("aria-expanded", "false");
+  });
+
+  it("toggle button forwards aria-expanded when open", () => {
+    render(<WidgetVisibilityMenu visibilityState={allVisible()} setWidgetVisible={vi.fn()} />);
+    openMenu();
+    const toggle = screen.getByRole("button", { name: "widget.visibility.label" });
+    expect(toggle).toHaveAttribute("aria-expanded", "true");
+  });
+
+  it("toggle button has title attribute", () => {
+    render(<WidgetVisibilityMenu visibilityState={allVisible()} setWidgetVisible={vi.fn()} />);
+    const toggle = screen.getByRole("button", { name: "widget.visibility.label" });
+    expect(toggle).toHaveAttribute("title", "widget.visibility.label");
+  });
+
   it("renders a checkbox for each widget in WIDGET_REGISTRY", () => {
     render(<WidgetVisibilityMenu visibilityState={allVisible()} setWidgetVisible={vi.fn()} />);
     openMenu();
@@ -56,14 +81,12 @@ describe("WidgetVisibilityMenu", () => {
     openMenu();
 
     WIDGET_REGISTRY.forEach((widget) => {
-      // The mock t() returns the key as-is, so the label text equals the titleKey
       expect(screen.getByRole("checkbox", { name: widget.titleKey })).toBeInTheDocument();
     });
   });
 
   it("toggle button uses widget.visibility.label i18n key", () => {
     render(<WidgetVisibilityMenu visibilityState={allVisible()} setWidgetVisible={vi.fn()} />);
-    // Button text and aria-label both use the key (returned as-is by mock)
     expect(screen.getByRole("button", { name: "widget.visibility.label" })).toBeInTheDocument();
   });
 

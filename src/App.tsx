@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import NewContentModal from "./components/NewContentModal/NewContentModal";
 import ProgressPie from "./components/ProgressPie/ProgressPie";
 import ThemeToggle from "./components/ThemeToggle/ThemeToggle";
+import { Button } from "./components/ui";
 import { WidgetGrid } from "./components/WidgetGrid/WidgetGrid";
 import { WidgetVisibilityMenu } from "./components/WidgetVisibilityMenu/WidgetVisibilityMenu";
 import config from "./config";
@@ -114,15 +115,14 @@ export default function App() {
         {config.features.darkLightToggle && <ThemeToggle />}
 
         {config.features.draggableLayout && (
-          <button
-            type="button"
-            className="reset-layout-btn"
+          <Button
+            variant="icon"
             onClick={resetLayout}
             aria-label={t("layout.reset")}
             title={t("layout.reset")}
           >
             <RotateCcw size={16} />
-          </button>
+          </Button>
         )}
 
         {config.features.draggableLayout && (
@@ -145,16 +145,16 @@ export default function App() {
           ))}
         </select>
 
-        <a
+        <Button
+          variant="icon"
           href="https://github.com/pemre/burkut"
           target="_blank"
+          rel="noreferrer"
           aria-label="GitHub"
           title="GitHub"
-          style={{ lineHeight: 1 }}
-          rel="noreferrer"
         >
           <Github size={18} />
-        </a>
+        </Button>
       </header>
 
       <div className="app-body">
