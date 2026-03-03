@@ -13,7 +13,7 @@ It started as something personal: a trip to China was coming up, and a timeline 
 ## Features
 
 - ⚡ Instant loading — all content pre-parsed at build time, zero runtime fetches
-- 🔀 Draggable & collapsible panels — resize Sidebar, Map, and Timeline; layout persisted to localStorage
+- 🔀 Draggable & resizable widget grid — rearrange Sidebar, Content, Map, and Timeline widgets; layout and visibility persisted to localStorage
 - 🌗 Dark / Light theme toggle
 - 🌐 i18n — Turkish, English, and Chinese
 - 📝 Markdown-driven content with YAML front matter
@@ -23,7 +23,7 @@ It started as something personal: a trip to China was coming up, and a timeline 
 
 ## Roadmap
 
-- [ ] Use react-grid-layout as a widget system instead of draggable panels: Breakpoint: lg (12 columns) and Compaction type: Vertical. Also 
+- [x] ~~Use react-grid-layout as a widget system instead of draggable panels~~
 - [ ] Custom localization for Vis.js based on app language
 - [ ] Search bar (by title + tag)
 - [ ] E2E tests (Playwright)
@@ -94,4 +94,4 @@ These steering files are the source of truth for architecture decisions and proj
 
 ---
 
-*Built with TypeScript + Vite + React + vis.js + react-leaflet + Biome. Markdown-driven, no backend required.*
+*Built with TypeScript + Vite + React + react-grid-layout + vis.js + react-leaflet + Biome. Markdown-driven, no backend required.*

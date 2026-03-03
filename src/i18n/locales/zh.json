@@ -29,5 +29,9 @@
   "progress.title": "阅读进度",
   "progress.newContentTitle": "新内容已添加！",
   "progress.newContentMessage": "自上次访问以来，已添加以下内容。您的进度已相应更新。",
-  "progress.dismiss": "知道了"
+  "progress.dismiss": "知道了",
+
+  "layout.reset": "重置布局",
+  "widget.close": "关闭小部件",
+  "widget.visibility.label": "小部件"
 }

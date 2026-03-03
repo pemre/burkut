@@ -6,6 +6,7 @@
   --accent-a20: rgba(242, 155, 23, 0.2);
   --accent-a30: rgba(242, 155, 23, 0.3);
   --accent-a44: #f29b1744;
+  --accent-a66: #f29b1766;
 
   --bg-body: #f0f2f5;
   --bg-surface: #ffffff;
@@ -27,12 +28,18 @@
   --success-a30: rgba(45, 164, 78, 0.3);
 
   /* Timeline background layers — light */
-  --tl-bg-ancient: rgba(56, 161, 74, 0.14); /* 🟢 green   */
-  --tl-bg-early: rgba(220, 110, 20, 0.14); /* 🟠 orange  */
-  --tl-bg-fragment: rgba(140, 88, 44, 0.18); /* 🟤 brown   */
-  --tl-bg-mid: rgba(30, 120, 210, 0.14); /* 🔵 blue    */
-  --tl-bg-late: rgba(140, 60, 185, 0.14); /* 🟣 purple  */
-  --tl-bg-modern: rgba(210, 40, 40, 0.14); /* 🔴 red     */
+  /* 🟢 green   */
+  --tl-bg-ancient: rgba(56, 161, 74, 0.14);
+  /* 🟠 orange  */
+  --tl-bg-early: rgba(220, 110, 20, 0.14);
+  /* 🟤 brown   */
+  --tl-bg-fragment: rgba(140, 88, 44, 0.18);
+  /* 🔵 blue    */
+  --tl-bg-mid: rgba(30, 120, 210, 0.14);
+  /* 🟣 purple  */
+  --tl-bg-late: rgba(140, 60, 185, 0.14);
+  /* 🔴 red     */
+  --tl-bg-modern: rgba(210, 40, 40, 0.14);
 
   /* vis-timeline overrides */
   --vis-bg: #ffffff;
@@ -77,12 +84,18 @@
   --success-a30: rgba(63, 185, 80, 0.3);
 
   /* Timeline background layers — dark (higher opacity for visibility) */
-  --tl-bg-ancient: rgba(80, 200, 95, 0.24); /* 🟢 green   */
-  --tl-bg-early: rgba(255, 145, 45, 0.24); /* 🟠 orange  */
-  --tl-bg-fragment: rgba(185, 125, 70, 0.22); /* 🟤 brown   */
-  --tl-bg-mid: rgba(66, 160, 250, 0.24); /* 🔵 blue    */
-  --tl-bg-late: rgba(185, 100, 230, 0.24); /* 🟣 purple  */
-  --tl-bg-modern: rgba(240, 75, 75, 0.24); /* 🔴 red     */
+  --tl-bg-ancient: rgba(80, 200, 95, 0.24);
+  /* 🟢 green   */
+  --tl-bg-early: rgba(255, 145, 45, 0.24);
+  /* 🟠 orange  */
+  --tl-bg-fragment: rgba(185, 125, 70, 0.22);
+  /* 🟤 brown   */
+  --tl-bg-mid: rgba(66, 160, 250, 0.24);
+  /* 🔵 blue    */
+  --tl-bg-late: rgba(185, 100, 230, 0.24);
+  /* 🟣 purple  */
+  --tl-bg-modern: rgba(240, 75, 75, 0.24);
+  /* 🔴 red     */
 
   /* vis-timeline overrides */
   --vis-bg: #22272e;

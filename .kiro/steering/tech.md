@@ -12,7 +12,7 @@
 | Markdown | react-markdown + remark-gfm |
 | i18n | react-i18next |
 | Icons | lucide-react |
-| Layout | react-resizable-panels |
+| Layout | react-grid-layout v2 |
 | Styling | Plain CSS with custom properties (no CSS-in-JS) |
 | Linting/Formatting | Biome |
 | Testing | Vitest + @testing-library/react + jsdom |

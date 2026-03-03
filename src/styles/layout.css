@@ -48,107 +48,24 @@
   border-color: var(--accent-a44);
 }
 
-/* ── Resize handles ────────────────────────────────────────── */
+/* ── Reset layout button ───────────────────────────────────── */
 
-.resize-handle {
-  background: var(--border-default);
-  transition: background 0.15s;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.resize-handle--horizontal {
-  width: 8px;
-  cursor: col-resize;
-}
-
-.resize-handle--vertical {
-  height: 8px;
-  cursor: row-resize;
-}
-
-.resize-handle:hover,
-.resize-handle[data-resize-handle-state="drag"] {
-  background: var(--accent-a30);
-}
-
-/* Drag indicator pill */
-.resize-handle__indicator {
-  border-radius: 9999px;
-  background: var(--bg-surface);
-  transition: background 0.15s;
-  flex-shrink: 0;
-}
-
-.resize-handle--horizontal .resize-handle__indicator {
-  width: 3px;
-  height: 24px;
-}
-
-.resize-handle--vertical .resize-handle__indicator {
-  width: 24px;
-  height: 3px;
-}
-
-.resize-handle:hover .resize-handle__indicator,
-.resize-handle[data-resize-handle-state="drag"] .resize-handle__indicator {
-  background: var(--bg-surface);
-}
-
-/* ── Panel wrappers ────────────────────────────────────────── */
-
-.panel-with-header {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  overflow: hidden;
-}
-
-.panel-with-header--vertical {
-  /* Same as above, used for vertical panels like timeline */
-}
-
-.sidebar-wrapper {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  overflow: hidden;
-}
-
-/* ── Collapsed sidebar strip ───────────────────────────────── */
-
-.sidebar-collapsed-strip {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  height: 100%;
-  background: var(--bg-sidebar);
-  border-right: 1px solid var(--border-default);
-  padding-top: 0.5rem;
-}
-
-.sidebar-collapsed-btn {
+.reset-layout-btn {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 28px;
   height: 28px;
   padding: 0;
-  border: none;
+  border: 1px solid var(--border-subtle);
   border-radius: 4px;
-  background: transparent;
+  background: var(--bg-surface-alt);
   color: var(--text-secondary);
-  font-size: 1rem;
   cursor: pointer;
-  transition:
-    background 0.15s,
-    color 0.15s;
+  flex-shrink: 0;
 }
 
-.sidebar-collapsed-btn:hover {
-  background: var(--hover-bg);
-  color: var(--accent);
+.reset-layout-btn:hover {
+  background: var(--border-subtle);
+  color: var(--text-primary);
 }

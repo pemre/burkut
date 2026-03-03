@@ -29,5 +29,9 @@
   "progress.title": "Okuma İlerlemesi",
   "progress.newContentTitle": "Yeni içerik eklendi!",
   "progress.newContentMessage": "Son ziyaretinizden bu yana aşağıdaki içerikler eklendi. İlerlemeniz buna göre güncellendi.",
-  "progress.dismiss": "Anladım"
+  "progress.dismiss": "Anladım",
+
+  "layout.reset": "Düzeni sıfırla",
+  "widget.close": "Pencere öğesini kapat",
+  "widget.visibility.label": "Pencere öğeleri"
 }

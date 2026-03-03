@@ -10,11 +10,14 @@
 │   │   ├── MapPanel/            # Leaflet map with markers + polygons
 │   │   ├── Sidebar/             # Group/item navigation list
 │   │   ├── TimelinePanel/       # vis-timeline integration
-│   │   ├── PanelHeader/         # Reusable collapse/expand header strip
+│   │   ├── WidgetGrid/          # react-grid-layout responsive grid container
+│   │   ├── WidgetHeader/        # Drag handle header for each widget
+│   │   ├── WidgetVisibilityMenu/ # Dropdown to toggle widget visibility
 │   │   ├── ThemeToggle/         # Dark/light theme switch
 │   │   ├── ProgressPie/         # SVG donut chart for reading progress
 │   │   └── NewContentModal/     # Modal for newly detected content
 │   ├── hooks/
+│   │   ├── useLayoutPersistence.ts # Widget grid layout + visibility state (localStorage)
 │   │   ├── useMdLoader.ts       # Loads pre-parsed markdown from virtual module
 │   │   ├── useProgress.ts       # Reading progress tracker (localStorage)
 │   │   ├── useResizeObserver.ts  # Debounced ResizeObserver for panel redraws
